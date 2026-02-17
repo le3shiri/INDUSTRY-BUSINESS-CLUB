@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IBC - Welcome</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="layout-split fade-in">
+
+        <!-- Left: Dynamic Visual Slider -->
+        <div class="split-visual">
+            <div class="onboarding-slider-container">
+
+                <!-- Slide 1 -->
+                <div class="onboarding-slide active" id="slide-1">
+                    <div class="slide-icon">
+                        <svg viewBox="0 0 24 24" fill="none" class="animate-icon" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round"
+                            style="width: 80px; height: 80px; margin-bottom: 2rem;">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
+                    <h1 class="visual-title">Connect with Leaders</h1>
+                    <p class="visual-text">Join the exclusive network for B2B professionals. Find verified partners and
+                        suppliers easily.</p>
+                </div>
+
+                <!-- Slide 2 -->
+                <div class="onboarding-slide" id="slide-2">
+                    <div class="slide-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round"
+                            style="width: 80px; height: 80px; margin-bottom: 2rem;">
+                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                        </svg>
+                    </div>
+                    <h1 class="visual-title">Expand Your Network</h1>
+                    <p class="visual-text">Access thousands of potential clients and collaborators in your sector.</p>
+                </div>
+
+                <!-- Slide 3 -->
+                <div class="onboarding-slide" id="slide-3">
+                    <div class="slide-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round"
+                            style="width: 80px; height: 80px; margin-bottom: 2rem;">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                        </svg>
+                    </div>
+                    <h1 class="visual-title">Grow Your Business</h1>
+                    <p class="visual-text">Unlock new opportunities and take your enterprise to the next level.</p>
+                </div>
+
+                <div class="slide-dots">
+                    <div class="dot active"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Action Form -->
+        <div class="split-form">
+            <div class="form-container text-center">
+
+                <div class="mb-6 fade-in-up">
+                    <div
+                        style="width: 64px; height: 64px; background: var(--primary-light); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;">
+                        <i class="fas fa-fingerprint" style="color: var(--primary-color); font-size: 1.8rem;"></i>
+                    </div>
+                    <h2 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem; color: var(--text-primary);">
+                        Get Started</h2>
+                    <p class="text-muted text-lg">Create your account to join the club.</p>
+                </div>
+
+                <div class="btn-group fade-in-up delay-100"
+                    style="display: flex; flex-direction: column; gap: 1rem; width: 100%;">
+                    <button class="btn btn-primary" onclick="window.location.href='register-step1.html'"
+                        style="font-size: 1.1rem;">
+                        Create Free Account <i class="fas fa-arrow-right" style="margin-left: 0.8rem;"></i>
+                    </button>
+
+                    <div style="display: flex; align-items: center; justify-content: center; margin: 1rem 0;">
+                        <span style="height: 1px; flex: 1; background: var(--border-color);"></span>
+                        <span style="padding: 0 1rem; color: var(--text-secondary); font-size: 0.9rem;">or</span>
+                        <span style="height: 1px; flex: 1; background: var(--border-color);"></span>
+                    </div>
+
+                    <button class="btn btn-secondary" onclick="window.location.href='login.html'"
+                        style="font-size: 1.1rem;">
+                        Log In
+                    </button>
+                </div>
+
+                <div class="fade-in-up delay-200"
+                    style="margin-top: 3rem; text-align: center; color: var(--text-secondary); font-size: 0.85rem;">
+                    <p class="mb-4">By continuing, you agree to our <a href="#" class="link">Terms of Service</a> & <a
+                            href="#" class="link">Privacy Policy</a>.</p>
+                    <p>&copy; 2026 Industry Business Club</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script src="js/app.js"></script>
+</body>
+
+</html>

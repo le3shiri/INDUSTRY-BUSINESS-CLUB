@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence - Price</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/wizard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+        <aside class="sidebar">
+            <!-- Reused Sidebar -->
+            <div class="sidebar-header">
+                <svg class="sidebar-logo" viewBox="0 0 100 100" fill="none">
+                    <circle cx="50" cy="50" r="45" stroke="#5dbee8" stroke-width="8" />
+                    <path d="M35 50L45 60L65 40" stroke="#336c41" stroke-width="8" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+                <h2 style="font-size: 1.25rem; font-weight: 800; color: var(--text-primary); margin: 0;">Fluxence</h2>
+            </div>
+            <nav class="nav-links">
+                <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i> <span>Dashboard</span></a>
+                <a href="search.html" class="nav-item"><i class="fas fa-search"></i> <span>Search</span></a>
+                <a href="create-listing-step1.html" class="nav-item active"><i class="fas fa-box-open"></i> <span>Sell
+                        Items</span></a>
+                <a href="#" class="nav-item"><i class="fas fa-handshake"></i> <span>Deals</span></a>
+                <a href="#" class="nav-item"><i class="fas fa-user-circle"></i> <span>Profile</span></a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header style="margin-bottom: 2rem; display: flex; align-items: center; justify-content: space-between;">
+                <h1 style="font-size: 1.75rem; font-weight: 800; margin: 0;">Create New Listing</h1>
+                <a href="dashboard.html" class="btn btn-secondary" style="width: auto; padding: 0.5rem 1rem;">
+                    <i class="fas fa-times" style="margin-right: 0.5rem;"></i> Cancel
+                </a>
+            </header>
+
+            <div class="wizard-container fade-in-up">
+
+                <div class="wizard-progress">
+                    <div class="wizard-bar-bg">
+                        <div class="wizard-bar-fill" style="width: 100%;"></div>
+                    </div>
+                    <div class="wizard-steps">
+                        <div class="step-item completed">
+                            <div class="step-indicator-circle">✓</div>
+                            <span class="step-label">Details</span>
+                        </div>
+                        <div class="step-item completed">
+                            <div class="step-indicator-circle">✓</div>
+                            <span class="step-label">Photos</span>
+                        </div>
+                        <div class="step-item completed">
+                            <div class="step-indicator-circle">✓</div>
+                            <span class="step-label">Specs</span>
+                        </div>
+                        <div class="step-item active">
+                            <div class="step-indicator-circle">4</div>
+                            <span class="step-label">Price</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="shadow-box" style="padding: 2.5rem;">
+                    <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem;">Quantity & Pricing</h2>
+
+                    <div class="form-group mb-6">
+                        <div style="display: flex; gap: 1rem;">
+                            <div style="flex: 1;">
+                                <label class="form-label">Total Quantity *</label>
+                                <input type="number" id="qty-val" class="form-input" placeholder="e.g. 100">
+                            </div>
+                            <div style="flex: 1;">
+                                <label class="form-label">Min. Purchase Qty *</label>
+                                <input type="number" id="min-qty-val" class="form-input" placeholder="e.g. 5">
+                            </div>
+                            <div style="width: 150px;">
+                                <label class="form-label">Unit</label>
+                                <select id="qty-unit" class="form-input">
+                                    <option>Pieces</option>
+                                    <option>Kg</option>
+                                    <option>Tons</option>
+                                    <option>m³</option>
+                                </select>
+                            </div>
+                        </div>
+                        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.5rem;">
+                            <i class="fas fa-info-circle"></i> "Min. Purchase Qty" is the smallest amount a buyer can
+                            order.
+                        </p>
+                    </div>
+
+                    <div class="form-group mb-6">
+                        <label class="form-label">Price (MAD) *</label>
+                        <div style="position: relative;">
+                            <input type="number" id="price" class="form-input" placeholder="0.00">
+                            <span
+                                style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); font-weight: 700; color: var(--text-secondary);">MAD</span>
+                        </div>
+                        <div style="margin-top: 0.5rem;">
+                            <label class="checkbox-themed">
+                                <input type="checkbox" id="price-request"> Price on Request
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- AI Price Button -->
+                    <div class="ai-price-block">
+                        <button class="btn btn-secondary" id="ai-btn"
+                            style="width: auto; background: var(--white); border: 1px solid var(--brand-blue); color: var(--brand-blue);">
+                            <i class="fas fa-magic"></i> Get AI Price Suggestion
+                        </button>
+                        <div id="ai-result" class="ai-suggestion">500 – 1,200 MAD</div>
+                        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.5rem;">Based on similar
+                            market listings.</p>
+                    </div>
+
+                    <div class="mt-6" style="display: flex; justify-content: space-between;">
+                        <a href="create-listing-step3.html" class="btn btn-secondary" style="width: auto;">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </a>
+                        <button class="btn btn-primary" id="review-btn"
+                            style="width: auto; min-width: 180px; background: var(--primary-gradient);">
+                            Review & Publish <i class="fas fa-check" style="margin-left: 0.5rem;"></i>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Overlay -->
+    <div class="overlay" id="dashboard-overlay"></div>
+
+    <!-- Validation Modal -->
+    <div id="validation-modal" class="modal-centered">
+        <div class="modal-header">
+            <h2 class="modal-title">Confirm Listing</h2>
+            <button class="icon-btn" onclick="closeOverlay()"><i class="fas fa-times"></i></button>
+        </div>
+
+        <div class="modal-section">
+            <h4 class="modal-section-title">Summary</h4>
+            <div
+                style="background: #f8fafc; padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                <p><strong>Title:</strong> <span id="summary-title"></span></p>
+                <p><strong>Category:</strong> <span id="summary-category"></span></p>
+                <p><strong>Condition:</strong> <span id="summary-condition"></span></p>
+                <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 0.5rem 0;">
+                <p><strong>Total Quantity:</strong> <span id="summary-qty"></span></p>
+                <p><strong>Min Order:</strong> <span id="summary-min-qty"></span></p>
+                <p><strong>Price:</strong> <span id="summary-price"
+                        style="color: var(--primary-color); font-weight: 700;"></span></p>
+            </div>
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn btn-secondary" onclick="closeOverlay()">Edit</button>
+            <button class="btn btn-primary" id="final-publish-btn" onclick="submitFinal()">Confirm & Publish</button>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        // AI Button Logic
+        document.getElementById('ai-btn').addEventListener('click', () => {
+            const btn = document.getElementById('ai-btn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing...';
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-magic"></i> Get AI Price Suggestion';
+                document.getElementById('ai-result').style.display = 'block';
+            }, 1500);
+        });
+
+        // Review Logic
+        document.getElementById('review-btn').addEventListener('click', () => {
+            const qty = document.getElementById('qty-val').value;
+            const minQty = document.getElementById('min-qty-val').value;
+            const unit = document.getElementById('qty-unit').value;
+            const price = document.getElementById('price').value;
+            const onReq = document.getElementById('price-request').checked;
+
+            if (qty && minQty && (price || onReq)) {
+                if (parseFloat(minQty) > parseFloat(qty)) {
+                    alert("Minimum quantity cannot be greater than Total quantity.");
+                    return;
+                }
+
+                // Load Data from LocalStorage
+                const listing = JSON.parse(localStorage.getItem('temp_listing') || '{}');
+                const step1 = listing.step1 || {};
+                const step3 = listing.step3 || {};
+
+                // Populate Modal
+                document.getElementById('summary-title').innerText = step1.title || 'N/A';
+                document.getElementById('summary-category').innerText = step1.category || 'N/A';
+                document.getElementById('summary-condition').innerText = step3.condition || 'N/A';
+
+                document.getElementById('summary-qty').innerText = `${qty} ${unit}`;
+                document.getElementById('summary-min-qty').innerText = `${minQty} ${unit}`;
+                document.getElementById('summary-price').innerText = onReq ? "On Request" : `${price} MAD`;
+
+                // Show Modal
+                document.getElementById('dashboard-overlay').classList.add('active');
+                const modal = document.getElementById('validation-modal');
+                modal.style.opacity = '1';
+                modal.style.pointerEvents = 'auto';
+                modal.style.transform = 'translate(-50%, -50%)';
+
+            } else {
+                alert("Please enter price and all quantity fields.");
+            }
+        });
+
+        function closeOverlay() {
+            document.getElementById('dashboard-overlay').classList.remove('active');
+            const modal = document.getElementById('validation-modal');
+            modal.style.opacity = '0';
+            modal.style.pointerEvents = 'none';
+            modal.style.transform = 'translate(-50%, -40%)';
+        }
+
+        function submitFinal() {
+            const btn = document.getElementById('final-publish-btn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publishing...';
+
+            setTimeout(() => {
+                // alert("Listing Published Successfully!");
+                localStorage.removeItem('temp_listing'); // Clear draft
+                window.location.href = 'dashboard.html';
+            }, 2000);
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence - Specs</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/wizard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+        <aside class="sidebar">
+            <!-- Reused Sidebar -->
+            <div class="sidebar-header">
+                <svg class="sidebar-logo" viewBox="0 0 100 100" fill="none">
+                    <circle cx="50" cy="50" r="45" stroke="#5dbee8" stroke-width="8" />
+                    <path d="M35 50L45 60L65 40" stroke="#336c41" stroke-width="8" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+                <h2 style="font-size: 1.25rem; font-weight: 800; color: var(--text-primary); margin: 0;">Fluxence</h2>
+            </div>
+            <nav class="nav-links">
+                <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i> <span>Dashboard</span></a>
+                <a href="search.html" class="nav-item"><i class="fas fa-search"></i> <span>Search</span></a>
+                <a href="create-listing-step1.html" class="nav-item active"><i class="fas fa-box-open"></i> <span>Sell
+                        Items</span></a>
+                <a href="#" class="nav-item"><i class="fas fa-handshake"></i> <span>Deals</span></a>
+                <a href="#" class="nav-item"><i class="fas fa-user-circle"></i> <span>Profile</span></a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header style="margin-bottom: 2rem; display: flex; align-items: center; justify-content: space-between;">
+                <h1 style="font-size: 1.75rem; font-weight: 800; margin: 0;">Create New Listing</h1>
+                <a href="dashboard.html" class="btn btn-secondary" style="width: auto; padding: 0.5rem 1rem;">
+                    <i class="fas fa-times" style="margin-right: 0.5rem;"></i> Cancel
+                </a>
+            </header>
+
+            <div class="wizard-container fade-in-up">
+
+                <div class="wizard-progress">
+                    <div class="wizard-bar-bg">
+                        <div class="wizard-bar-fill" style="width: 75%;"></div>
+                    </div>
+                    <div class="wizard-steps">
+                        <div class="step-item completed">
+                            <div class="step-indicator-circle">✓</div>
+                            <span class="step-label">Details</span>
+                        </div>
+                        <div class="step-item completed">
+                            <div class="step-indicator-circle">✓</div>
+                            <span class="step-label">Photos</span>
+                        </div>
+                        <div class="step-item active">
+                            <div class="step-indicator-circle">3</div>
+                            <span class="step-label">Specs</span>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-indicator-circle">4</div>
+                            <span class="step-label">Price</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="shadow-box" style="padding: 2.5rem;">
+                    <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem;">Technical Specifications
+                    </h2>
+
+                    <div class="form-group mb-6">
+                        <label class="form-label">Condition *</label>
+                        <div class="condition-grid">
+                            <div class="condition-option" onclick="selectCondition(this, 'New')">
+                                <i class="fas fa-star"
+                                    style="color: var(--success-color); font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
+                                <div style="font-weight: 600;">New / Unused</div>
+                            </div>
+                            <div class="condition-option" onclick="selectCondition(this, 'Used')">
+                                <i class="fas fa-tasks"
+                                    style="color: #f59e0b; font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
+                                <div style="font-weight: 600;">Used - Good</div>
+                            </div>
+                            <div class="condition-option" onclick="selectCondition(this, 'Refurbished')">
+                                <i class="fas fa-tools"
+                                    style="color: var(--brand-blue); font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
+                                <div style="font-weight: 600;">Refurbished</div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="condition" required>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                        <div class="form-group">
+                            <label class="form-label">Dimensions (LxWxH)</label>
+                            <input type="text" class="form-input" placeholder="e.g. 2m x 1m x 0.5m">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Weight (Approx)</label>
+                            <input type="text" class="form-input" placeholder="e.g. 500kg">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Safety / Analysis Certificate (PDF)</label>
+                        <div class="upload-area-themed" style="padding: 1.5rem;"
+                            onclick="document.getElementById('cert-upload').click()">
+                            <input type="file" id="cert-upload" hidden onchange="showFileName(this)">
+                            <i class="fas fa-file-pdf"
+                                style="font-size: 2rem; color: var(--text-secondary); margin-bottom: 0.5rem;"></i>
+                            <p style="font-size: 0.9rem; color: var(--text-secondary);">Click to upload document</p>
+                            <p id="file-name"
+                                style="margin-top: 0.5rem; font-weight: 700; color: var(--brand-green); display: none;">
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="mt-6" style="display: flex; justify-content: space-between;">
+                        <a href="create-listing-step2.html" class="btn btn-secondary" style="width: auto;">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </a>
+                        <button class="btn btn-primary" id="next-step-3" style="width: auto; min-width: 150px;">
+                            Continue <i class="fas fa-arrow-right" style="margin-left: 0.5rem;"></i>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        function selectCondition(el, val) {
+            document.querySelectorAll('.condition-option').forEach(c => c.classList.remove('selected'));
+            el.classList.add('selected');
+            document.getElementById('condition').value = val;
+        }
+
+        function showFileName(input) {
+            const display = document.getElementById('file-name');
+            if (input.files && input.files[0]) {
+                display.style.display = 'block';
+                display.innerText = input.files[0].name;
+            }
+        }
+
+        document.getElementById('next-step-3').addEventListener('click', () => {
+            const cond = document.getElementById('condition').value;
+            if (cond) {
+                // Save
+                const listing = JSON.parse(localStorage.getItem('temp_listing') || '{}');
+                listing.step3 = { condition: cond };
+                localStorage.setItem('temp_listing', JSON.stringify(listing));
+                window.location.href = 'create-listing-step4.html';
+            } else {
+                alert("Please select item condition.");
+            }
+        });
+    </script>
+</body>
+
+</html>

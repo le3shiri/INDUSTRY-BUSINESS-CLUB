@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence - Negotiation Room</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/negotiations.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+        <aside class="sidebar">
+            <!-- Reused Sidebar -->
+            <div class="sidebar-header">
+                <svg class="sidebar-logo" viewBox="0 0 100 100" fill="none">
+                    <circle cx="50" cy="50" r="45" stroke="#5dbee8" stroke-width="8" />
+                    <path d="M35 50L45 60L65 40" stroke="#336c41" stroke-width="8" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+                <h2 style="font-size: 1.25rem; font-weight: 800; color: var(--text-primary); margin: 0;">Fluxence</h2>
+            </div>
+            <nav class="nav-links">
+                <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i> <span>Dashboard</span></a>
+                <a href="search.html" class="nav-item"><i class="fas fa-search"></i> <span>Search</span></a>
+                <a href="create-listing-step1.html" class="nav-item"><i class="fas fa-box-open"></i> <span>Sell
+                        Items</span></a>
+                <a href="negotiations.html" class="nav-item active"><i class="fas fa-handshake"></i>
+                    <span>Deals</span></a>
+                <a href="#" class="nav-item"><i class="fas fa-user-circle"></i> <span>Profile</span></a>
+            </nav>
+        </aside>
+
+        <main class="main-content" style="padding: 1.5rem;">
+
+            <div class="room-container">
+                <!-- Room Header -->
+                <div class="room-header">
+                    <a href="negotiations.html"
+                        style="color: var(--text-secondary); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; font-weight: 600;">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                    <div style="text-align: center;">
+                        <h3 id="room-title" style="margin: 0; font-size: 1.1rem; font-weight: 700;">Loading...</h3>
+                        <p id="room-price" style="margin: 0; font-size: 0.9rem; color: var(--text-secondary);">Listing
+                            Price: ...</p>
+                    </div>
+                    <div style="width: 24px;"></div> <!-- Spacer -->
+                </div>
+
+                <!-- Timeline -->
+                <div class="timeline-area" id="timeline">
+                    <!-- Messages Injected Here -->
+                </div>
+
+                <!-- Waiting Status -->
+                <div class="waiting-status" id="status-msg">
+                    Waiting for response...
+                </div>
+
+                <!-- Footer Actions -->
+                <div class="room-footer">
+                    <button class="btn btn-secondary" style="width: auto;" onclick="openOfferModal()">
+                        <i class="fas fa-plus"></i> <span id="new-offer-text">New Offer</span>
+                    </button>
+                    <button class="btn btn-primary" style="width: auto; background: var(--success-color);"
+                        id="accept-btn" onclick="acceptOffer()">
+                        Accept Deal
+                    </button>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Offer Modal -->
+    <div class="overlay" id="offer-overlay"></div>
+    <div id="offer-modal" class="modal-centered">
+        <div class="modal-header">
+            <h2 class="modal-title">Make Counter Offer</h2>
+            <button class="icon-btn" onclick="closeOfferModal()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-section">
+            <label class="form-label">Your Price (MAD)</label>
+            <input type="number" id="offer-price" class="form-input" placeholder="0.00">
+        </div>
+        <div class="modal-section">
+            <label class="form-label">Message (Optional)</label>
+            <textarea id="offer-msg" class="form-input" rows="3" placeholder="Add a note..."></textarea>
+        </div>
+        <div class="modal-actions">
+            <button class="btn btn-secondary" onclick="closeOfferModal()">Cancel</button>
+            <button class="btn btn-primary" onclick="submitOffer()">Send Offer</button>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        // --- Room Logic ---
+        const urlParams = new URLSearchParams(window.location.search);
+        const ROLE = urlParams.get('role') || 'buyer'; // 'buyer' or 'seller'
+        const ID = urlParams.get('id') || '1';
+
+        // Mock Data (In reality, fetch from API)
+        const roomData = {
+            1: { title: '50 Tons of Portland Cement', price: 120000 },
+            2: { title: 'Copper Wiring Scraps', price: 45000 },
+            3: { title: 'Aluminum Blocks', price: 13000 }
+        };
+
+        // Initial Conversation State (or load from localStorage)
+        const defaultMsgs = [
+            { type: 'initial', sender: 'seller', price: 120000, text: 'Initial Listing Price' },
+            { type: 'counter', sender: 'buyer', price: 110000, text: 'Would you accept this for quick payment?' },
+            { type: 'counter', sender: 'seller', price: 115000, text: 'I can do 115. final price.' }
+        ];
+
+        function loadRoom() {
+            const data = roomData[ID] || { title: 'Unknown Item', price: 0 };
+            document.getElementById('room-title').innerText = data.title;
+            document.getElementById('room-price').innerText = `Listing: ${data.price.toLocaleString()} MAD`;
+
+            // Button Texts
+            document.getElementById('new-offer-text').innerText = ROLE === 'buyer' ? 'New Offer' : 'Counter Offer';
+
+            // Render Messages
+            const stored = localStorage.getItem(`room_${ID}`);
+            const messages = stored ? JSON.parse(stored) : defaultMsgs;
+            renderTimeline(messages);
+
+            // Status Msg
+            const lastMsg = messages[messages.length - 1];
+            const isMyTurn = (ROLE === 'buyer' && lastMsg.sender === 'seller') || (ROLE === 'seller' && lastMsg.sender === 'buyer');
+
+            document.getElementById('status-msg').innerText = isMyTurn ? "Your turn to respond" : "Waiting for the other party...";
+            document.getElementById('accept-btn').innerText = `Accept ${lastMsg.price.toLocaleString()} MAD`;
+
+            // Auto scroll
+            const timeline = document.getElementById('timeline');
+            timeline.scrollTop = timeline.scrollHeight;
+        }
+
+        function renderTimeline(msgs) {
+            const container = document.getElementById('timeline');
+            container.innerHTML = '';
+
+            msgs.forEach(m => {
+                const isOwn = (m.sender === ROLE); // If user is buyer, and sender is buyer -> Own
+
+                const block = document.createElement('div');
+                block.className = `offer-block ${isOwn ? 'own' : 'other'}`;
+                block.innerHTML = `
+                  <div class="offer-label">${m.type} • ${m.sender}</div>
+                  <div class="offer-price">${m.price.toLocaleString()} MAD</div>
+                  <div class="offer-msg">${m.text}</div>
+              `;
+                container.appendChild(block);
+            });
+        }
+
+        // Interaction
+        function openOfferModal() {
+            document.getElementById('offer-overlay').classList.add('active');
+            const modal = document.getElementById('offer-modal');
+            modal.style.opacity = '1';
+            modal.style.pointerEvents = 'auto';
+            modal.style.transform = 'translate(-50%, -50%)';
+        }
+
+        function closeOfferModal() {
+            document.getElementById('offer-overlay').classList.remove('active');
+            const modal = document.getElementById('offer-modal');
+            modal.style.opacity = '0';
+            modal.style.pointerEvents = 'none';
+            modal.style.transform = 'translate(-50%, -40%)';
+        }
+
+        function submitOffer() {
+            const price = parseInt(document.getElementById('offer-price').value);
+            const msg = document.getElementById('offer-msg').value;
+
+            if (price) {
+                const stored = localStorage.getItem(`room_${ID}`);
+                const messages = stored ? JSON.parse(stored) : [...defaultMsgs];
+
+                const newMsg = {
+                    type: 'counter',
+                    sender: ROLE,
+                    price: price,
+                    text: msg || 'Counter offer sent.'
+                };
+
+                messages.push(newMsg);
+                localStorage.setItem(`room_${ID}`, JSON.stringify(messages));
+
+                closeOfferModal();
+                loadRoom(); // Re-render
+            } else {
+                alert("Enter a price");
+            }
+        }
+
+        function acceptOffer() {
+            if (confirm("Are you sure you want to accept this deal?")) {
+                alert("Deal Accepted! Redirecting to contracts...");
+                // Logic to update status would go here
+                window.location.href = 'negotiations.html';
+            }
+        }
+
+        // Run
+        loadRoom();
+    </script>
+</body>
+
+</html>

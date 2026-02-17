@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IBC - Register Step 1</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="layout-split fade-in">
+
+        <!-- Left: Branding -->
+        <div class="split-visual" style="flex: 0 0 35%;">
+            <div class="visual-content">
+                <div class="splash-logo" style="width: 80px; height: 80px; margin-bottom: 2rem;">
+                    <!-- Logo SVG inline -->
+                    <svg viewBox="0 0 100 100" fill="none" class="fade-in-up">
+                        <circle cx="50" cy="50" r="45" stroke="white" stroke-width="4" />
+                        <path d="M35 50L45 60L65 40" stroke="white" stroke-width="4" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
+                </div>
+
+                <h1 style="color: white; margin-bottom: 1rem;" class="fade-in-up delay-100">Join the Club</h1>
+                <p style="color: rgba(255,255,255,0.85); font-size: 1.15rem; max-width: 400px;"
+                    class="fade-in-up delay-200">
+                    Tell us about your business to get verified and start connecting with industry leaders.
+                </p>
+
+                <div class="mt-6 fade-in-up delay-300">
+                    <div class="mb-4" style="display: flex; align-items: center; gap: 1rem;">
+                        <div
+                            style="width: 40px; height: 40px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-check" style="color: #fff;"></i>
+                        </div>
+                        <div>
+                            <h4 style="font-weight: 700;">Verified Network</h4>
+                            <p style="margin: 0; font-size: 0.9rem; opacity: 0.8;">Only registered businesses allowed.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div
+                            style="width: 40px; height: 40px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-shield-alt" style="color: #fff;"></i>
+                        </div>
+                        <div>
+                            <h4 style="font-weight: 700;">Secure Data</h4>
+                            <p style="margin: 0; font-size: 0.9rem; opacity: 0.8;">Your information is encrypted &
+                                private.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Form -->
+        <div class="split-form">
+            <div class="form-container">
+
+                <a href="onboarding.html" class="link mb-4"
+                    style="display: inline-flex; align-items: center; gap: 0.5rem; color: var(--text-secondary); font-size: 0.9rem;">
+                    <i class="fas fa-arrow-left"></i> Back to start
+                </a>
+
+                <div class="progress-container fade-in-up">
+                    <div class="progress-meta">
+                        <span>Company Info</span>
+                        <span>Step 1 of 3</span>
+                    </div>
+                    <div class="progress-track">
+                        <div class="progress-fill" style="width: 33%;"></div>
+                    </div>
+                </div>
+
+                <div class="fade-in-up delay-100 mb-6">
+                    <h2 style="font-size: 2rem; font-weight: 700; color: var(--text-primary);">Company Details</h2>
+                    <p class="text-muted">Please enter your official business information.</p>
+                </div>
+
+                <form id="step1-form" class="fade-in-up delay-200">
+                    <div class="form-group">
+                        <label class="form-label" for="companyName">Company Name *</label>
+                        <div style="position: relative;">
+                            <i class="fas fa-building"
+                                style="position: absolute; left: 1rem; top: 1rem; color: var(--text-secondary);"></i>
+                            <input type="text" id="companyName" class="form-input"
+                                placeholder="e.g. Acme Industries Ltd." style="padding-left: 2.8rem;">
+                        </div>
+                        <div class="error-msg">Please enter your company name.</div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                        <div class="form-group">
+                            <label class="form-label" for="ice">ICE Number *</label>
+                            <input type="number" id="ice" class="form-input" placeholder="123456789">
+                            <div class="error-msg">Valid 9-digit ICE required.</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="zone">Industrial Zone *</label>
+                            <input type="text" id="zone" class="form-input" placeholder="e.g. Ain Sebaa">
+                            <div class="error-msg">Zone required.</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="city">City *</label>
+                        <div style="position: relative;">
+                            <i class="fas fa-map-marker-alt"
+                                style="position: absolute; left: 1rem; top: 1rem; color: var(--text-secondary);"></i>
+                            <input type="text" id="city" class="form-input" placeholder="e.g. Casablanca"
+                                style="padding-left: 2.8rem;">
+                        </div>
+                        <div class="error-msg">City is required.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="email">Business Email *</label>
+                        <div style="position: relative;">
+                            <i class="fas fa-envelope"
+                                style="position: absolute; left: 1rem; top: 1rem; color: var(--text-secondary);"></i>
+                            <input type="email" id="email" class="form-input" placeholder="name@company.com"
+                                style="padding-left: 2.8rem;">
+                        </div>
+                        <div class="error-msg">Valid email is required.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="address">Full Address *</label>
+                        <textarea id="address" class="form-input" rows="3" placeholder="Street, Building, etc."
+                            style="resize: none;"></textarea>
+                        <div class="error-msg">Address is required.</div>
+                    </div>
+
+                    <div class="mt-6 text-right">
+                        <button type="submit" class="btn btn-primary" style="width: auto; min-width: 180px;">
+                            Next Step <i class="fas fa-arrow-right" style="margin-left: 0.5rem;"></i>
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <script src="js/app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IBC - Login</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .form-info {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 1.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.85rem;
+            user-select: none;
+        }
+
+        .toggle-password:hover {
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layout-split fade-in">
+
+        <!-- Left: Branding -->
+        <div class="split-visual" style="flex: 0 0 35%;">
+            <div class="visual-content">
+                <div class="splash-logo" style="width: 80px; height: 80px; margin-bottom: 2rem;">
+                    <!-- Logo SVG inline -->
+                    <svg viewBox="0 0 100 100" fill="none" class="fade-in-up">
+                        <circle cx="50" cy="50" r="45" stroke="white" stroke-width="4" />
+                        <path d="M35 50L45 60L65 40" stroke="white" stroke-width="4" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
+                </div>
+
+                <h1 style="color: white; margin-bottom: 1rem;" class="fade-in-up delay-100">Welcome Back</h1>
+                <p style="color: rgba(255,255,255,0.85); font-size: 1.15rem; max-width: 400px;"
+                    class="fade-in-up delay-200">
+                    Log in to manage your business profile and connect with new partners.
+                </p>
+            </div>
+        </div>
+
+        <!-- Right: Form -->
+        <div class="split-form">
+            <div class="form-container" style="max-width: 420px; text-align: center;">
+
+                <div class="fade-in-up mb-6">
+                    <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text-primary);">
+                        Log In</h2>
+                    <p class="text-muted">Enter your email and password.</p>
+                </div>
+
+                <form id="login-form">
+                    <div class="form-group fade-in-up delay-100 text-left">
+                        <label class="form-label" for="login-email">Email Address</label>
+                        <div style="position: relative;">
+                            <i class="fas fa-envelope"
+                                style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary);"></i>
+                            <input type="email" id="login-email" class="form-input" placeholder="name@company.com"
+                                style="padding-left: 2.8rem;">
+                        </div>
+                    </div>
+
+                    <div class="form-group fade-in-up delay-200 text-left">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <label class="form-label" for="login-password" style="margin-bottom: 0;">Password</label>
+                            <a href="#" class="link text-muted" style="font-size: 0.85rem;">Forgot password?</a>
+                        </div>
+                        <div style="position: relative;">
+                            <i class="fas fa-lock"
+                                style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary);"></i>
+                            <input type="password" id="login-password" class="form-input" placeholder="Enter password"
+                                style="padding-left: 2.8rem; padding-right: 3.5rem;">
+                            <span class="toggle-password" data-target="login-password">Show</span>
+                        </div>
+                    </div>
+
+                    <div class="fade-in-up delay-300 mt-6">
+                        <button class="btn btn-primary" type="submit" id="login-btn" style="width: 100%;">
+                            Access Account <i class="fas fa-sign-in-alt" style="margin-left: 0.8rem;"></i>
+                        </button>
+                    </div>
+
+                    <div class="mt-6 fade-in-up delay-300">
+                        <p class="text-muted text-small">Don't have an account? <a href="onboarding.html"
+                                class="link">Get Started</a></p>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <script src="js/app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IBC - Verify Phone</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="layout-split fade-in">
+
+        <!-- Left: Branding -->
+        <div class="split-visual" style="flex: 0 0 35%;">
+            <div class="visual-content">
+                <div class="splash-logo" style="width: 80px; height: 80px; margin-bottom: 2rem;">
+                    <svg viewBox="0 0 100 100" fill="none" class="fade-in-up">
+                        <circle cx="50" cy="50" r="45" stroke="white" stroke-width="4" />
+                        <path d="M35 50L45 60L65 40" stroke="white" stroke-width="4" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
+                </div>
+
+                <h1 style="color: white; margin-bottom: 1rem;" class="fade-in-up delay-100">Verification</h1>
+                <p style="color: rgba(255,255,255,0.85); font-size: 1.15rem; max-width: 400px;"
+                    class="fade-in-up delay-200">
+                    We take security seriously. Please verify your mobile number to proceed.
+                </p>
+            </div>
+        </div>
+
+        <!-- Right: Form -->
+        <div class="split-form">
+            <div class="form-container" style="max-width: 420px; text-align: center;">
+
+                <div class="fade-in-up mb-6">
+                    <div
+                        style="width: 80px; height: 80px; background: var(--primary-light); border-radius: 50%; color: var(--primary-color); font-size: 2rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem;">Mobile Number</h2>
+                    <p class="text-muted">We will send you a 6-digit confirmation code.</p>
+                </div>
+
+                <div class="form-group fade-in-up delay-100 text-left">
+                    <label class="form-label" for="phone">Enter Number</label>
+                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                        <span
+                            style="font-weight: 600; color: var(--text-secondary); background: #f1f5f9; padding: 1rem 1.2rem; border-radius: var(--radius-md); border: 2px solid var(--border-color); white-space: nowrap;">🇲🇦
+                            +212</span>
+                        <input type="tel" id="phone" class="form-input" placeholder="6 12 34 56 78" inputmode="numeric"
+                            style="font-weight: 600; font-size: 1.1rem; letter-spacing: 1px;">
+                    </div>
+                    <div class="error-msg text-center">Please enter a valid mobile number.</div>
+                </div>
+
+                <div class="fade-in-up delay-200 mt-6">
+                    <button class="btn btn-primary" id="get-otp-btn">
+                        Send OTP Code <i class="fas fa-paper-plane" style="margin-left: 0.8rem;"></i>
+                    </button>
+                    <div class="mt-4">
+                        <a href="register-step3.html" class="link text-muted" style="font-size: 0.9rem;">
+                            <i class="fas fa-arrow-left"></i> Returns to interests
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script src="js/app.js"></script>
+</body>
+
+</html>

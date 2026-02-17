@@ -1,0 +1,198 @@
+/* --- Create Listing Wizard Styles --- */
+
+.wizard-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.wizard-progress {
+    margin-bottom: 2.5rem;
+}
+
+.wizard-steps {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 1;
+}
+
+.step-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+    width: 25%;
+}
+
+.step-indicator-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--white);
+    border: 2px solid var(--border-color);
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    transition: var(--transition);
+    z-index: 2;
+}
+
+.step-item.active .step-indicator-circle {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    background: var(--primary-light);
+}
+
+.step-item.completed .step-indicator-circle {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: var(--white);
+}
+
+.step-label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.step-item.active .step-label {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.wizard-bar-bg {
+    position: absolute;
+    top: 16px;
+    left: 12.5%;
+    right: 12.5%;
+    height: 3px;
+    background: var(--border-color);
+    z-index: 0;
+}
+
+.wizard-bar-fill {
+    height: 100%;
+    background: var(--primary-gradient);
+    transition: width 0.4s ease;
+}
+
+/* Upload Zone Enhanced */
+.image-upload-zone {
+    border: 2px dashed var(--border-color);
+    border-radius: var(--radius-md);
+    background: #f8fafc;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+}
+
+.image-upload-zone:hover,
+.image-upload-zone.dragover {
+    border-color: var(--primary-color);
+    background: var(--primary-light);
+}
+
+.preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.preview-item {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+.preview-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.remove-btn {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 24px;
+    height: 24px;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.8rem;
+    border: none;
+}
+
+/* Condition Cards */
+.condition-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.condition-option {
+    padding: 1.5rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-md);
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.condition-option:hover {
+    border-color: var(--primary-color);
+}
+
+.condition-option.selected {
+    border-color: var(--primary-color);
+    background: var(--primary-light);
+    box-shadow: 0 0 0 1px var(--primary-color);
+}
+
+/* AI Price Block */
+.ai-price-block {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    margin-top: 1rem;
+    border: 1px solid #bae6fd;
+    text-align: center;
+}
+
+.ai-suggestion {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--brand-blue);
+    margin: 0.5rem 0;
+    display: none;
+    animation: fadeIn 0.4s;
+}
+
+/* Responsive Wizard */
+@media (max-width: 768px) {
+    .step-label {
+        display: none;
+    }
+
+    /* Hide labels on mobile */
+    .condition-grid {
+        grid-template-columns: 1fr;
+    }
+}

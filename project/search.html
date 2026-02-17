@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence - Search</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Overlay -->
+    <div class="overlay" id="dashboard-overlay"></div>
+
+    <!-- Main Grid -->
+    <div class="layout-dashboard">
+
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <svg class="sidebar-logo" viewBox="0 0 100 100" fill="none">
+                    <circle cx="50" cy="50" r="45" stroke="#5dbee8" stroke-width="8" />
+                    <path d="M35 50L45 60L65 40" stroke="#336c41" stroke-width="8" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+                <h2 style="font-size: 1.25rem; font-weight: 800; color: var(--text-primary); margin: 0;">Fluxence</h2>
+            </div>
+
+            <nav class="nav-links">
+                <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i> <span>Dashboard</span></a>
+                <a href="#" class="nav-item active"><i class="fas fa-search"></i> <span>Search</span></a>
+                <a href="create-listing-step1.html" class="nav-item"><i class="fas fa-box-open"></i> <span>Sell
+                        Items</span></a>
+                <a href="negotiations.html" class="nav-item"><i class="fas fa-handshake"></i> <span>Deals</span></a>
+                <a href="#" class="nav-item"><i class="fas fa-user-circle"></i> <span>Profile</span></a>
+            </nav>
+
+            <div class="user-profile-mini" onclick="window.location.href='index.html'">
+                <div
+                    style="width: 40px; height: 40px; background: var(--primary-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary-color); font-weight: 700;">
+                    AC
+                </div>
+                <div>
+                    <p style="margin: 0; font-weight: 600; font-size: 0.9rem;">Acme Corp</p>
+                    <p style="margin: 0; font-size: 0.75rem; color: var(--text-secondary);">Enterprise Plan</p>
+                </div>
+                <i class="fas fa-sign-out-alt" style="margin-left: auto; color: var(--text-secondary);"></i>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- Search Header -->
+            <header style="margin-bottom: 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h1 style="font-size: 2rem; font-weight: 800; color: var(--text-primary); margin: 0;">Marketplace
+                        Search</h1>
+                    <div style="display: flex; gap: 1rem;">
+                        <button class="btn btn-secondary" style="width: auto;" id="save-search-btn">
+                            <i class="far fa-heart"></i> Save Search
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Enhanced Search Bar -->
+                <div style="position: relative; margin-bottom: 1.5rem;">
+                    <i class="fas fa-search search-icon" style="font-size: 1.2rem; color: var(--primary-color);"></i>
+                    <input type="text" class="search-input" placeholder="Search for materials, equipment, scrap..."
+                        style="padding: 1rem 1rem 1rem 3.5rem; font-size: 1.1rem; border-color: var(--primary-color); box-shadow: var(--shadow-md);"
+                        value="Metal">
+                    <button class="icon-btn"
+                        style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); border: none; background: transparent;"
+                        onclick="toggleFilterSidebar()">
+                        <i class="fas fa-sliders-h" style="font-size: 1.2rem; color: var(--text-secondary);"></i>
+                    </button>
+                </div>
+
+                <!-- Result Count & Chips -->
+                <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                    <span class="text-secondary" style="font-weight: 600;">Results: <span id="result-count"
+                            style="color: var(--primary-color);">28</span></span>
+                    <div style="width: 1px; height: 24px; background: var(--border-color); margin: 0 0.5rem;"></div>
+
+                    <div class="chips-row" style="margin-bottom: 0; padding-bottom: 0;">
+                        <div class="chip active">Metals</div>
+                        <div class="chip">Construction</div>
+                        <div class="chip">Machinery</div>
+                        <div class="chip">Plastics</div>
+                        <div class="chip">Textiles</div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Search Results Grid -->
+            <div class="materials-grid">
+
+                <!-- Result 1 -->
+                <article class="material-card">
+                    <div class="condition-badge" style="background: #ecfdf5; color: #059669;">New</div>
+                    <div class="card-img-container">
+                        <div
+                            style="width: 100%; height: 100%; background: linear-gradient(120deg, #e2e8f0 0%, #94a3b8 100%); display: flex; align-items: center; justify-content: center; color: #fff;">
+                            <i class="fas fa-layer-group fa-3x"></i>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="rating">
+                            <i class="fas fa-star"></i> <span>4.9</span>
+                        </div>
+                        <h3 class="card-title">Aluminum Sheets 5mm</h3>
+                        <p class="card-desc">High-grade aluminum sheets suitable for industrial cladding.</p>
+                        <div class="card-meta">
+                            <div>
+                                <div class="price">$1,200 / ton</div>
+                                <div class="qty">Min: 500kg</div>
+                            </div>
+                            <button class="btn btn-secondary" style="width: auto; padding: 0.5rem 1rem;">View</button>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Result 2 -->
+                <article class="material-card">
+                    <div class="condition-badge">Used - Good</div>
+                    <div class="card-img-container">
+                        <div
+                            style="width: 100%; height: 100%; background: linear-gradient(120deg, #dbeafe 0%, #3b82f6 100%); display: flex; align-items: center; justify-content: center; color: #fff;">
+                            <i class="fas fa-cog fa-3x"></i>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="rating">
+                            <i class="fas fa-star"></i> <span>4.5</span>
+                        </div>
+                        <h3 class="card-title">Steel Gears (Mixed Lot)</h3>
+                        <p class="card-desc">Assorted steel gears from decommissioned machinery. Good condition.</p>
+                        <div class="card-meta">
+                            <div>
+                                <div class="price">$450 total</div>
+                                <div class="qty">Lot: 50kg</div>
+                            </div>
+                            <button class="btn btn-secondary" style="width: auto; padding: 0.5rem 1rem;">View</button>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Result 3 -->
+                <article class="material-card">
+                    <div class="condition-badge" style="background: #fff7ed; color: #ea580c;">Refurbished</div>
+                    <div class="card-img-container">
+                        <div
+                            style="width: 100%; height: 100%; background: linear-gradient(120deg, #ffedd5 0%, #f97316 100%); display: flex; align-items: center; justify-content: center; color: #fff;">
+                            <i class="fas fa-hammer fa-3x"></i>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="rating">
+                            <i class="fas fa-star"></i> <span>4.2</span>
+                        </div>
+                        <h3 class="card-title">Copper Piping Scraps</h3>
+                        <p class="card-desc">Clean copper pipes, various lengths. Ideal for recycling or melting.</p>
+                        <div class="card-meta">
+                            <div>
+                                <div class="price">$7.50 / kg</div>
+                                <div class="qty">Stock: 200kg</div>
+                            </div>
+                            <button class="btn btn-secondary" style="width: auto; padding: 0.5rem 1rem;">View</button>
+                        </div>
+                    </div>
+                </article>
+                <!-- Result 4 -->
+                <article class="material-card">
+                    <div class="condition-badge" style="background: #f0fdf4; color: #15803d;">New</div>
+                    <div class="card-img-container">
+                        <div
+                            style="width: 100%; height: 100%; background: linear-gradient(120deg, #dcfce7 0%, #22c55e 100%); display: flex; align-items: center; justify-content: center; color: #fff;">
+                            <i class="fas fa-box fa-3x"></i>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="rating">
+                            <i class="fas fa-star"></i> <span>5.0</span>
+                        </div>
+                        <h3 class="card-title">Zinc Ingot Pallets</h3>
+                        <p class="card-desc">99.9% pure zinc ingots. Certified quality for casting.</p>
+                        <div class="card-meta">
+                            <div>
+                                <div class="price">$2,800 / ton</div>
+                                <div class="qty">Min: 1 ton</div>
+                            </div>
+                            <button class="btn btn-secondary" style="width: auto; padding: 0.5rem 1rem;">View</button>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </main>
+    </div>
+
+    <!-- Filter Sidebar (Inlined for standalone functionality) -->
+    <div id="filter-sidebar" class="sidebar-right">
+        <div class="sidebar-header-pane">
+            <h3 class="modal-title" style="font-size: 1.3rem;">
+                <i class="fas fa-sliders-h" style="color: var(--primary-color);"></i> Filters
+            </h3>
+            <button class="icon-btn" onclick="closeOverlay()"><i class="fas fa-times"></i></button>
+        </div>
+
+        <!-- Category -->
+        <div class="filter-group">
+            <label class="filter-label">Category</label>
+            <div class="pills-grid">
+                <div class="pill-option active" onclick="toggleChip(this)">All</div>
+                <div class="pill-option" onclick="toggleChip(this)">Metals</div>
+                <div class="pill-option" onclick="toggleChip(this)">Plastics</div>
+                <div class="pill-option" onclick="toggleChip(this)">Machinery</div>
+                <div class="pill-option" onclick="toggleChip(this)">Electronics</div>
+            </div>
+        </div>
+
+        <!-- Price Range -->
+        <div class="filter-group">
+            <label class="filter-label">Price Range</label>
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <div style="flex: 1;">
+                    <label
+                        style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.25rem; display: block;">Min</label>
+                    <input type="number" class="form-input" placeholder="0" style="padding: 0.6rem;">
+                </div>
+                <span style="color: var(--text-secondary); margin-top: 1rem;">-</span>
+                <div style="flex: 1;">
+                    <label
+                        style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.25rem; display: block;">Max</label>
+                    <input type="number" class="form-input" placeholder="Any" style="padding: 0.6rem;">
+                </div>
+            </div>
+        </div>
+
+        <!-- Radius Slider -->
+        <div class="filter-group">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                <label class="filter-label">Search Radius</label>
+                <span style="font-size: 0.9rem; font-weight: 700; color: var(--primary-color);" id="radius-val">50
+                    km</span>
+            </div>
+            <div class="range-slider-container">
+                <input type="range" min="0" max="100" value="50" class="range-slider" id="radius-slider"
+                    oninput="document.getElementById('radius-val').innerText = this.value + ' km'">
+            </div>
+        </div>
+
+        <!-- Condition -->
+        <div class="filter-group">
+            <label class="filter-label">Condition</label>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                <label class="checkbox-themed">
+                    <input type="checkbox" checked> New / Unused
+                </label>
+                <label class="checkbox-themed">
+                    <input type="checkbox"> Used - Good
+                </label>
+                <label class="checkbox-themed">
+                    <input type="checkbox"> Refurbished
+                </label>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div style="margin-top: auto; display: flex; gap: 1rem;">
+            <button class="btn btn-secondary" onclick="resetFilters()">Clear</button>
+            <button class="btn btn-primary" onclick="applyFilters()">Show Results</button>
+        </div>
+    </div>
+
+    <div id="notification-area" class="notification-container"></div>
+
+    <script src="js/app.js"></script>
+    <script>
+        // --- Search Page Specific Scripts ---
+
+        // Save Search Toggle
+        const saveBtn = document.getElementById('save-search-btn');
+        let isSaved = false;
+
+        saveBtn.addEventListener('click', () => {
+            isSaved = !isSaved;
+            if (isSaved) {
+                saveBtn.innerHTML = '<i class="fas fa-heart" style="color: var(--error-color);"></i> Saved';
+                saveBtn.style.borderColor = 'var(--primary-color)';
+                saveBtn.style.background = 'var(--primary-light)';
+                showToast("Search Saved!", "You'll get alerts for new matches.");
+            } else {
+                saveBtn.innerHTML = '<i class="far fa-heart"></i> Save Search';
+                saveBtn.style.borderColor = '';
+                saveBtn.style.background = '';
+            }
+        });
+
+        // Sidebar Logic
+        function toggleFilterSidebar() {
+            document.getElementById('dashboard-overlay').classList.add('active');
+            document.getElementById('filter-sidebar').style.right = '0';
+        }
+
+        function closeOverlay() {
+            document.getElementById('dashboard-overlay').classList.remove('active');
+            document.getElementById('filter-sidebar').style.right = '-400px';
+        }
+
+        document.getElementById('dashboard-overlay').addEventListener('click', closeOverlay);
+
+        // Chip Toggle Logic
+        function toggleChip(el) {
+            el.classList.toggle('active');
+        }
+
+        // Filter Actions
+        function resetFilters() {
+            // Visual reset only for prototype
+            document.querySelectorAll('.pill-option').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
+            document.getElementById('radius-slider').value = 50;
+            document.getElementById('radius-val').innerText = '50 km';
+            closeOverlay();
+        }
+
+        function applyFilters() {
+            document.getElementById('result-count').innerText = "5"; // Simulate finding fewer results
+            closeOverlay();
+            showToast("Filters Applied", "Showing top 5 matches.");
+        }
+
+        // Toast Logic (Reused from Dashboard, ensuring it works here too)
+        function showToast(title, message) {
+            let container = document.getElementById('notification-area');
+            if (!container) { // Create if missing
+                container = document.createElement('div');
+                container.id = 'notification-area';
+                container.className = 'notification-container';
+                document.body.appendChild(container);
+            }
+
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `
+            <div class="toast-icon">
+                <i class="fas fa-bell"></i>
+            </div>
+            <div class="toast-content">
+                <div class="toast-title">${title}</div>
+                <div class="toast-msg">${message}</div>
+            </div>
+            <div class="toast-close" onclick="this.parentElement.classList.add('hiding'); setTimeout(() => this.parentElement.remove(), 400);">
+                <i class="fas fa-times"></i>
+            </div>
+        `;
+
+            container.appendChild(toast);
+            // Auto hide for Save Search specifically as requested (3 seconds)
+            if (title === "Search Saved!") {
+                setTimeout(() => {
+                    toast.classList.add('hiding');
+                    setTimeout(() => toast.remove(), 400);
+                }, 3000);
+            }
+        }
+    </script>
+</body>
+
+</html>
