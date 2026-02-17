@@ -33,10 +33,51 @@ document.addEventListener('DOMContentLoaded', () => {
   const path = window.location.pathname;
   const page = path.split('/').pop() || 'index.html';
 
+  // --- Auth Check (Simple Guard) ---
+  const publicPages = [
+    'index.html',
+    'onboarding.html',
+    'login.html',
+    'register-step1.html',
+    'register-step2.html',
+    'register-step3.html',
+    'otp-phone.html',
+    'otp-code.html',
+    'password.html'
+  ];
+
+  const savedLogin = State.load('isLoggedIn');
+  const isPublic = publicPages.includes(page) || page === '' || page === '/';
+
+  if (!isPublic && !savedLogin) {
+    console.warn("Unauthorized access. Redirecting to login.");
+    // window.location.href = 'login.html'; // Commented out for dev ease, uncomment for prod
+    // For now, let's just log it so we don't break the user's flow
+  }
+
+  // --- Logout Logic (Global) ---
+  // Attach manually since we don't have a single ID, but look for the specific icon container
+  // This is best done inside specific page logic or a global delegate, but here is a simple attempt:
+  document.body.addEventListener('click', (e) => {
+    if (e.target.closest('.user-profile-mini') || e.target.classList.contains('fa-sign-out-alt')) {
+      // Check if it was the sign out icon specifically
+      if (e.target.classList.contains('fa-sign-out-alt') || e.target.querySelector('.fa-sign-out-alt')) {
+        if (confirm("Log out?")) {
+          State.clear();
+          window.location.href = 'login.html';
+        }
+      }
+    }
+  });
+
+
   // --- 1. Splash Screen Logic ---
   if (page === 'index.html') {
-    // Only redirect if "onboarding" hasn't been seen? For now, always redirect.
-    setTimeout(() => window.navigateTo('onboarding.html'), 2500);
+    if (savedLogin) {
+      setTimeout(() => window.navigateTo('dashboard.html'), 1000);
+    } else {
+      setTimeout(() => window.navigateTo('onboarding.html'), 2500);
+    }
   }
 
   // --- 2. Onboarding Logic (Auto Slider) ---
@@ -334,9 +375,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // Mock Authentication
         loginBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Authenticating...';
         setTimeout(() => {
+          State.save('isLoggedIn', true); // Save Auth Flag
           alert('Welcome back! Redirecting to dashboard...');
           // In a real app, you would redirect to dashboard
-          window.navigateTo('index.html');
+          window.location.href = 'dashboard.html';
         }, 1500);
       } else {
         if (!email) emailInput.classList.add('error');
