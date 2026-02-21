@@ -41,6 +41,12 @@
                         <i class="fas fa-bell"></i>
                         <span class="badge">2</span>
                     </button>
+                    <div class="profile-nav-item"
+                        style="display: flex; align-items: center; gap: 0.75rem; margin-left: 0.5rem; cursor: pointer;"
+                        onclick="window.location.href='profile-settings.html'">
+                        <img src="assets/profiles/admin.png" alt="Admin"
+                            style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-color);">
+                    </div>
                     <button class="btn btn-primary" style="width: auto; padding: 0.6rem 1.25rem; font-size: 0.9rem;"
                         onclick="openKYCModal()">
                         <i class="fas fa-check-circle" style="margin-right: 0.5rem;"></i> Verify Account
@@ -49,15 +55,23 @@
             </header>
 
             <!-- Welcome Section -->
-            <section style="margin-bottom: 2.5rem;">
-                <h1
-                    style="font-size: 2.5rem; font-weight: 800; color: var(--text-primary); margin-bottom: 0.5rem; letter-spacing: -0.02em;">
-                    Welcome back, Acme Corp!</h1>
-                <p class="text-secondary" style="font-size: 1.1rem; font-weight: 500;">Based on your interests in
-                    <strong style="color: var(--primary-color);">Construction</strong> & <strong
-                        style="color: var(--pure-black);">Logistics</strong>, we found <strong>2 new matches</strong>
-                    for you on Fluxence.
-                </p>
+            <section style="margin-bottom: 2.5rem; display: flex; align-items: center; gap: 2rem;">
+                <div
+                    style="width: 80px; height: 80px; min-width: 80px; border-radius: var(--radius-lg); background: var(--white); overflow: hidden; box-shadow: var(--shadow-md); border: 1px solid var(--border-color);">
+                    <img src="assets/logos/acme_corp.png" alt="Acme Corp"
+                        style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div>
+                    <h1
+                        style="font-size: 2.5rem; font-weight: 800; color: var(--text-primary); margin-bottom: 0.25rem; letter-spacing: -0.02em;">
+                        Welcome back, Acme Corp!</h1>
+                    <p class="text-secondary" style="font-size: 1.1rem; font-weight: 500;">Based on your interests in
+                        <strong style="color: var(--primary-color);">Construction</strong> & <strong
+                            style="color: var(--pure-black);">Logistics</strong>, we found <strong>2 new
+                            matches</strong>
+                        for you on Fluxence.
+                    </p>
+                </div>
             </section>
 
             <!-- Categories Chips -->
@@ -81,10 +95,8 @@
                         style="background: var(--white); color: var(--text-primary); border: 1px solid var(--border-color);">
                         Very Good</div>
                     <div class="card-img-container">
-                        <div
-                            style="width: 100%; height: 100%; background: var(--white); display: flex; align-items: center; justify-content: center; color: var(--primary-color); border-bottom: 1px solid var(--border-color);">
-                            <i class="fas fa-cubes fa-3x"></i>
-                        </div>
+                        <img src="assets/products/rebar.png" alt="Steel Rebar"
+                            style="width: 100%; height: 100%; object-fit: cover; border-bottom: 1px solid var(--border-color);">
                     </div>
                     <div class="card-body">
                         <div class="rating">
@@ -110,10 +122,8 @@
                         style="background: var(--primary-color); color: var(--white); border: 1px solid var(--pure-black);">
                         New</div>
                     <div class="card-img-container">
-                        <div
-                            style="width: 100%; height: 100%; background: var(--white); display: flex; align-items: center; justify-content: center; color: var(--primary-color); border-bottom: 1px solid var(--border-color);">
-                            <i class="fas fa-truck-loading fa-3x"></i>
-                        </div>
+                        <img src="assets/products/forklift.png" alt="Heavy Duty Forklift"
+                            style="width: 100%; height: 100%; object-fit: cover; border-bottom: 1px solid var(--border-color);">
                     </div>
                     <div class="card-body">
                         <div class="rating">
@@ -139,10 +149,8 @@
                         style="background: var(--pure-black); color: var(--white); border: 1px solid var(--pure-black);">
                         Used</div>
                     <div class="card-img-container">
-                        <div
-                            style="width: 100%; height: 100%; background: var(--white); display: flex; align-items: center; justify-content: center; color: var(--primary-color); border-bottom: 1px solid var(--border-color);">
-                            <i class="fas fa-bolt fa-3x"></i>
-                        </div>
+                        <img src="assets/products/copper_cables.png" alt="Copper Cabling"
+                            style="width: 100%; height: 100%; object-fit: cover; border-bottom: 1px solid var(--border-color);">
                     </div>
                     <div class="card-body">
                         <div class="rating">
@@ -168,10 +176,8 @@
                         style="background: var(--white); color: var(--text-primary); border: 1px solid var(--border-color);">
                         Refurbished</div>
                     <div class="card-img-container">
-                        <div
-                            style="width: 100%; height: 100%; background: var(--white); display: flex; align-items: center; justify-content: center; color: var(--primary-color); border-bottom: 1px solid var(--border-color);">
-                            <i class="fas fa-industry fa-3x"></i>
-                        </div>
+                        <img src="assets/products/conveyor.png" alt="Industrial Conveyor"
+                            style="width: 100%; height: 100%; object-fit: cover; border-bottom: 1px solid var(--border-color);">
                     </div>
                     <div class="card-body">
                         <div class="rating">

@@ -156,13 +156,26 @@
                 <div class="fade-in-up">
                     <div class="product-gallery">
                         <div class="main-image">
-                            <i class="fas fa-cubes fa-6x"></i>
+                            <img src="assets/products/rebar.png" id="main-product-img" alt="Product Image"
+                                style="width: 100%; height: 100%; object-fit: cover;">
                         </div>
                         <div class="thumbnail-row">
-                            <div class="thumbnail active"><i class="fas fa-image"></i></div>
-                            <div class="thumbnail"><i class="fas fa-image"></i></div>
-                            <div class="thumbnail"><i class="fas fa-image"></i></div>
-                            <div class="thumbnail"><i class="fas fa-plus"></i></div>
+                            <div class="thumbnail active" onclick="changeImage('assets/products/rebar.png', this)"><img
+                                    src="assets/products/rebar.png"
+                                    style="width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius-md);">
+                            </div>
+                            <div class="thumbnail" onclick="changeImage('assets/products/forklift.png', this)"><img
+                                    src="assets/products/forklift.png"
+                                    style="width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius-md);">
+                            </div>
+                            <div class="thumbnail" onclick="changeImage('assets/products/copper_cables.png', this)"><img
+                                    src="assets/products/copper_cables.png"
+                                    style="width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius-md);">
+                            </div>
+                            <div class="thumbnail" onclick="changeImage('assets/products/conveyor.png', this)"><img
+                                    src="assets/products/conveyor.png"
+                                    style="width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius-md);">
+                            </div>
                         </div>
                     </div>
 
@@ -185,7 +198,9 @@
                 <div class="fade-in-up delay-100">
                     <div class="product-info-card">
                         <div class="seller-badge">
-                            <i class="fas fa-check-circle"></i> Verified Seller: Atlas Steel
+                            <img src="assets/logos/atlas_steel.png" alt="Atlas Steel"
+                                style="width: 20px; height: 20px; border-radius: 50%; object-fit: cover;">
+                            Verified Seller: Atlas Steel
                         </div>
 
                         <div style="margin-bottom: 2rem;">
@@ -228,8 +243,10 @@
                     <div class="shadow-box"
                         style="margin-top: 2rem; padding: 1.5rem; display: flex; align-items: center; gap: 1rem; border: 1px solid var(--border-color); box-shadow: var(--shadow-md);">
                         <div
-                            style="width: 60px; height: 60px; background: var(--border-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--primary-color);">
-                            AS</div>
+                            style="width: 60px; height: 60px; background: var(--border-light); border-radius: 50%; overflow: hidden;">
+                            <img src="assets/logos/atlas_steel.png" alt="Atlas Steel"
+                                style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
                         <div>
                             <h4 style="margin: 0; font-weight: 700; color: var(--text-primary);">Atlas Steel SA</h4>
                             <p style="margin: 0; font-size: 0.85rem; color: var(--text-secondary);"><i
@@ -246,16 +263,26 @@
 
     <script src="js/app.js"></script>
     <script>
+        function changeImage(src, el) {
+            document.getElementById('main-product-img').src = src;
+            document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+        }
+
         // Simple mock for product details
         document.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
             const id = params.get('id');
-            // In a real app, you would fetch data here. 
-            // For UI/UX demo, we keep the static content but could swap titles.
+            const mainImg = document.getElementById('main-product-img');
+
             if (id === '2') {
                 document.getElementById('product-title').innerText = "Heavy Duty Forklift - 5 Ton";
                 document.getElementById('product-price').innerHTML = "22,000 MAD";
-                // ... swap other fields
+                mainImg.src = "assets/products/forklift.png";
+            } else if (id === '3') {
+                document.getElementById('product-title').innerText = "Copper Cabling Spools";
+                document.getElementById('product-price').innerHTML = "4.20 MAD";
+                mainImg.src = "assets/products/copper_cables.png";
             }
         });
     </script>
