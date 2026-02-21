@@ -7,6 +7,7 @@
     <title>IBC - Register Step 1</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="js/components.js"></script>
 </head>
 
 <body>
@@ -18,40 +19,41 @@
                 <div class="splash-logo" style="width: 80px; height: 80px; margin-bottom: 2rem;">
                     <!-- Logo SVG inline -->
                     <svg viewBox="0 0 100 100" fill="none" class="fade-in-up">
-                        <circle cx="50" cy="50" r="45" stroke="white" stroke-width="4" />
-                        <path d="M35 50L45 60L65 40" stroke="white" stroke-width="4" stroke-linecap="round"
+                        <circle cx="50" cy="50" r="45" stroke="var(--pure-black)" stroke-width="6" />
+                        <path d="M35 50L45 60L65 40" stroke="var(--pure-black)" stroke-width="6" stroke-linecap="round"
                             stroke-linejoin="round" />
                     </svg>
                 </div>
 
-                <h1 style="color: white; margin-bottom: 1rem;" class="fade-in-up delay-100">Join the Club</h1>
-                <p style="color: rgba(255,255,255,0.85); font-size: 1.15rem; max-width: 400px;"
+                <h1 style="color: var(--pure-black); font-size: 3rem; font-weight: 900; margin-bottom: 1rem;"
+                    class="fade-in-up delay-100">Join the Club</h1>
+                <p style="color: var(--pure-black); font-size: 1.15rem; font-weight: 500; opacity: 0.8; max-width: 400px;"
                     class="fade-in-up delay-200">
-                    Tell us about your business to get verified and start connecting with industry leaders.
+                    Tell us about your business to get verified and start connecting with industry leaders on Fluxence.
                 </p>
 
                 <div class="mt-6 fade-in-up delay-300">
                     <div class="mb-4" style="display: flex; align-items: center; gap: 1rem;">
                         <div
-                            style="width: 40px; height: 40px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                            <i class="fas fa-check" style="color: #fff;"></i>
+                            style="width: 40px; height: 40px; background: var(--pure-black); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 2px 2px 0px var(--primary-color);">
+                            <i class="fas fa-check" style="color: var(--primary-color);"></i>
                         </div>
                         <div>
-                            <h4 style="font-weight: 700;">Verified Network</h4>
-                            <p style="margin: 0; font-size: 0.9rem; opacity: 0.8;">Only registered businesses allowed.
-                            </p>
+                            <h4 style="font-weight: 700; color: var(--pure-black);">Verified Network</h4>
+                            <p style="margin: 0; font-size: 0.9rem; color: var(--pure-black); opacity: 0.7;">Only
+                                registered businesses allowed.</p>
                         </div>
                     </div>
 
                     <div style="display: flex; align-items: center; gap: 1rem;">
                         <div
-                            style="width: 40px; height: 40px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                            <i class="fas fa-shield-alt" style="color: #fff;"></i>
+                            style="width: 40px; height: 40px; background: var(--pure-black); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 2px 2px 0px var(--primary-color);">
+                            <i class="fas fa-shield-alt" style="color: var(--primary-color);"></i>
                         </div>
                         <div>
-                            <h4 style="font-weight: 700;">Secure Data</h4>
-                            <p style="margin: 0; font-size: 0.9rem; opacity: 0.8;">Your information is encrypted &
-                                private.</p>
+                            <h4 style="font-weight: 700; color: var(--pure-black);">Secure Data</h4>
+                            <p style="margin: 0; font-size: 0.9rem; color: var(--pure-black); opacity: 0.7;">Your
+                                information is encrypted & private.</p>
                         </div>
                     </div>
                 </div>
@@ -146,6 +148,9 @@
             </div>
         </div>
     </div>
+
+    <div id="footer-container"></div>
+
     <script src="js/app.js"></script>
 </body>
 

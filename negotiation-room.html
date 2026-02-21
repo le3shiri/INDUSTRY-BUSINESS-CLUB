@@ -9,47 +9,55 @@
     <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="css/negotiations.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="js/components.js"></script>
+    <style>
+        /* Breadcrumbs */
+        .breadcrumbs {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .breadcrumbs a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .breadcrumbs a:hover {
+            color: var(--primary-color);
+        }
+
+        .breadcrumb-sep {
+            color: #cbd5e1;
+            font-size: 0.75rem;
+        }
+    </style>
 </head>
 
 <body>
 
     <div class="layout-dashboard">
-        <aside class="sidebar">
-            <!-- Reused Sidebar -->
-            <div class="sidebar-header">
-                <svg class="sidebar-logo" viewBox="0 0 100 100" fill="none">
-                    <circle cx="50" cy="50" r="45" stroke="#5dbee8" stroke-width="8" />
-                    <path d="M35 50L45 60L65 40" stroke="#336c41" stroke-width="8" stroke-linecap="round"
-                        stroke-linejoin="round" />
-                </svg>
-                <h2 style="font-size: 1.25rem; font-weight: 800; color: var(--text-primary); margin: 0;">Fluxence</h2>
-            </div>
-            <nav class="nav-links">
-                <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i> <span>Dashboard</span></a>
-                <a href="search.html" class="nav-item"><i class="fas fa-search"></i> <span>Search</span></a>
-                <a href="create-listing-step1.html" class="nav-item"><i class="fas fa-box-open"></i> <span>Sell
-                        Items</span></a>
-                <a href="negotiations.html" class="nav-item active"><i class="fas fa-handshake"></i>
-                    <span>Deals</span></a>
-                <a href="#" class="nav-item"><i class="fas fa-user-circle"></i> <span>Profile</span></a>
-            </nav>
-        </aside>
+        <aside id="sidebar-container"></aside>
 
         <main class="main-content" style="padding: 1.5rem;">
 
             <div class="room-container">
                 <!-- Room Header -->
-                <div class="room-header">
-                    <a href="negotiations.html"
-                        style="color: var(--text-secondary); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; font-weight: 600;">
-                        <i class="fas fa-arrow-left"></i> Back
-                    </a>
-                    <div style="text-align: center;">
-                        <h3 id="room-title" style="margin: 0; font-size: 1.1rem; font-weight: 700;">Loading...</h3>
-                        <p id="room-price" style="margin: 0; font-size: 0.9rem; color: var(--text-secondary);">Listing
+                <div class="room-header"
+                    style="flex-direction: column; align-items: flex-start; gap: 1rem; border-bottom: 1px solid var(--border-color); background: var(--white);">
+                    <div id="breadcrumbs-container"></div>
+                    <div style="text-align: left; width: 100%;">
+                        <h3 id="room-title"
+                            style="margin: 0; font-size: 1.5rem; font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em;">
+                            Loading...</h3>
+                        <p id="room-price"
+                            style="margin: 0; font-size: 1rem; color: var(--text-secondary); font-weight: 500;">Listing
                             Price: ...</p>
                     </div>
-                    <div style="width: 24px;"></div> <!-- Spacer -->
                 </div>
 
                 <!-- Timeline -->
@@ -63,12 +71,12 @@
                 </div>
 
                 <!-- Footer Actions -->
-                <div class="room-footer">
+                <div class="room-footer"
+                    style="border-top: 1px solid var(--border-color); background: var(--white); padding: 1.5rem;">
                     <button class="btn btn-secondary" style="width: auto;" onclick="openOfferModal()">
                         <i class="fas fa-plus"></i> <span id="new-offer-text">New Offer</span>
                     </button>
-                    <button class="btn btn-primary" style="width: auto; background: var(--success-color);"
-                        id="accept-btn" onclick="acceptOffer()">
+                    <button class="btn btn-primary" style="width: auto;" id="accept-btn" onclick="acceptOffer()">
                         Accept Deal
                     </button>
                 </div>

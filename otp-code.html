@@ -7,6 +7,7 @@
     <title>IBC - Enter Code</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="js/components.js"></script>
     <style>
         .resend-link {
             transition: color 0.3s;
@@ -30,16 +31,17 @@
             <div class="visual-content">
                 <div class="splash-logo" style="width: 80px; height: 80px; margin-bottom: 2rem;">
                     <svg viewBox="0 0 100 100" fill="none" class="fade-in-up">
-                        <circle cx="50" cy="50" r="45" stroke="white" stroke-width="4" />
-                        <path d="M35 50L45 60L65 40" stroke="white" stroke-width="4" stroke-linecap="round"
+                        <circle cx="50" cy="50" r="45" stroke="var(--pure-black)" stroke-width="6" />
+                        <path d="M35 50L45 60L65 40" stroke="var(--pure-black)" stroke-width="6" stroke-linecap="round"
                             stroke-linejoin="round" />
                     </svg>
                 </div>
 
-                <h1 style="color: white; margin-bottom: 1rem;" class="fade-in-up delay-100">Verification</h1>
-                <p style="color: rgba(255,255,255,0.85); font-size: 1.15rem; max-width: 400px;"
+                <h1 style="color: var(--pure-black); font-size: 3rem; font-weight: 900; margin-bottom: 1rem;"
+                    class="fade-in-up delay-100">Verification</h1>
+                <p style="color: var(--pure-black); font-weight: 500; font-size: 1.15rem; max-width: 400px; opacity: 0.8;"
                     class="fade-in-up delay-200">
-                    Check your SMS for the code we just sent you. It may take a few seconds.
+                    Check your SMS for the Fluxence security code we just sent you. It may take a few seconds.
                 </p>
             </div>
         </div>
@@ -50,7 +52,7 @@
 
                 <div class="fade-in-up mb-6">
                     <div
-                        style="width: 80px; height: 80px; background: #dcfce7; border-radius: 50%; color: #16a34a; font-size: 2rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+                        style="width: 80px; height: 80px; background: var(--pure-black); border-radius: 50%; color: var(--primary-color); font-size: 2rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; box-shadow: 4px 4px 0px var(--primary-color);">
                         <i class="fas fa-envelope-open-text"></i>
                     </div>
                     <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem;">Enter Code</h2>
@@ -87,6 +89,9 @@
             </div>
         </div>
     </div>
+
+    <div id="footer-container"></div>
+
     <script src="js/app.js"></script>
 </body>
 

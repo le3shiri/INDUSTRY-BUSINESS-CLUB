@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="js/components.js"></script>
 </head>
 
 <body>
@@ -19,37 +20,8 @@
     <div class="layout-dashboard">
 
         <!-- Sidebar Navigation -->
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <svg class="sidebar-logo" viewBox="0 0 100 100" fill="none">
-                    <circle cx="50" cy="50" r="45" stroke="#5dbee8" stroke-width="8" />
-                    <path d="M35 50L45 60L65 40" stroke="#336c41" stroke-width="8" stroke-linecap="round"
-                        stroke-linejoin="round" />
-                </svg>
-                <h2 style="font-size: 1.25rem; font-weight: 800; color: var(--text-primary); margin: 0;">Fluxence</h2>
-            </div>
-
-            <nav class="nav-links">
-                <a href="dashboard.html" class="nav-item active"><i class="fas fa-home"></i> <span>Dashboard</span></a>
-                <a href="search.html" class="nav-item"><i class="fas fa-search"></i> <span>Search</span></a>
-                <a href="create-listing-step1.html" class="nav-item"><i class="fas fa-box-open"></i> <span>Sell
-                        Items</span></a>
-                <a href="negotiations.html" class="nav-item"><i class="fas fa-handshake"></i> <span>Deals</span></a>
-                <a href="#" class="nav-item"><i class="fas fa-user-circle"></i> <span>Profile</span></a>
-            </nav>
-
-            <div class="user-profile-mini" onclick="window.location.href='index.html'">
-                <div
-                    style="width: 40px; height: 40px; background: var(--primary-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary-color); font-weight: 700;">
-                    AC
-                </div>
-                <div>
-                    <p style="margin: 0; font-weight: 600; font-size: 0.9rem;">Acme Corp</p>
-                    <p style="margin: 0; font-size: 0.75rem; color: var(--text-secondary);">Enterprise Plan</p>
-                </div>
-                <i class="fas fa-sign-out-alt" style="margin-left: auto; color: var(--text-secondary);"></i>
-            </div>
-        </aside>
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar-container"></aside>
 
         <!-- Main Content -->
         <main class="main-content">
@@ -65,7 +37,7 @@
                     <button class="icon-btn" onclick="toggleFilterSidebar()">
                         <i class="fas fa-sliders-h"></i>
                     </button>
-                    <button class="icon-btn">
+                    <button class="icon-btn" onclick="window.location.href='notifications.html'">
                         <i class="fas fa-bell"></i>
                         <span class="badge">2</span>
                     </button>
@@ -78,12 +50,14 @@
 
             <!-- Welcome Section -->
             <section style="margin-bottom: 2.5rem;">
-                <h1 style="font-size: 2rem; font-weight: 800; color: var(--text-primary); margin-bottom: 0.5rem;">
+                <h1
+                    style="font-size: 2.5rem; font-weight: 800; color: var(--text-primary); margin-bottom: 0.5rem; letter-spacing: -0.02em;">
                     Welcome back, Acme Corp!</h1>
-                <p class="text-secondary">Based on your interests in <strong
-                        style="color: var(--brand-green);">Construction</strong> & <strong
-                        style="color: var(--brand-blue);">Logistics</strong>, we found <strong>2 new matches</strong>
-                    for you.</p>
+                <p class="text-secondary" style="font-size: 1.1rem; font-weight: 500;">Based on your interests in
+                    <strong style="color: var(--primary-color);">Construction</strong> & <strong
+                        style="color: var(--pure-black);">Logistics</strong>, we found <strong>2 new matches</strong>
+                    for you on Fluxence.
+                </p>
             </section>
 
             <!-- Categories Chips -->
@@ -103,10 +77,12 @@
 
                 <!-- Card 1 -->
                 <article class="material-card">
-                    <div class="condition-badge">Very Good</div>
+                    <div class="condition-badge"
+                        style="background: var(--white); color: var(--text-primary); border: 1px solid var(--border-color);">
+                        Very Good</div>
                     <div class="card-img-container">
                         <div
-                            style="width: 100%; height: 100%; background: linear-gradient(120deg, #e2e8f0 0%, #cbd5e1 100%); display: flex; align-items: center; justify-content: center; color: #94a3b8;">
+                            style="width: 100%; height: 100%; background: var(--white); display: flex; align-items: center; justify-content: center; color: var(--primary-color); border-bottom: 1px solid var(--border-color);">
                             <i class="fas fa-cubes fa-3x"></i>
                         </div>
                     </div>
@@ -122,17 +98,20 @@
                                 <div class="price">$850 / ton</div>
                                 <div class="qty">Min: 10 tons</div>
                             </div>
-                            <button class="btn btn-secondary" style="width: auto; padding: 0.5rem 1rem;">View</button>
+                            <button class="btn btn-primary" style="width: auto; padding: 0.5rem 1.5rem;"
+                                onclick="window.location.href='product-detail.html?id=1'">View Item</button>
                         </div>
                     </div>
                 </article>
 
                 <!-- Card 2 -->
                 <article class="material-card">
-                    <div class="condition-badge" style="background: #ecfdf5; color: #059669;">New</div>
+                    <div class="condition-badge"
+                        style="background: var(--primary-color); color: var(--white); border: 1px solid var(--pure-black);">
+                        New</div>
                     <div class="card-img-container">
                         <div
-                            style="width: 100%; height: 100%; background: linear-gradient(120deg, #f0f9ff 0%, #bae6fd 100%); display: flex; align-items: center; justify-content: center; color: #38bdf8;">
+                            style="width: 100%; height: 100%; background: var(--white); display: flex; align-items: center; justify-content: center; color: var(--primary-color); border-bottom: 1px solid var(--border-color);">
                             <i class="fas fa-truck-loading fa-3x"></i>
                         </div>
                     </div>
@@ -148,17 +127,20 @@
                                 <div class="price">$22,000</div>
                                 <div class="qty">1 Unit</div>
                             </div>
-                            <button class="btn btn-secondary" style="width: auto; padding: 0.5rem 1rem;">View</button>
+                            <button class="btn btn-primary" style="width: auto; padding: 0.5rem 1.5rem;"
+                                onclick="window.location.href='product-detail.html?id=2'">View Item</button>
                         </div>
                     </div>
                 </article>
 
                 <!-- Card 3 -->
                 <article class="material-card">
-                    <div class="condition-badge" style="background: #fff7ed; color: #ea580c;">Used</div>
+                    <div class="condition-badge"
+                        style="background: var(--pure-black); color: var(--white); border: 1px solid var(--pure-black);">
+                        Used</div>
                     <div class="card-img-container">
                         <div
-                            style="width: 100%; height: 100%; background: linear-gradient(120deg, #fffbeb 0%, #fde68a 100%); display: flex; align-items: center; justify-content: center; color: #d97706;">
+                            style="width: 100%; height: 100%; background: var(--white); display: flex; align-items: center; justify-content: center; color: var(--primary-color); border-bottom: 1px solid var(--border-color);">
                             <i class="fas fa-bolt fa-3x"></i>
                         </div>
                     </div>
@@ -174,17 +156,20 @@
                                 <div class="price">$4.20 / meter</div>
                                 <div class="qty">Total: 500m</div>
                             </div>
-                            <button class="btn btn-secondary" style="width: auto; padding: 0.5rem 1rem;">View</button>
+                            <button class="btn btn-primary" style="width: auto; padding: 0.5rem 1.5rem;"
+                                onclick="window.location.href='product-detail.html?id=3'">View Item</button>
                         </div>
                     </div>
                 </article>
 
                 <!-- Card 4 -->
                 <article class="material-card">
-                    <div class="condition-badge">Refurbished</div>
+                    <div class="condition-badge"
+                        style="background: var(--white); color: var(--text-primary); border: 1px solid var(--border-color);">
+                        Refurbished</div>
                     <div class="card-img-container">
                         <div
-                            style="width: 100%; height: 100%; background: linear-gradient(120deg, #fae8ff 0%, #e879f9 100%); display: flex; align-items: center; justify-content: center; color: #a21caf;">
+                            style="width: 100%; height: 100%; background: var(--white); display: flex; align-items: center; justify-content: center; color: var(--primary-color); border-bottom: 1px solid var(--border-color);">
                             <i class="fas fa-industry fa-3x"></i>
                         </div>
                     </div>
@@ -199,7 +184,8 @@
                                 <div class="price">$5,500</div>
                                 <div class="qty">1 Set</div>
                             </div>
-                            <button class="btn btn-secondary" style="width: auto; padding: 0.5rem 1rem;">View</button>
+                            <button class="btn btn-primary" style="width: auto; padding: 0.5rem 1.5rem;"
+                                onclick="window.location.href='product-detail.html?id=4'">View Item</button>
                         </div>
                     </div>
                 </article>
@@ -233,7 +219,7 @@
                     or drag and drop</p>
                 <p style="font-size: 0.8rem; color: var(--text-secondary); margin: 0;">PDF, JPG or PNG (max. 5MB)</p>
                 <p id="file-name-1"
-                    style="margin-top: 0.5rem; font-weight: 700; color: var(--brand-green); display: none;"></p>
+                    style="margin-top: 0.5rem; font-weight: 700; color: var(--primary-color); display: none;"></p>
             </div>
         </div>
 
@@ -242,11 +228,11 @@
             <h4 class="modal-section-title">Bank Statement (RIB)</h4>
             <div class="upload-area-themed" onclick="document.getElementById('file-rib').click()">
                 <input type="file" id="file-rib" hidden onchange="showFileName(this, 'file-name-2')">
-                <i class="fas fa-file-invoice-dollar upload-icon"></i>
+                <i class="fas fa-file-invoice-dollar upload-icon" style="opacity: 1;"></i>
                 <p style="font-size: 0.95rem; font-weight: 500; color: var(--text-primary); margin: 0;">Click to upload
                     RIB document</p>
                 <p id="file-name-2"
-                    style="margin-top: 0.5rem; font-weight: 700; color: var(--brand-green); display: none;"></p>
+                    style="margin-top: 0.5rem; font-weight: 700; color: var(--primary-color); display: none;"></p>
             </div>
         </div>
 

@@ -18,17 +18,20 @@
             <div class="splash-logo" style="width: 120px; height: 120px; margin: 0 auto 2rem;">
                 <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"
                     style="animation: pulseSoft 2s infinite;">
-                    <circle cx="50" cy="50" r="45" stroke="#5dbee8" stroke-width="4" />
-                    <path d="M35 50L45 60L65 40" stroke="#5dbee8" stroke-width="4" stroke-linecap="round"
+                    <circle cx="50" cy="50" r="45" stroke="var(--primary-color)" stroke-width="4" />
+                    <path d="M35 50L45 60L65 40" stroke="var(--pure-black)" stroke-width="6" stroke-linecap="round"
                         stroke-linejoin="round" />
-                    <path d="M50 20V30M80 50H70M50 80V70M20 50H30" stroke="#5dbee8" stroke-width="2"
+                    <path d="M50 20V30M80 50H70M50 80V70M20 50H30" stroke="var(--primary-hover)" stroke-width="2"
                         stroke-opacity="0.5" />
                 </svg>
             </div>
 
-            <h1 class="text-primary" style="font-size: 3rem; margin-bottom: 0.5rem; color: var(--primary-color);">IBC
-            </h1>
-            <p class="text-secondary" style="font-size: 1.1rem; margin-bottom: 3rem;">Industry Business Club</p>
+            <h1 class="text-primary"
+                style="font-size: 3.5rem; font-weight: 900; margin-bottom: 0rem; color: var(--pure-black); letter-spacing: -2px;">
+                FLUXENCE</h1>
+            <p class="text-secondary"
+                style="font-size: 1rem; font-weight: 700; color: var(--primary-color); text-transform: uppercase; letter-spacing: 2px;">
+                Industry Business Club</p>
 
             <!-- Custom Loader -->
             <div class="loader-ring">
@@ -42,6 +45,11 @@
         </div>
 
     </div>
+    <script>
+        setTimeout(() => {
+            window.location.href = 'dashboard.html';
+        }, 2200);
+    </script>
     <script src="js/app.js"></script>
 </body>
 

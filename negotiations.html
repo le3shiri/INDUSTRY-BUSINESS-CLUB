@@ -9,35 +9,19 @@
     <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="css/negotiations.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="js/components.js"></script>
 </head>
 
 <body>
 
     <div class="layout-dashboard">
-        <aside class="sidebar">
-            <!-- Reused Sidebar -->
-            <div class="sidebar-header">
-                <svg class="sidebar-logo" viewBox="0 0 100 100" fill="none">
-                    <circle cx="50" cy="50" r="45" stroke="#5dbee8" stroke-width="8" />
-                    <path d="M35 50L45 60L65 40" stroke="#336c41" stroke-width="8" stroke-linecap="round"
-                        stroke-linejoin="round" />
-                </svg>
-                <h2 style="font-size: 1.25rem; font-weight: 800; color: var(--text-primary); margin: 0;">Fluxence</h2>
-            </div>
-            <nav class="nav-links">
-                <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i> <span>Dashboard</span></a>
-                <a href="search.html" class="nav-item"><i class="fas fa-search"></i> <span>Search</span></a>
-                <a href="create-listing-step1.html" class="nav-item"><i class="fas fa-box-open"></i> <span>Sell
-                        Items</span></a>
-                <a href="negotiations.html" class="nav-item active"><i class="fas fa-handshake"></i>
-                    <span>Deals</span></a>
-                <a href="#" class="nav-item"><i class="fas fa-user-circle"></i> <span>Profile</span></a>
-            </nav>
-        </aside>
+        <aside id="sidebar-container"></aside>
 
         <main class="main-content">
             <header style="margin-bottom: 2rem;">
-                <h1 style="font-size: 1.75rem; font-weight: 800; margin-bottom: 1.5rem;">Negotiations</h1>
+                <h1
+                    style="font-size: 2.5rem; font-weight: 800; color: var(--text-primary); margin-bottom: 1.5rem; letter-spacing: -0.02em;">
+                    Negotiations</h1>
 
                 <div class="negotiation-tabs">
                     <div class="tab-pill active" onclick="switchTab('buying')" id="pill-buying">Buying (2)</div>
@@ -55,6 +39,16 @@
                 <!-- Items injected by JS -->
             </div>
 
+
+            <!-- Empty State -->
+            <div id="negotiations-empty-state" class="empty-state" style="display: none;">
+                <i class="fas fa-handshake-slash"></i>
+                <h3>No active negotiations</h3>
+                <p>You don't have any ongoing deals at the moment. Browse the marketplace to start a new negotiation.
+                </p>
+                <button class="btn btn-primary" style="width: auto;" onclick="window.location.href='search.html'">Browse
+                    Marketplace</button>
+            </div>
         </main>
     </div>
 
@@ -101,18 +95,18 @@
             negotiations.forEach(neg => {
                 const card = `
                 <a href="negotiation-room.html?role=${neg.role}&id=${neg.id}" class="negotiation-card">
-                    <div class="neg-thumb"><i class="fas ${neg.icon} fa-2x"></i></div>
+                    <div class="neg-thumb" style="border-right: 1px solid var(--border-color);"><i class="fas ${neg.icon} fa-2x" style="color: var(--primary-color);"></i></div>
                     <div class="neg-info">
-                        <h3 style="font-size: 1.1rem; font-weight: 700; margin: 0 0 0.5rem 0;">${neg.title}</h3>
-                        <div style="font-size: 0.9rem; color: var(--text-secondary); display: flex; gap: 1.5rem;">
+                        <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin: 0 0 0.5rem 0;">${neg.title}</h3>
+                        <div style="font-size: 0.95rem; color: var(--text-secondary); display: flex; gap: 1.5rem; font-weight: 500;">
                             <span>${neg.role === 'buyer' ? 'My Offer' : 'Received Offer'}: <strong style="color: var(--primary-color);">${neg.lastOffer.toLocaleString()} MAD</strong></span>
                             <span>Listing: ${neg.listPrice.toLocaleString()} MAD</span>
                         </div>
                     </div>
-                    <span class="neg-status status-${neg.status}">${neg.status}</span>
-                    <i class="fas fa-chevron-right" style="color: var(--border-color); margin-left: 1rem;"></i>
+                    <span class="neg-status status-${neg.status}" style="font-weight: 700;">${neg.status}</span>
+                    <i class="fas fa-chevron-right" style="color: var(--primary-color); margin-left: 1rem; font-size: 1.2rem;"></i>
                 </a>
-              `;
+                      `;
 
                 if (neg.role === 'buyer') buyList.innerHTML += card;
                 else sellList.innerHTML += card;

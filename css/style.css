@@ -1,45 +1,89 @@
 /* Global CSS & Theming */
 :root {
   /* Brand Colors */
-  --brand-blue: #5dbee8;
-  --brand-green: #336c41;
+  --sprite-green: #00B140;
+  /* Official Sprite Green */
+  --pure-black: #000000;
+  --pure-white: #ffffff;
 
-  /* Primary serves as the main solid color for text/borders/icons where gradient isn't possible */
-  --primary-color: #336c41;
-  --primary-hover: #265230;
+  /* Primary Theme Tokens */
+  --primary-color: var(--sprite-green);
+  --primary-hover: #008f33;
 
-  /* The Main Gradient */
-  --primary-gradient: linear-gradient(135deg, #5dbee8 0%, #336c41 100%);
-  --primary-gradient-hover: linear-gradient(135deg, #4dabd1 0%, #265230 100%);
-
-  --primary-light: #f0fdf4;
-  /* Very light green tint for backgrounds */
-
-  /* Neutrals */
-  --bg-color: #f8fafc;
-  --white: #ffffff;
-  --text-primary: #1e293b;
-  /* Slate 800 */
-  --text-secondary: #64748b;
-  /* Slate 500 */
+  /* Text & Neutral Tokens */
+  --bg-color: var(--pure-white);
+  --white: var(--pure-white);
+  --text-primary: #111827;
+  /* Near black for better readability */
+  --text-secondary: #4b5563;
+  --text-muted: #9ca3af;
   --border-color: #e2e8f0;
+  /* Subtle light grey */
+  --border-light: #f1f5f9;
 
   /* Feedback */
-  --error-color: #ef4444;
-  --success-color: #10b981;
+  --error-color: #d0021b;
+  --success-color: var(--sprite-green);
 
-  /* UI Tokens */
+  /* UI Tokens - Increased for professional soft look */
   --radius-md: 12px;
-  --radius-lg: 20px;
-  --radius-xl: 32px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
 
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-  --shadow-lg: 0 10px 15px -3px rgba(51, 108, 65, 0.15), 0 4px 6px -2px rgba(51, 108, 65, 0.1);
+  /* Shadows - Professional blurred depth */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   --shadow-floating: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 
   --font-main: 'Inter', system-ui, -apple-system, sans-serif;
-  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition: all 0.2s ease-in-out;
+}
+
+/* Footer Section */
+.site-footer {
+  padding: 4rem 2rem 2rem 2rem;
+  background: var(--white);
+  border-top: 1px solid var(--border-color);
+  margin-top: 4rem;
+}
+
+.footer-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3rem;
+}
+
+.footer-logo {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.footer-link {
+  display: block;
+  color: var(--text-secondary);
+  text-decoration: none;
+  margin-bottom: 0.75rem;
+  transition: var(--transition);
+  font-size: 0.9rem;
+}
+
+.footer-link:hover {
+  color: var(--primary-color);
+  transform: translateX(5px);
+}
+
+.footer-title {
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  font-size: 1.1rem;
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
@@ -102,6 +146,39 @@ body {
   animation: fadeInUp 0.6s ease-out forwards;
 }
 
+/* Empty States */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  border: 2px dashed var(--border-color);
+  margin-top: 2rem;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.empty-state i {
+  font-size: 4rem;
+  color: #cbd5e1;
+  margin-bottom: 1.5rem;
+  display: block;
+}
+
+.empty-state h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.empty-state p {
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .delay-100 {
   animation-delay: 0.1s;
 }
@@ -125,7 +202,7 @@ body {
 /* LEFT SIDE: Visual Brand Area */
 .split-visual {
   flex: 0 0 40%;
-  background: var(--primary-gradient);
+  background: var(--primary-color);
   position: relative;
   overflow: hidden;
   color: var(--white);
@@ -254,27 +331,30 @@ body {
 }
 
 .btn-primary {
-  background: var(--primary-gradient);
+  background: var(--primary-color);
   color: var(--white);
-  box-shadow: 0 4px 6px rgba(51, 108, 65, 0.2);
+  border: 1px solid var(--primary-hover);
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-primary:hover {
-  background: var(--primary-gradient-hover);
+  background: var(--primary-hover);
   transform: translateY(-2px);
-  box-shadow: 0 8px 12px rgba(51, 108, 65, 0.3);
+  box-shadow: var(--shadow-md);
 }
 
 .btn-secondary {
-  background: transparent;
-  color: var(--text-secondary);
-  border: 2px solid var(--border-color);
+  background: var(--white);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-secondary:hover {
-  border-color: var(--primary-color);
-  color: var(--primary-color);
-  background: var(--primary-light);
+  background: var(--border-light);
+  border-color: var(--border-color);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
 }
 
 /* Inputs */
@@ -305,7 +385,7 @@ body {
 
 .form-input:focus {
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 4px rgba(51, 108, 65, 0.1);
+  box-shadow: 4px 4px 0px var(--pure-black);
 }
 
 .form-input.error {
@@ -350,7 +430,7 @@ body {
 
 .progress-fill {
   height: 100%;
-  background: var(--primary-gradient);
+  background: var(--primary-color);
   border-radius: 999px;
   transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -391,9 +471,7 @@ body {
 .role-icon {
   font-size: 2.2rem;
   margin-bottom: 1rem;
-  background: -webkit-linear-gradient(135deg, #5dbee8, #336c41);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--primary-color);
   transition: var(--transition);
 }
 
@@ -426,11 +504,10 @@ body {
 }
 
 .pill-option.selected {
-  background: var(--primary-gradient);
+  background: var(--primary-color);
   color: var(--white);
-  border-color: transparent;
-  /* Gradient border trick is hard, keeping simple */
-  box-shadow: 0 4px 10px rgba(51, 108, 65, 0.3);
+  border-color: var(--pure-black);
+  box-shadow: 4px 4px 0px var(--pure-black);
 }
 
 /* OTP */

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence - Secure Payment</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="js/components.js"></script>
+    <style>
+        .payment-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .payment-method-card {
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            margin-bottom: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            background: var(--white);
+        }
+
+        .payment-method-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-md);
+        }
+
+        .payment-method-card.active {
+            border-color: var(--primary-color);
+            background: var(--primary-light);
+            border-width: 2px;
+        }
+
+        .payment-method-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--white);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .payment-method-card.active .payment-method-icon {
+            color: var(--primary-color);
+        }
+
+        .bank-details-box {
+            background: #f8fafc;
+            border: 1px dashed var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .bank-details-box.active {
+            display: block;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+        <aside id="sidebar-container"></aside>
+
+        <main class="main-content">
+            <div class="payment-container">
+                <header style="margin-bottom: 2.5rem; text-align: center;">
+                    <h1 style="font-size: 2rem; font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em;">
+                        Secure Payment</h1>
+                    <p class="text-secondary">Amount Due: <strong style="color: var(--primary-color);">44,337.50
+                            MAD</strong></p>
+                </header>
+
+                <div class="shadow-box" style="padding: 2.5rem;">
+                    <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 2rem;">Select Payment Method</h3>
+
+                    <!-- Method 1: Bank Transfer -->
+                    <div class="payment-method-card active" onclick="selectMethod('bank')">
+                        <div class="payment-method-icon">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <div style="flex: 1;">
+                            <h4 style="margin: 0; font-size: 1rem; font-weight: 700;">Direct Bank Transfer (RIB)</h4>
+                            <p style="margin: 0; font-size: 0.85rem; color: var(--text-secondary);">Ideal for large
+                                industrial volume payments.</p>
+                        </div>
+                        <div class="checkbox-themed"><input type="radio" name="pay-method" checked></div>
+                    </div>
+
+                    <div id="bank-details" class="bank-details-box active">
+                        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">Please
+                            transfer the total amount to the following account:</p>
+                        <div class="detail-row"><span>Beneficiary:</span> <strong>FLUXENCE IBC ESCROW</strong></div>
+                        <div class="detail-row"><span>Bank:</span> <strong>Attijariwafa Bank</strong></div>
+                        <div class="detail-row"><span>RIB:</span> <strong>007 780 0001234567890123 45</strong></div>
+                        <div class="detail-row"><span>Reference:</span> <strong>PO-2024-8842-STEEL</strong></div>
+                        <button class="btn btn-secondary"
+                            style="width: auto; padding: 0.4rem 1rem; font-size: 0.8rem; margin-top: 0.5rem;">
+                            <i class="far fa-copy"></i> Copy Details
+                        </button>
+                    </div>
+
+                    <!-- Method 2: Escrow Guarantee -->
+                    <div class="payment-method-card" onclick="selectMethod('escrow')">
+                        <div class="payment-method-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div style="flex: 1;">
+                            <h4 style="margin: 0; font-size: 1rem; font-weight: 700;">IBC Escrow Wallet</h4>
+                            <p style="margin: 0; font-size: 0.85rem; color: var(--text-secondary);">Funds released only
+                                upon material acceptance.</p>
+                        </div>
+                        <div class="checkbox-themed"><input type="radio" name="pay-method"></div>
+                    </div>
+
+                    <div class="modal-section" style="margin-top: 3rem;">
+                        <h4 class="modal-section-title">Step 2: Upload Proof of Transfer</h4>
+                        <div class="upload-area-themed" onclick="document.getElementById('proof-file').click()">
+                            <input type="file" id="proof-file" hidden
+                                onchange="document.getElementById('file-ready').style.display='block'">
+                            <i class="fas fa-file-invoice-dollar upload-icon"></i>
+                            <p style="font-size: 0.95rem; font-weight: 500; color: var(--text-primary); margin: 0;">
+                                Click to upload transfer receipt (Avis de virement)</p>
+                            <p style="font-size: 0.8rem; color: var(--text-secondary); margin: 0;">PDF or Image format
+                                required.</p>
+                            <p id="file-ready"
+                                style="margin-top: 0.5rem; color: var(--success-color); font-weight: 700; display: none;">
+                                <i class="fas fa-check-circle"></i> receipt_po_8842.pdf ready
+                            </p>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 3rem; display: flex; justify-content: center; gap: 1.5rem;">
+                        <button class="btn btn-secondary" onclick="window.history.back()">Back</button>
+                        <button class="btn btn-primary" style="width: 300px;"
+                            onclick="window.location.href='order-tracking.html'">
+                            Submit Payment Confirmation
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        function selectMethod(method) {
+            document.querySelectorAll('.payment-method-card').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.bank-details-box').forEach(b => b.classList.remove('active'));
+
+            if (method === 'bank') {
+                document.querySelector('.payment-method-card:nth-child(2)').classList.add('active');
+                document.getElementById('bank-details').classList.add('active');
+            }
+        }
+    </script>
+</body>
+
+</html>

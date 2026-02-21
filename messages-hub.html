@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence - Messages Hub</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="js/components.js"></script>
+    <style>
+        .messages-container {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            height: calc(100vh - 160px);
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .chat-list {
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-list-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .chat-item {
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .chat-item:hover {
+            background: var(--bg-color);
+        }
+
+        .chat-item.active {
+            background: var(--primary-light);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .avatar-small {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+
+        .chat-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .chat-name {
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.15rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chat-last-msg {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chat-window {
+            display: flex;
+            flex-direction: column;
+            background: #f8fafc;
+        }
+
+        .chat-window-header {
+            padding: 1rem 1.5rem;
+            background: var(--white);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .msg-bubble {
+            max-width: 70%;
+            padding: 1rem 1.25rem;
+            border-radius: var(--radius-md);
+            font-size: 0.95rem;
+            position: relative;
+        }
+
+        .msg-received {
+            background: var(--white);
+            color: var(--text-primary);
+            align-self: flex-start;
+            border-bottom-left-radius: 0;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .msg-sent {
+            background: var(--primary-gradient);
+            color: var(--white);
+            align-self: flex-end;
+            border-bottom-right-radius: 0;
+            box-shadow: 0 4px 6px rgba(51, 108, 65, 0.1);
+        }
+
+        .chat-input-area {
+            padding: 1.5rem;
+            background: var(--white);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 1rem;
+        }
+
+        @media (max-width: 1024px) {
+            .messages-container {
+                grid-template-columns: 1fr;
+            }
+
+            .chat-list {
+                display: none;
+                /* simple mobile mock: hide list when chat is open */
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+        <aside id="sidebar-container"></aside>
+
+        <main class="main-content" style="padding: 1rem 2rem;">
+            <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                <h1 style="font-size: 1.75rem; font-weight: 800; color: var(--text-primary);">Messages</h1>
+                <div style="font-size: 0.9rem; color: var(--text-secondary);"><i class="fas fa-circle"
+                        style="color: var(--success-color); font-size: 0.5rem;"></i> 2 Members Online</div>
+            </header>
+
+            <div class="messages-container fade-in-up">
+                <!-- Sidebar: Chats -->
+                <div class="chat-list">
+                    <div class="chat-list-header">
+                        <input type="text" class="form-input" placeholder="Search conversations..."
+                            style="padding: 0.6rem 1rem; font-size: 0.9rem;">
+                    </div>
+                    <div style="overflow-y: auto;">
+                        <div class="chat-item active">
+                            <div class="avatar-small" style="background: #bae6fd; color: #0369a1;">AS</div>
+                            <div class="chat-info">
+                                <div class="chat-name">Atlas Steel SA</div>
+                                <div class="chat-last-msg">Can you provide the technical data sheet?</div>
+                            </div>
+                            <span style="font-size: 0.7rem; color: var(--text-secondary);">10:42 AM</span>
+                        </div>
+                        <div class="chat-item">
+                            <div class="avatar-small" style="background: #fef08a; color: #a16207;">BC</div>
+                            <div class="chat-info">
+                                <div class="chat-name">BuildCo Morocco</div>
+                                <div class="chat-last-msg">The order was delivered at 9 AM. Thanks!</div>
+                            </div>
+                            <span style="font-size: 0.7rem; color: var(--text-secondary);">Yesterday</span>
+                        </div>
+                        <div class="chat-item">
+                            <div class="avatar-small" style="background: #fed7aa; color: #9a3412;">LC</div>
+                            <div class="chat-info">
+                                <div class="chat-name">Logistics Central</div>
+                                <div class="chat-last-msg">Quote for transport Casablanca-Tanger.</div>
+                            </div>
+                            <span style="font-size: 0.7rem; color: var(--text-secondary);">2 days ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main: Chat Window -->
+                <div class="chat-window">
+                    <div class="chat-window-header">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div class="avatar-small"
+                                style="width: 40px; height: 40px; background: #bae6fd; color: #0369a1;">AS</div>
+                            <div>
+                                <div style="font-weight: 700; color: var(--text-primary);">Atlas Steel SA</div>
+                                <div style="font-size: 0.75rem; color: var(--success-color); font-weight: 600;">Online
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="icon-btn" onclick="window.location.href='public-profile.html'"><i
+                                    class="fas fa-info-circle"></i></button>
+                            <button class="icon-btn"><i class="fas fa-phone-alt"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="chat-messages">
+                        <div class="msg-bubble msg-received">
+                            Hello! I saw your listing for 'Portland Cement'. Is it still available for bulk order?
+                        </div>
+                        <div class="msg-bubble msg-sent">
+                            Yes, we have 500 tons currently in stock. How much do you need?
+                        </div>
+                        <div class="msg-bubble msg-received">
+                            We need around 100 tons for a site in Tanger. Can you provide the technical data sheet?
+                        </div>
+                    </div>
+
+                    <form class="chat-input-area" onsubmit="event.preventDefault(); alert('Message sent!')">
+                        <button type="button" class="icon-btn"><i class="fas fa-paperclip"></i></button>
+                        <input type="text" class="form-input" placeholder="Type your message..."
+                            style="margin-bottom: 0;">
+                        <button type="submit" class="btn btn-primary" style="width: auto;"><i
+                                class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+
+</html>

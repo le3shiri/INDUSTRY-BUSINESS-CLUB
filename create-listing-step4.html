@@ -9,30 +9,13 @@
     <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="css/wizard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="js/components.js"></script>
 </head>
 
 <body>
 
     <div class="layout-dashboard">
-        <aside class="sidebar">
-            <!-- Reused Sidebar -->
-            <div class="sidebar-header">
-                <svg class="sidebar-logo" viewBox="0 0 100 100" fill="none">
-                    <circle cx="50" cy="50" r="45" stroke="#5dbee8" stroke-width="8" />
-                    <path d="M35 50L45 60L65 40" stroke="#336c41" stroke-width="8" stroke-linecap="round"
-                        stroke-linejoin="round" />
-                </svg>
-                <h2 style="font-size: 1.25rem; font-weight: 800; color: var(--text-primary); margin: 0;">Fluxence</h2>
-            </div>
-            <nav class="nav-links">
-                <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i> <span>Dashboard</span></a>
-                <a href="search.html" class="nav-item"><i class="fas fa-search"></i> <span>Search</span></a>
-                <a href="create-listing-step1.html" class="nav-item active"><i class="fas fa-box-open"></i> <span>Sell
-                        Items</span></a>
-                <a href="#" class="nav-item"><i class="fas fa-handshake"></i> <span>Deals</span></a>
-                <a href="#" class="nav-item"><i class="fas fa-user-circle"></i> <span>Profile</span></a>
-            </nav>
-        </aside>
+        <aside id="sidebar-container"></aside>
 
         <main class="main-content">
             <header style="margin-bottom: 2rem; display: flex; align-items: center; justify-content: space-between;">

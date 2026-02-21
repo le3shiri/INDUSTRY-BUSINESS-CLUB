@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence - Company Directory</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="js/components.js"></script>
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+        <aside id="sidebar-container"></aside>
+
+        <main class="main-content">
+            <header style="margin-bottom: 2.5rem;">
+                <h1 style="font-size: 2.25rem; font-weight: 800; color: var(--text-primary);">Company Directory</h1>
+                <p class="text-secondary">Browse verified industrial partners and suppliers in the network.</p>
+            </header>
+
+            <div class="shadow-box mb-8" style="padding: 1.5rem;">
+                <div style="display: flex; gap: 1rem;">
+                    <div style="flex: 1; position: relative;">
+                        <i class="fas fa-search"
+                            style="position: absolute; left: 1.2rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary);"></i>
+                        <input type="text" class="form-input" placeholder="Search companies by name or industry..."
+                            style="padding-left: 3rem;">
+                    </div>
+                    <select class="form-input" style="width: 200px;">
+                        <option>All Industries</option>
+                        <option>Construction</option>
+                        <option>Metallurgy</option>
+                        <option>Logistics</option>
+                        <option>Manufacturing</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="materials-grid">
+                <!-- Company 1 -->
+                <article class="shadow-box"
+                    style="padding: 2rem; display: flex; flex-direction: column; align-items: center; text-align: center;">
+                    <div
+                        style="width: 80px; height: 80px; background: #e2e8f0; border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 700; color: var(--primary-color); margin-bottom: 1.5rem;">
+                        AS</div>
+                    <h3 style="margin: 0; font-size: 1.25rem; font-weight: 700;">Atlas Steel SA</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0.5rem 0 1.5rem 0;"><i
+                            class="fas fa-th-large"></i> Metallurgy & Steel</p>
+                    <div
+                        style="display: flex; gap: 1.5rem; margin-bottom: 2rem; width: 100%; justify-content: center; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+                        <div><strong style="display: block;">120+</strong><small
+                                style="color: var(--text-secondary);">Deals</small></div>
+                        <div><strong style="display: block;">4.9</strong><small
+                                style="color: var(--text-secondary);">Rating</small></div>
+                    </div>
+                    <button class="btn btn-secondary" style="width: 100%;"
+                        onclick="window.location.href='public-profile.html'">View Profile</button>
+                </article>
+
+                <!-- Company 2 -->
+                <article class="shadow-box"
+                    style="padding: 2rem; display: flex; flex-direction: column; align-items: center; text-align: center;">
+                    <div
+                        style="width: 80px; height: 80px; background: #fef3c7; border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 700; color: #d97706; margin-bottom: 1.5rem;">
+                        ML</div>
+                    <h3 style="margin: 0; font-size: 1.25rem; font-weight: 700;">Maghreb Logistics</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0.5rem 0 1.5rem 0;"><i
+                            class="fas fa-truck"></i> Transport & Logistics</p>
+                    <div
+                        style="display: flex; gap: 1.5rem; margin-bottom: 2rem; width: 100%; justify-content: center; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+                        <div><strong style="display: block;">850+</strong><small
+                                style="color: var(--text-secondary);">Shipments</small></div>
+                        <div><strong style="display: block;">4.8</strong><small
+                                style="color: var(--text-secondary);">Rating</small></div>
+                    </div>
+                    <button class="btn btn-secondary" style="width: 100%;"
+                        onclick="window.location.href='public-profile.html'">View Profile</button>
+                </article>
+
+                <!-- Company 3 -->
+                <article class="shadow-box"
+                    style="padding: 2rem; display: flex; flex-direction: column; align-items: center; text-align: center;">
+                    <div
+                        style="width: 80px; height: 80px; background: #dcfce7; border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 700; color: #16a34a; margin-bottom: 1.5rem;">
+                        CC</div>
+                    <h3 style="margin: 0; font-size: 1.25rem; font-weight: 700;">Casablanca Cement</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0.5rem 0 1.5rem 0;"><i
+                            class="fas fa-hard-hat"></i> Construction Materials</p>
+                    <div
+                        style="display: flex; gap: 1.5rem; margin-bottom: 2rem; width: 100%; justify-content: center; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+                        <div><strong style="display: block;">500+</strong><small
+                                style="color: var(--text-secondary);">Orders</small></div>
+                        <div><strong style="display: block;">5.0</strong><small
+                                style="color: var(--text-secondary);">Rating</small></div>
+                    </div>
+                    <button class="btn btn-secondary" style="width: 100%;"
+                        onclick="window.location.href='public-profile.html'">View Profile</button>
+                </article>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+
+</html>
