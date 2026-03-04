@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fluxence Admin | Centre de Vérification KYC</title>
+    <title>Fluxence Admin | Demandes d'inscription Vendeurs</title>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -174,15 +174,6 @@
             border: 1px solid #fda29b;
         }
 
-        .entity-type {
-            padding: 2px 6px;
-            background: #f2f4f7;
-            color: #344054;
-            border-radius: 4px;
-            font-size: 0.65rem;
-            font-weight: 700;
-        }
-
         /* File Links */
         .doc-link {
             font-size: 0.75rem;
@@ -253,35 +244,35 @@
         <main class="main-content">
             <header class="top-nav">
                 <div>
-                    <h1 style="margin:0; font-size: 1.5rem; font-weight: 700;">Vérification KYC & KYB</h1>
-                    <p style="margin:0; font-size: 0.85rem; color: var(--text-sub);">Contrôle d'identité et validation
-                        de la conformité réglementaire</p>
+                    <h1 style="margin:0; font-size: 1.5rem; font-weight: 700;">Demandes d'inscription Vendeurs</h1>
+                    <p style="margin:0; font-size: 0.85rem; color: var(--text-sub);">Audit des candidatures fournisseurs
+                        et vérification KYB initiale</p>
                 </div>
             </header>
 
             <div class="dashboard-container">
 
-                <!-- KYC Stats -->
+                <!-- Registration Flow Stats -->
                 <div class="stat-grid">
                     <div class="stat-card">
-                        <span class="stat-label">Demandes en attente</span>
-                        <p class="stat-value">12</p>
-                        <span class="stat-subtext" style="color: #b54708;">Priorité Haute</span>
+                        <span class="stat-label">Dossiers en attente</span>
+                        <p class="stat-value">18</p>
+                        <span class="stat-subtext" style="color: #b54708;">+6 depuis 24h</span>
                     </div>
                     <div class="stat-card">
-                        <span class="stat-label">Vérifiés (7 Derniers Jours)</span>
-                        <p class="stat-value">48</p>
-                        <span class="stat-subtext" style="color: #027a48;">+12% vs sem. précédente</span>
+                        <span class="stat-label">Inscriptions Approuvées</span>
+                        <p class="stat-value">142</p>
+                        <span class="stat-subtext" style="color: #027a48;">Taux conversion: 78%</span>
                     </div>
                     <div class="stat-card">
-                        <span class="stat-label">Taux d'Approbation</span>
-                        <p class="stat-value">91.4%</p>
-                        <span class="stat-subtext" style="color: var(--text-sub);">Délai moyen: 2.4h</span>
+                        <span class="stat-label">Dossiers Refusés</span>
+                        <p class="stat-value">14</p>
+                        <span class="stat-subtext" style="color: #b42318;">Non-conformité ICE/RC</span>
                     </div>
                     <div class="stat-card">
-                        <span class="stat-label">Refus Automatisés</span>
-                        <p class="stat-value">4</p>
-                        <span class="stat-subtext" style="color: #b42318;">Anomalies détectées</span>
+                        <span class="stat-label">Délai de traitement</span>
+                        <p class="stat-value">4.2h</p>
+                        <span class="stat-subtext" style="color: #026aa2;">Objectif < 6h</span>
                     </div>
                 </div>
 
@@ -291,18 +282,18 @@
                             <thead>
                                 <tr>
                                     <th>ID Demande / Date</th>
-                                    <th>Utilisateur & Entreprise</th>
-                                    <th>Type Entité</th>
-                                    <th>Détails Légaux (Pays / RC / ICE)</th>
-                                    <th>Documents (RC / TVA / Adresse)</th>
-                                    <th>Mandataire (Nom / ID / Selfie)</th>
-                                    <th>Statut KYC</th>
-                                    <th>Motif de refus (le cas échéant)</th>
-                                    <th style="text-align: right;">Décision Admin</th>
+                                    <th>Candidat (Nom/Email/Tel)</th>
+                                    <th>Entreprise & Secteur</th>
+                                    <th>Localisation & Adresse</th>
+                                    <th>Identifiants (RC / ICE / TVA)</th>
+                                    <th>Représentant & Documents</th>
+                                    <th>Statut Demande</th>
+                                    <th>Motif de refus</th>
+                                    <th style="text-align: right;">Actions Admin</th>
                                 </tr>
                             </thead>
-                            <tbody id="kyc-table-body">
-                                <!-- Injected via JS -->
+                            <tbody id="seller-requests-body">
+                                <!-- JS Injected -->
                             </tbody>
                         </table>
                     </div>
@@ -314,95 +305,91 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            Components.renderAdminSidebar('admin-kyc.html');
+            Components.renderAdminSidebar('admin-seller-requests.html');
 
-            const kycRecords = [
+            const requests = [
                 {
-                    id: 'KYC-8821', user: 'Omar Alami', company: 'Atlas Mining Group', type: 'Entreprise',
-                    legalName: 'Atlas Mining Group SARL', country: 'Maroc',
-                    rc: '91200', ice: '002294911000018', tva: '33811904',
-                    docs: { rc: 'RC_Atlas.pdf', tva: 'TVA_Atlas.pdf', address: 'Facture_Lydec.pdf' },
-                    rep: { name: 'Omar Alami', idDoc: 'ID_Omar_Front.jpg', selfie: 'Selfie_Omar.jpg' },
-                    date: '24/02/2026 à 10:45', status: 'pending', reason: '--'
+                    id: 'REQ-9142', name: 'Omar Alami', company: 'Atlas Mining Group', sector: 'Raw Materials',
+                    email: 'o.alami@atlasmining.ma', phone: '+212 661-443322', country: 'Maroc', city: 'Casablanca',
+                    address: 'Zone Industrielle, Tit Mellil', rc: '84422', ice: '001524388000045', tva: '50221941',
+                    repName: 'Omar Alami', date: '04/03/2026 à 08:30', status: 'pending', reason: '--'
                 },
                 {
-                    id: 'KYC-8822', user: 'Yasmine Benani', company: 'Safi Logistics SA', type: 'Entreprise',
-                    legalName: 'Safi Logistics Global SA', country: 'Maroc',
-                    rc: '11200', ice: '003112299000042', tva: '99011234',
-                    docs: { rc: 'RC_Safi.pdf', tva: 'TVA_Safi.pdf', address: 'Quittance_Loyer.pdf' },
-                    rep: { name: 'Yasmine Benani', idDoc: 'CIN_Yasmine.jpg', selfie: 'Selfie_Yasmine.jpg' },
-                    date: '22/02/2026 à 09:15', status: 'verified', reason: '--'
+                    id: 'REQ-9140', name: 'Reda Hakimi', company: 'BuildIt SA', sector: 'Manufacturing',
+                    email: 'reda@buildit.ma', phone: '+212 663-887766', country: 'Maroc', city: 'Tanger',
+                    address: 'Boulvard Tanger, Lot 4', rc: '91200', ice: '002294911000018', tva: '33811904',
+                    repName: 'Reda Hakimi', date: '03/03/2026 à 14:15', status: 'approved', reason: '--'
                 },
                 {
-                    id: 'KYC-8823', user: 'Mehdi Tazi', company: 'Kenitra Metals', type: 'Individu',
-                    legalName: 'Mehdi Tazi (Auto-entrepreneur)', country: 'Maroc',
-                    rc: '44556', ice: '001994433000091', tva: 'N/A',
-                    docs: { rc: 'AE_Attestation.pdf', tva: '--', address: 'Dom_Bancaire.pdf' },
-                    rep: { name: 'Mehdi Tazi', idDoc: 'Passport_Mehdi.jpg', selfie: 'Selfie_Mehdi.jpg' },
-                    date: '15/01/2026 à 14:00', status: 'refused', reason: 'Documents illisibles (flous)'
+                    id: 'REQ-9138', name: 'Youssef Mansouri', company: 'ElectroParts SARL', sector: 'Supply Chain',
+                    email: 'y.mansouri@electro.ma', phone: '+212 662-110000', country: 'Maroc', city: 'Rabat',
+                    address: 'Hay Riad, Imm 120', rc: '11223', ice: '003112299000022', tva: '99011234',
+                    repName: 'Youssef Mansouri', date: '01/03/2026 à 10:00', status: 'refused', reason: 'RC non valide/expiré'
                 },
                 {
-                    id: 'KYC-8824', user: 'Leila Mansouri', company: 'Intech Solutions', type: 'Entreprise',
-                    legalName: 'Intech Solutions SARL AU', country: 'Maroc',
-                    rc: '77211', ice: '001887722000011', tva: '22114400',
-                    docs: { rc: 'RC_Intech.pdf', tva: 'TVA_Intech.pdf', address: 'Telécom_Rabat.pdf' },
-                    rep: { name: 'Leila Mansouri', idDoc: 'ID_Leila.jpg', selfie: 'Selfie_Leila.jpg' },
-                    date: '02/03/2026 à 11:30', status: 'pending', reason: '--'
+                    id: 'REQ-9135', name: 'Leila Bennani', company: 'Safi Chemical Ltd', sector: 'Chemicals',
+                    email: 'l.bennani@safichem.ma', phone: '+212 665-998877', country: 'Maroc', city: 'Safi',
+                    address: 'Zone OCP, Porte 4', rc: '55667', ice: '001994433000044', tva: '77221100',
+                    repName: 'Hamza Tazi (CEO)', date: '28/02/2026 à 16:45', status: 'pending', reason: '--'
                 }
             ];
 
-            const tbody = document.getElementById('kyc-table-body');
+            const tbody = document.getElementById('seller-requests-body');
 
-            function renderKYC(list) {
-                tbody.innerHTML = list.map(k => `
+            function renderRequests(list) {
+                tbody.innerHTML = list.map(r => `
                     <tr>
                         <td>
-                            <div style="font-weight: 700; color: var(--text-main); font-family: monospace;">${k.id}</div>
-                            <div style="font-size: 0.7rem; color: var(--text-sub);">${k.date}</div>
+                            <div style="font-weight: 700; color: var(--text-main); font-family: monospace;">${r.id}</div>
+                            <div style="font-size: 0.7rem; color: var(--text-sub);">${r.date}</div>
                         </td>
                         <td>
-                            <div style="font-weight: 700;">${k.user}</div>
-                            <div style="font-size: 0.75rem; color: var(--text-sub);">${k.company}</div>
-                        </td>
-                        <td><span class="entity-type">${k.type}</span></td>
-                        <td>
-                            <div style="font-weight: 700; font-size: 0.8rem;">${k.legalName}</div>
-                            <div style="font-size: 0.7rem; color: var(--text-sub);">
-                                ${k.country} • RC: ${k.rc} • ICE: ${k.ice}
-                            </div>
+                            <div style="font-weight: 700;">${r.name}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-sub);">${r.email}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-sub);">${r.phone}</div>
                         </td>
                         <td>
-                            <a href="#" class="doc-link"><i class="fas fa-file-pdf"></i> RC</a>
-                            <a href="#" class="doc-link"><i class="fas fa-file-invoice"></i> TVA: ${k.tva}</a>
-                            <a href="#" class="doc-link"><i class="fas fa-map-marker-alt"></i> Adresse</a>
+                            <div style="font-weight: 700;">${r.company}</div>
+                            <div style="font-size: 0.75rem; color: #026aa2; font-weight: 600;">${r.sector}</div>
                         </td>
                         <td>
-                            <div style="font-weight: 700; font-size: 0.8rem;">${k.rep.name}</div>
+                            <div style="font-weight: 600;">${r.country}, ${r.city}</div>
+                            <div style="font-size: 0.7rem; color: var(--text-sub); max-width: 150px; overflow: hidden; text-overflow: ellipsis;">${r.address}</div>
+                        </td>
+                        <td>
+                            <div style="font-size: 0.75rem;">RC: <strong>${r.rc}</strong></div>
+                            <div style="font-size: 0.75rem;">ICE: <strong>${r.ice}</strong></div>
+                            <div style="font-size: 0.75rem;">TVA: <strong>${r.tva}</strong></div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700; font-size: 0.8rem;">${r.repName}</div>
                             <div style="display:flex; gap: 8px; margin-top: 4px;">
-                                <a href="#" class="doc-link" title="Voir Pièce d'identité"><i class="fas fa-id-card"></i> ID</a>
-                                <a href="#" class="doc-link" title="Voir Selfie"><i class="fas fa-camera"></i> Selfie</a>
+                                <a href="#" class="doc-link" title="Voir Pièce d'identité"><i class="fas fa-id-card"></i> ID Rep.</a>
+                                <a href="#" class="doc-link" title="Voir Dossier Entreprise"><i class="fas fa-file-archive"></i> Dossier Social</a>
                             </div>
                         </td>
                         <td>
-                            <span class="badge badge-${k.status}">${k.status === 'pending' ? 'En attente' : (k.status === 'verified' ? 'Vérifié' : 'Refusé')}</span>
+                            <span class="badge badge-${r.status === 'approved' ? 'verified' : (r.status === 'refused' ? 'refused' : 'pending')}">
+                                ${r.status === 'pending' ? 'En attente' : (r.status === 'approved' ? 'Approuvée' : 'Refusée')}
+                            </span>
                         </td>
-                        <td style="font-size: 0.75rem; color: #b42318; font-style: italic; max-width: 150px; white-space: normal;">
-                            ${k.reason}
+                        <td style="font-size: 0.75rem; color: #b42318; font-style: italic; max-width: 120px; white-space: normal;">
+                            ${r.reason}
                         </td>
                         <td style="text-align: right;">
                             <div class="action-btns">
-                                <button class="btn-icon" title="Voir tous les documents"><i class="fas fa-folder-open"></i></button>
-                                <button class="btn-icon success" title="Approuver KYC"><i class="fas fa-check-circle"></i></button>
-                                <button class="btn-icon danger" title="Refuser KYC"><i class="fas fa-times-circle"></i></button>
+                                <button class="btn-icon" title="Voir dossier complet"><i class="fas fa-folder-open"></i></button>
+                                <button class="btn-icon warning" title="Vérifier documents"><i class="fas fa-clipboard-check"></i></button>
+                                <button class="btn-icon success" title="Approuver inscription"><i class="fas fa-check-circle"></i></button>
+                                <button class="btn-icon danger" title="Refuser inscription"><i class="fas fa-times-circle"></i></button>
                                 <button class="btn-icon warning" title="Demander documents supp."><i class="fas fa-file-signature"></i></button>
-                                <button class="btn-icon danger" title="Suspendre compte"><i class="fas fa-user-slash"></i></button>
                             </div>
                         </td>
                     </tr>
                 `).join('');
             }
 
-            renderKYC(kycRecords);
+            renderRequests(requests);
         });
     </script>
 </body>

@@ -92,7 +92,48 @@ const AdminData = {
             { id: 1, message: 'Acme Corp placed a bid on "Steel Rebars"', time: 'Just now', type: 'info' },
             { id: 2, message: 'Deal Completed between Atlas and BuildIt', time: '14m ago', type: 'success' },
             { id: 3, message: 'Flagged Msg: Potential off-platform mention', time: '42m ago', type: 'error' }
-        ]
+        ],
+        PAYMENTS: [
+            { id: 'PAY-101', company: 'Acme Corp', amount: '25,000 MAD', date: 'Just now', status: 'completed', type: 'Credit' },
+            { id: 'PAY-102', company: 'Safi Logistics', amount: '120,000 MAD', date: '2h ago', status: 'pending', type: 'Payout' },
+            { id: 'PAY-103', company: 'Atlas Cement', amount: '8,500 MAD', date: '5h ago', status: 'failed', type: 'Fee' }
+        ],
+        RECENT_ACTIVITY: [
+            { user: 'Omar Alami', action: 'Nouvelle inscription', time: '5m ago', type: 'signup' },
+            { user: 'Acme Corp', action: 'Nouvelle annonce: Acier Barre', time: '12m ago', type: 'post' },
+            { user: 'Atlas Cement', action: 'Offre d\'achat sur "Sable"', time: '25m ago', type: 'bid' },
+            { user: 'Safi Logistics', action: 'Paiement de 4,500 MAD reçu', time: '1h ago', type: 'payment' }
+        ],
+        RANKINGS: {
+            topSellers: [
+                { name: 'Atlas Cement', deals: 42, volume: '1.2M MAD' },
+                { name: 'Acme Industrial', deals: 38, volume: '950k MAD' },
+                { name: 'BuildIt SA', deals: 25, volume: '450k MAD' }
+            ],
+            topCategories: [
+                { name: 'BTP & Construction', growth: '+15%' },
+                { name: 'Métaux & Mines', growth: '+8%' },
+                { name: 'Énergie', growth: '+22%' }
+            ]
+        },
+        INTELLIGENCE: {
+            timeToClose: '3.4 Jours',
+            conversionRate: '24.5%',
+            avgBids: '5.2',
+            topCategories: [
+                { name: 'Matériaux BTP', value: '850,000 MAD', deals: 12, color: '#00B140' },
+                { name: 'Matières premières', color: '#6366f1', value: '420,000 MAD', deals: 8 },
+                { name: 'Machines Industrielles', color: '#1e293b', value: '1.2M MAD', deals: 3 }
+            ],
+            riskWatch: [
+                { name: 'Kenitra Metals', flags: 14, status: 'suspended', risk: 'CRITIQUE' },
+                { name: 'Atlas Mining Group', flags: 3, status: 'actif', risk: 'FAIBLE' },
+                { name: 'Safi Logistics', flags: 0, status: 'actif', risk: 'AUCUN' }
+            ],
+            monthlyGmv: [400, 600, 800, 1200, 900, 2400],
+            monthlyTransactions: [45, 52, 68, 85, 72, 110],
+            newSignups: [12, 18, 25, 30, 22, 45]
+        }
     },
 
     /**
@@ -166,8 +207,14 @@ const AdminData = {
             activeDeals: deals.length,
             pendingKyc: kyc.length,
             pendingPosts: this.getData(this.KEYS.POSTS).filter(p => p.status === 'pending').length,
-            gmv: '2.4M' // Static mock for now
+            gmv: '2.4M', // Static mock for now
+            avgTimeToClose: this.SEED.INTELLIGENCE.timeToClose,
+            riskScore: 'LOW'
         };
+    },
+
+    getIntelligence: function () {
+        return this.SEED.INTELLIGENCE;
     },
 
     updatePostStatus: function (id, status, remark = '') {

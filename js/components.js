@@ -24,12 +24,18 @@ const Components = {
 
             <nav class="nav-links">
                 <a href="dashboard.html" class="nav-item ${activePage === 'dashboard.html' ? 'active' : ''}"><i class="fas fa-home"></i> <span>Dashboard</span></a>
-                <a href="search.html" class="nav-item ${activePage === 'search.html' ? 'active' : ''}"><i class="fas fa-search"></i> <span>Search</span></a>
-                <a href="create-listing-step1.html" class="nav-item ${activePage === 'create-listing-step1.html' ? 'active' : ''}"><i class="fas fa-box-open"></i> <span>Sell Items</span></a>
-                <a href="negotiations.html" class="nav-item ${activePage === 'negotiations.html' ? 'active' : ''}"><i class="fas fa-handshake"></i> <span>Deals</span></a>
-                <a href="messages-hub.html" class="nav-item ${activePage === 'messages-hub.html' ? 'active' : ''}"><i class="fas fa-comment-alt"></i> <span>Messages</span></a>
-                <a href="company-directory.html" class="nav-item ${activePage === 'company-directory.html' ? 'active' : ''}"><i class="fas fa-building"></i> <span>Companies</span></a>
-                <a href="profile-settings.html" class="nav-item ${activePage === 'profile-settings.html' ? 'active' : ''}"><i class="fas fa-user-circle"></i> <span>Profile</span></a>
+
+                <div class="sidebar-group-title">Marketplace</div>
+                <a href="search.html" class="nav-item ${activePage === 'search.html' ? 'active' : ''}"><i class="fas fa-search"></i> <span>Search Items</span></a>
+                <a href="create-listing-step1.html" class="nav-item ${activePage === 'create-listing-step1.html' ? 'active' : ''}"><i class="fas fa-plus-circle"></i> <span>New Listing</span></a>
+                
+                <div class="sidebar-group-title">Transactions</div>
+                <a href="negotiations.html" class="nav-item ${activePage === 'negotiations.html' ? 'active' : ''}"><i class="fas fa-handshake"></i> <span>Active Deals</span></a>
+                <a href="messages-hub.html" class="nav-item ${activePage === 'messages-hub.html' ? 'active' : ''}"><i class="fas fa-comment-dots"></i> <span>Messages Hub</span></a>
+                
+                <div class="sidebar-group-title">Network</div>
+                <a href="company-directory.html" class="nav-item ${activePage === 'company-directory.html' ? 'active' : ''}"><i class="fas fa-buildings"></i> <span>Company Dir</span></a>
+                <a href="profile-settings.html" class="nav-item ${activePage === 'profile-settings.html' ? 'active' : ''}"><i class="fas fa-user-cog"></i> <span>Account Settings</span></a>
             </nav>
 
             <div style="margin-top: auto; padding: 1rem 1.5rem; border-top: 1px solid var(--border-color);">
@@ -62,39 +68,154 @@ const Components = {
      */
     renderAdminSidebar: function (activePage = 'admin-dashboard.html') {
         const sidebarHTML = `
-            <div class="sidebar-header">
+            <div class="sidebar-header" style="padding: 1.5rem 1.25rem;">
                 <svg class="sidebar-logo" viewBox="0 0 100 100" fill="none">
                     <circle cx="50" cy="50" r="45" stroke="var(--primary-color)" stroke-width="6" />
                     <path d="M35 50L45 60L65 40" stroke="var(--text-primary)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
-                <h2 style="font-size: 1.1rem; font-weight: 700; color: var(--text-primary); margin: 0; letter-spacing: -0.5px;">Fluxence <span style="color: var(--primary-color); font-size: 0.65rem; vertical-align: middle; background: var(--primary-light); padding: 2px 6px; border-radius: 4px; margin-left: 4px;">ADMIN</span></h2>
+                <div style="display: flex; flex-direction: column;">
+                    <h2 style="font-size: 1rem; font-weight: 800; color: var(--text-primary); margin: 0; letter-spacing: -0.5px; line-height: 1;">Fluxence</h2>
+                    <span style="color: var(--primary-color); font-size: 0.6rem; font-weight: 700; text-transform: uppercase; margin-top: 2px;">Admin Console</span>
+                </div>
             </div>
 
             <nav class="nav-links">
-                <a href="admin-dashboard.html" class="nav-item ${activePage.includes('admin-dashboard') ? 'active' : ''}"><i class="fas fa-chart-pie"></i> <span>Overview</span></a>
-                <a href="admin-companies.html" class="nav-item ${activePage.includes('admin-companies') ? 'active' : ''}"><i class="fas fa-building"></i> <span>Companies</span></a>
-                <a href="admin-users.html" class="nav-item ${activePage.includes('admin-users') ? 'active' : ''}"><i class="fas fa-users"></i> <span>Users</span></a>
-                <a href="admin-deals.html" class="nav-item ${activePage.includes('admin-deals') ? 'active' : ''}"><i class="fas fa-handshake"></i> <span>Live Deals</span></a>
-                <a href="admin-posts.html" class="nav-item ${activePage.includes('admin-posts') ? 'active' : ''}"><i class="fas fa-box"></i> <span>Posts Mgt</span> <span class="badge" id="pending-posts-badge" style="position: static; margin-left: auto; display: none;">0</span></a>
-                <a href="admin-kyc.html" class="nav-item ${activePage.includes('admin-kyc') ? 'active' : ''}"><i class="fas fa-shield-alt"></i> <span>KYC Review</span> <span class="badge" style="position: static; margin-left: auto;">5</span></a>
-                <a href="admin-moderation.html" class="nav-item ${activePage.includes('admin-moderation') ? 'active' : ''}"><i class="fas fa-comments"></i> <span>Moderation</span></a>
-                <a href="admin-revenue.html" class="nav-item ${activePage.includes('admin-revenue') ? 'active' : ''}"><i class="fas fa-file-invoice-dollar"></i> <span>Revenue</span></a>
-                <a href="admin-settings.html" class="nav-item ${activePage.includes('admin-settings') ? 'active' : ''}"><i class="fas fa-cog"></i> <span>Settings</span></a>
+                
+                <!-- DROPDOWN: DASHBOARD -->
+                <div class="nav-item nav-item-dropdown-trigger open" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('active')">
+                    <div style="display: flex; align-items: center; gap: 0.85rem;"><i class="fas fa-home"></i> <span>Tableau de bord</span></div>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </div>
+                <div class="nav-dropdown active">
+                    <a href="admin-dashboard.html" class="nav-item ${activePage.includes('admin-dashboard') ? 'active' : ''}">Overview</a>
+                    <a href="admin-intelligence.html" class="nav-item ${activePage.includes('admin-intelligence') ? 'active' : ''}">Statistiques</a>
+                    <a href="admin-activity.html" class="nav-item ${activePage.includes('admin-activity') ? 'active' : ''}">Activité récente</a>
+                </div>
+
+                <!-- DROPDOWN: UTILISATEURS -->
+                <div class="nav-item nav-item-dropdown-trigger open" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('active')">
+                    <div style="display: flex; align-items: center; gap: 0.85rem;"><i class="fas fa-users"></i> <span>Utilisateurs</span></div>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </div>
+                <div class="nav-dropdown active">
+                    <a href="admin-users.html" class="nav-item ${activePage.includes('admin-users') ? 'active' : ''}">Liste des utilisateurs</a>
+                    <a href="admin-companies.html" class="nav-item ${activePage.includes('admin-companies') ? 'active' : ''}">Entreprises</a>
+                    <a href="admin-kyc.html" class="nav-item ${activePage.includes('admin-kyc') ? 'active' : ''}">Vérification KYC</a>
+                    <a href="admin-suspended.html" class="nav-item ${activePage.includes('admin-suspended') ? 'active' : ''}">Comptes suspendus</a>
+                    <a href="admin-settings.html" class="nav-item">Permissions / Rôles</a>
+                </div>
+
+                <!-- DROPDOWN: VENDEURS -->
+                <div class="nav-item nav-item-dropdown-trigger open" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('active')">
+                    <div style="display: flex; align-items: center; gap: 0.85rem;"><i class="fas fa-store"></i> <span>Gestion Vendeurs</span></div>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </div>
+                <div class="nav-dropdown active">
+                    <a href="admin-sellers.html" class="nav-item ${activePage.includes('admin-sellers') ? 'active' : ''}">Liste des vendeurs</a>
+                    <a href="admin-seller-requests.html" class="nav-item ${activePage.includes('admin-seller-requests') ? 'active' : ''}">Demandes d'inscription</a>
+                    <a href="admin-company-verification.html" class="nav-item ${activePage.includes('admin-company-verification') ? 'active' : ''}">Vérification entreprise</a>
+                    <a href="admin-posts.html" class="nav-item">Stocks publiés</a>
+                    <a href="admin-revenue.html" class="nav-item ${activePage.includes('admin-revenue') ? 'active' : ''}">Historique ventes</a>
+                </div>
+
+                <!-- DROPDOWN: PRODUITS -->
+                <div class="nav-item nav-item-dropdown-trigger open" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('active')">
+                    <div style="display: flex; align-items: center; gap: 0.85rem;"><i class="fas fa-boxes"></i> <span>Produits & Stocks</span></div>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </div>
+                <div class="nav-dropdown active">
+                    <a href="admin-all-stocks.html" class="nav-item ${activePage.includes('admin-all-stocks') ? 'active' : ''}">Tous les stocks</a>
+                    <a href="admin-add-stock.html" class="nav-item ${activePage.includes('admin-add-stock') ? 'active' : ''}">Ajouter stock (Admin)</a>
+                    <a href="admin-validate-posts.html" class="nav-item ${activePage.includes('admin-validate-posts') ? 'active' : ''}">Validation annonces</a>
+                    <a href="admin-refused-posts.html" class="nav-item ${activePage.includes('admin-refused-posts') ? 'active' : ''}">Annonces refusées</a>
+                    <a href="admin-moderation.html" class="nav-item">Annonces signalées</a>
+                </div>
+
+                <!-- DROPDOWN: TRANSACTIONS -->
+                <div class="nav-item nav-item-dropdown-trigger open" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('active')">
+                    <div style="display: flex; align-items: center; gap: 0.85rem;"><i class="fas fa-handshake"></i> <span>Transactions</span></div>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </div>
+                <div class="nav-dropdown active">
+                    <a href="admin-deals.html" class="nav-item ${activePage.includes('admin-deals') ? 'active' : ''}">Deals en cours</a>
+                    <a href="admin-deals.html" class="nav-item">Deals validés</a>
+                    <a href="admin-deals.html" class="nav-item">Deals annulés</a>
+                    <a href="admin-revenue.html" class="nav-item">Historique transactions</a>
+                    <a href="admin-moderation.html" class="nav-item">Litiges</a>
+                </div>
+
+                <!-- DROPDOWN: PAIEMENTS -->
+                <div class="nav-item nav-item-dropdown-trigger open" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('active')">
+                    <div style="display: flex; align-items: center; gap: 0.85rem;"><i class="fas fa-credit-card"></i> <span>Finance</span></div>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </div>
+                <div class="nav-dropdown active">
+                    <a href="admin-revenue.html" class="nav-item ${activePage.includes('admin-revenue') ? 'active' : ''}">Paiements reçus</a>
+                    <a href="admin-revenue.html" class="nav-item">Paiements en attente</a>
+                    <a href="admin-revenue.html" class="nav-item">Reversement vendeurs</a>
+                    <a href="admin-revenue.html" class="nav-item">Commissions</a>
+                </div>
+
+                <!-- DROPDOWN: LOGISTIQUE -->
+                <div class="nav-item nav-item-dropdown-trigger open" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('active')">
+                    <div style="display: flex; align-items: center; gap: 0.85rem;"><i class="fas fa-truck"></i> <span>Logistique</span></div>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </div>
+                <div class="nav-dropdown active">
+                    <a href="admin-deals.html" class="nav-item">Expéditions</a>
+                    <a href="admin-deals.html" class="nav-item">Suivi livraison</a>
+                </div>
+
+                <!-- DROPDOWN: FACTURATION -->
+                <div class="nav-item nav-item-dropdown-trigger open" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('active')">
+                    <div style="display: flex; align-items: center; gap: 0.85rem;"><i class="fas fa-file-invoice"></i> <span>Facturation</span></div>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </div>
+                <div class="nav-dropdown active">
+                    <a href="admin-revenue.html" class="nav-item">Factures clients</a>
+                    <a href="admin-revenue.html" class="nav-item">Factures vendeurs</a>
+                    <a href="admin-revenue.html" class="nav-item">Historique</a>
+                </div>
+
+                <!-- DROPDOWN: CATALOGUE -->
+                <div class="nav-item nav-item-dropdown-trigger open" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('active')">
+                    <div style="display: flex; align-items: center; gap: 0.85rem;"><i class="fas fa-tag"></i> <span>Catalogue</span></div>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </div>
+                <div class="nav-dropdown active">
+                    <a href="admin-settings.html" class="nav-item">Catégories</a>
+                    <a href="admin-settings.html" class="nav-item">Sous catégories</a>
+                    <a href="admin-settings.html" class="nav-item">Unités de mesure</a>
+                </div>
+
+                <!-- DROPDOWN: PARAMETRES -->
+                <div class="nav-item nav-item-dropdown-trigger open" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('active')">
+                    <div style="display: flex; align-items: center; gap: 0.85rem;"><i class="fas fa-cog"></i> <span>Paramètres</span></div>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </div>
+                <div class="nav-dropdown active">
+                    <a href="admin-settings.html" class="nav-item ${activePage.includes('admin-settings') ? 'active' : ''}">Configuration plateforme</a>
+                    <a href="admin-settings.html" class="nav-item">Commissions</a>
+                    <a href="admin-settings.html" class="nav-item">Modes de paiement</a>
+                    <a href="admin-settings.html" class="nav-item">Notifications</a>
+                    <a href="admin-settings.html" class="nav-item">CGU / Politique</a>
+                </div>
+
             </nav>
 
-            <div style="margin-top: auto; padding: 1rem 1.5rem; border-top: 1px solid var(--border-color);">
-                <a href="dashboard.html" class="nav-item" style="color: var(--text-secondary); text-decoration: none; display: flex; align-items: center; gap: 0.75rem; font-size: 0.9rem;">
-                    <i class="fas fa-arrow-left"></i> <span>Back to User View</span>
+            <div style="margin-top: auto; padding-bottom: 0.5rem; background: var(--white); border-top: 1px solid var(--border-color);">
+                <a href="dashboard.html" class="nav-item" style="font-size: 0.8rem; opacity: 0.7;">
+                    <i class="fas fa-reply-all" style="font-size: 0.75rem;"></i> <span>Portail Client</span>
                 </a>
-            </div>
-
-            <div class="user-profile-mini">
-                <div style="width: 40px; height: 40px; background: var(--pure-black); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--white); font-weight: 700;">
-                    SA
-                </div>
-                <div>
-                    <p style="margin: 0; font-weight: 600; font-size: 0.9rem;">Super Admin</p>
-                    <p style="margin: 0; font-size: 0.75rem; color: var(--text-secondary);">Root Access</p>
+                
+                <div class="user-profile-mini" style="margin: 0.5rem 1rem 1rem 1rem; padding: 0.75rem; background: var(--border-light); border-radius: 12px; border-top: none;">
+                    <div style="width: 32px; height: 32px; background: var(--primary-color); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--white); font-weight: 800; font-size: 0.8rem; box-shadow: 0 4px 12px rgba(0, 177, 64, 0.2);">
+                        AD
+                    </div>
+                    <div style="overflow: hidden;">
+                        <p style="margin: 0; font-weight: 700; font-size: 0.8rem; color: var(--text-primary);">Super Admin</p>
+                        <p style="margin: 0; font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Root Access</p>
+                    </div>
                 </div>
             </div>
         `;

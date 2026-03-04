@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence Admin | Validation des Annonces</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="js/components.js"></script>
+    <script src="js/admin-data.js"></script>
+
+    <style>
+        :root {
+            --admin-bg: #fcfcfd;
+            --card-border: #eaecf0;
+            --text-main: #101828;
+            --text-sub: #475467;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --primary-corporate: #101828;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--admin-bg);
+            color: var(--text-main);
+            letter-spacing: -0.01em;
+        }
+
+        .main-content {
+            padding: 0;
+            background: var(--admin-bg);
+        }
+
+        .top-nav {
+            background: white;
+            border-bottom: 1px solid var(--card-border);
+            padding: 1.25rem 2.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-container {
+            padding: 2rem 2.5rem;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        /* KPI Grid System */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin: 0;
+        }
+
+        .stat-subtext {
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            display: block;
+        }
+
+        /* Admin Table Styling */
+        .table-outer {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            scrollbar-width: thin;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        .admin-table th {
+            background: #f9fafb;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--card-border);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .admin-table td {
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid var(--card-border);
+            font-size: 0.85rem;
+            vertical-align: middle;
+        }
+
+        /* Verification Checklist */
+        .verif-checklist {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .verif-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        .verif-item i {
+            width: 14px;
+            text-align: center;
+        }
+
+        .verif-success {
+            color: #027a48;
+        }
+
+        .verif-pending {
+            color: #b54708;
+        }
+
+        /* Status & Badges */
+        .badge {
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge-pending {
+            background: #fffaeb;
+            color: #b54708;
+            border: 1px solid #fec84b;
+        }
+
+        .badge-approved {
+            background: #ecfdf3;
+            color: #027a48;
+            border: 1px solid #6ce9a6;
+        }
+
+        .badge-refused {
+            background: #fef3f2;
+            color: #b42318;
+            border: 1px solid #fda29b;
+        }
+
+        /* Document Links */
+        .doc-link {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #026aa2;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-bottom: 2px;
+        }
+
+        .doc-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Actions Shell */
+        .action-btns {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            border: 1px solid var(--card-border);
+            background: white;
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+
+        .btn-icon:hover {
+            border-color: var(--text-main);
+            color: var(--text-main);
+            background: #f9fafb;
+        }
+
+        .btn-icon.success:hover {
+            color: #027a48;
+            border-color: #6ce9a6;
+            background: #ecfdf3;
+        }
+
+        .btn-icon.danger:hover {
+            color: #b42318;
+            border-color: #fda29b;
+            background: #fef3f2;
+        }
+
+        .btn-icon.warning:hover {
+            color: #b54708;
+            border-color: #fec84b;
+            background: #fffaeb;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+        <aside id="sidebar-container"></aside>
+
+        <main class="main-content">
+            <header class="top-nav">
+                <div>
+                    <h1 style="margin:0; font-size: 1.5rem; font-weight: 700;">Validation des Annonces</h1>
+                    <p style="margin:0; font-size: 0.85rem; color: var(--text-sub);">Audit technique et conformité des
+                        nouveaux stocks industriels</p>
+                </div>
+            </header>
+
+            <div class="dashboard-container">
+
+                <!-- Validation Stats -->
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <span class="stat-label">Annonces en attente</span>
+                        <p class="stat-value">42</p>
+                        <span class="stat-subtext" style="color: #b54708;">Priorité Haute</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Temps moyen d'audit</span>
+                        <p class="stat-value">1.8h</p>
+                        <span class="stat-subtext" style="color: #027a48;">Optimisation OK</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Annonces Refusées</span>
+                        <p class="stat-value">12%</p>
+                        <span class="stat-subtext" style="color: #b42318;">Non-conformité technique</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Objectif de Qualité</span>
+                        <p class="stat-value">100%</p>
+                        <span class="stat-subtext" style="color: #026aa2;">Zéro litige post-audit</span>
+                    </div>
+                </div>
+
+                <div class="table-outer">
+                    <div class="table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID / Titre Annonce</th>
+                                    <th>Catégorie / Vendeur</th>
+                                    <th>Quantité / Prix</th>
+                                    <th>Localisation / État</th>
+                                    <th>Documents Foumis</th>
+                                    <th>Checklist État-Civil</th>
+                                    <th>Soumission / Statut</th>
+                                    <th>Commentaires Admin / Motif</th>
+                                    <th style="text-align: right;">Actions Globales</th>
+                                </tr>
+                            </thead>
+                            <tbody id="validation-table-body">
+                                <!-- Data injected via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            Components.renderAdminSidebar('admin-validate-posts.html');
+
+            const validationQueue = [
+                {
+                    id: 'STK-0142', title: 'Bobines Cuivre 2mm', cat: 'Matières Premières', subCat: 'Métaux',
+                    vendeur: 'Omar Alami', company: 'Atlas Mining Group', quantity: 15, unit: 'Tonne',
+                    price: '62,000 MAD', totalValue: '930,000 MAD', country: 'Maroc', city: 'Casablanca',
+                    condition: 'Surplus', desc: 'Acier Inox haute qualité 316L, bobines industrielles...',
+                    submittedAt: '04/03/2026 à 08:30', status: 'pending', reason: '--',
+                    verif: { seller: true, conformity: true, consistency: false, docs: true },
+                    docs: { photos: 4, video: false, tech: true, cert: true }
+                },
+                {
+                    id: 'STK-0140', title: 'Capteur Pression Industriel', cat: 'Équipements', subCat: 'Automatisme',
+                    vendeur: 'Reda Hakimi', company: 'BuildIt SA', quantity: 50, unit: 'Pièce',
+                    price: '850 MAD', totalValue: '42,500 MAD', country: 'Maroc', city: 'Tanger',
+                    condition: 'Neuf', desc: 'Série X-420, précision +/- 0.1 bar, sortie 4-20mA...',
+                    submittedAt: '03/03/2026 à 14:20', status: 'approved', reason: '--',
+                    verif: { seller: true, conformity: true, consistency: true, docs: true },
+                    docs: { photos: 2, video: true, tech: true, cert: true }
+                },
+                {
+                    id: 'STK-0138', title: 'Moteur Industriel WEG 50HP', cat: 'Équipements', subCat: 'Moteurs',
+                    vendeur: 'Mehdi Tazi', company: 'Kenitra Metals', quantity: 2, unit: 'Pièce',
+                    price: '28,000 MAD', totalValue: '56,000 MAD', country: 'Maroc', city: 'Kenitra',
+                    condition: 'Occasion', desc: 'Moteur triphasé hautes performances, révisé.',
+                    submittedAt: '01/03/2026 à 10:00', status: 'refused', reason: 'Fiche technique manquante et prix incohérent.',
+                    verif: { seller: true, conformity: false, consistency: false, docs: false },
+                    docs: { photos: 1, video: false, tech: false, cert: false }
+                }
+            ];
+
+            const tbody = document.getElementById('validation-table-body');
+
+            function renderQueue(list) {
+                tbody.innerHTML = list.map(s => `
+                    <tr>
+                        <td>
+                            <div style="font-weight: 700; color: var(--text-main);">${s.title}</div>
+                            <div style="font-size: 0.7rem; color: var(--text-sub); font-family: monospace;">${s.id}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-sub); white-space: normal; max-width: 200px; margin-top: 4px; font-style: italic;">
+                                "${s.desc.substring(0, 60)}..."
+                            </div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700;">${s.cat}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-sub);">${s.vendeur}</div>
+                            <div style="font-size: 0.7rem; font-weight: 700; color: #026aa2;">${s.company}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700;">${s.quantity} ${s.unit}s</div>
+                            <div style="font-size: 0.75rem; color: #027a48; font-weight: 700;">${s.price} / unit</div>
+                            <div style="font-size: 0.7rem; color: var(--text-sub);">Val: ${s.totalValue}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 600;">${s.country}, ${s.city}</div>
+                            <div style="margin-top: 4px;"><span class="badge" style="background: #f2f4f7; border-color: #eaecf0; color: #344054;">${s.condition}</span></div>
+                        </td>
+                        <td>
+                            <div style="display: flex; flex-direction: column; gap: 2px;">
+                                <a href="#" class="doc-link"><i class="fas fa-camera"></i> ${s.docs.photos} Photos</a>
+                                ${s.docs.video ? `<a href="#" class="doc-link"><i class="fas fa-video"></i> Vidéo OK</a>` : '<span style="font-size:0.65rem; color:#98a2b3;"><i class="fas fa-video"></i> Non fournie</span>'}
+                                <a href="#" class="doc-link"><i class="fas fa-file-pdf"></i> Fiche Tech. ${s.docs.tech ? 'OK' : 'ABS'}</a>
+                                <a href="#" class="doc-link"><i class="fas fa-certificate"></i> Certificats ${s.docs.cert ? 'OK' : 'ABS'}</a>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="verif-checklist">
+                                <span class="verif-item ${s.verif.seller ? 'verif-success' : 'verif-pending'}">
+                                    <i class="fas ${s.verif.seller ? 'fa-check-circle' : 'fa-circle-notch'}"></i> Vendeur Vérifié
+                                </span>
+                                <span class="verif-item ${s.verif.conformity ? 'verif-success' : 'verif-pending'}">
+                                    <i class="fas ${s.verif.conformity ? 'fa-check-circle' : 'fa-circle-notch'}"></i> Conformité Produit
+                                </span>
+                                <span class="verif-item ${s.verif.consistency ? 'verif-success' : 'verif-pending'}">
+                                    <i class="fas ${s.verif.consistency ? 'fa-check-circle' : 'fa-circle-notch'}"></i> Cohérence Prix
+                                </span>
+                                <span class="verif-item ${s.verif.docs ? 'verif-success' : 'verif-pending'}">
+                                    <i class="fas ${s.verif.docs ? 'fa-check-circle' : 'fa-circle-notch'}"></i> Audit Documents
+                                </span>
+                            </div>
+                        </td>
+                        <td>
+                            <div style="font-size: 0.75rem; margin-bottom: 4px;">${s.submittedAt}</div>
+                            <span class="badge badge-${s.status}">
+                                ${s.status === 'pending' ? 'En attente' : (s.status === 'approved' ? 'Approuvée' : 'Refusée')}
+                            </span>
+                        </td>
+                        <td>
+                            <div style="font-size: 0.75rem; color: var(--text-sub); white-space: normal; max-width: 150px;">
+                                ${s.reason === '--' ? 'Aucun commentaire.' : `<span style="color:#b42318; font-weight:700;">Rejeté:</span> ${s.reason}`}
+                            </div>
+                        </td>
+                        <td style="text-align: right;">
+                            <div class="action-btns">
+                                <button class="btn-icon" title="Voir l'annonce complète"><i class="fas fa-external-link-alt"></i></button>
+                                <button class="btn-icon" title="Voir profil vendeur"><i class="fas fa-user-shield"></i></button>
+                                <button class="btn-icon success" title="Approuver"><i class="fas fa-check-double"></i></button>
+                                <button class="btn-icon danger" title="Refuser"><i class="fas fa-ban"></i></button>
+                                <button class="btn-icon warning" title="Demander modification"><i class="fas fa-edit"></i></button>
+                                <button class="btn-icon danger" title="Supprimer"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            renderQueue(validationQueue);
+        });
+    </script>
+</body>
+
+</html>

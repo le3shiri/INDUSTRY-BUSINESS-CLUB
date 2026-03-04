@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fluxence Admin | Gestion des Stocks & Annonces</title>
+    <title>Fluxence Admin | Annonces Refusées</title>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,6 +25,10 @@
             --text-main: #101828;
             --text-sub: #475467;
             --font-main: 'Plus Jakarta Sans', sans-serif;
+            --danger-main: #b42318;
+            --danger-bg: #fef3f2;
+            --warning-main: #b54708;
+            --warning-bg: #fffaeb;
         }
 
         body {
@@ -102,39 +106,6 @@
             display: block;
         }
 
-        /* Unified Table Controls */
-        .table-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .search-container {
-            position: relative;
-            flex: 1;
-            min-width: 300px;
-        }
-
-        .search-container i {
-            position: absolute;
-            left: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-sub);
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 0.6rem 1rem 0.6rem 2.5rem;
-            border: 1px solid var(--card-border);
-            border-radius: 8px;
-            font-family: inherit;
-            font-size: 0.9rem;
-        }
-
         /* Admin Table Styling */
         .table-outer {
             background: white;
@@ -177,7 +148,7 @@
             vertical-align: middle;
         }
 
-        /* Badge Logic */
+        /* Badge & Status Logic */
         .badge {
             padding: 2px 8px;
             border-radius: 6px;
@@ -189,43 +160,28 @@
             gap: 4px;
         }
 
-        .badge-published {
-            background: #ecfdf3;
-            color: #027a48;
-            border: 1px solid #6ce9a6;
-        }
-
-        .badge-pending {
-            background: #fffaeb;
-            color: #b54708;
-            border: 1px solid #fec84b;
-        }
-
         .badge-refused {
-            background: #fef3f2;
-            color: #b42318;
+            background: var(--danger-bg);
+            color: var(--danger-main);
             border: 1px solid #fda29b;
         }
 
-        .badge-expired {
-            background: #f2f4f7;
-            color: #475467;
-            border: 1px solid #eaecf0;
+        .badge-waiting-mod {
+            background: var(--warning-bg);
+            color: var(--warning-main);
+            border: 1px solid #fec84b;
         }
 
-        .badge-sold {
-            background: #f0f9ff;
-            color: #026aa2;
-            border: 1px solid #b9e6fe;
-        }
-
-        .condition-tag {
+        .reason-tag {
             padding: 2px 6px;
             background: #f2f4f7;
             color: #344054;
             border-radius: 4px;
             font-size: 0.65rem;
             font-weight: 700;
+            display: inline-block;
+            margin-bottom: 4px;
+            border: 1px solid #eaecf0;
         }
 
         /* Actions Shell */
@@ -235,8 +191,8 @@
         }
 
         .btn-icon {
-            width: 32px;
-            height: 32px;
+            width: 30px;
+            height: 30px;
             border-radius: 6px;
             border: 1px solid var(--card-border);
             background: white;
@@ -246,6 +202,7 @@
             justify-content: center;
             cursor: pointer;
             transition: all 0.2s;
+            font-size: 0.8rem;
         }
 
         .btn-icon:hover {
@@ -261,15 +218,15 @@
         }
 
         .btn-icon.danger:hover {
-            color: #b42318;
+            color: var(--danger-main);
             border-color: #fda29b;
-            background: #fef3f2;
+            background: var(--danger-bg);
         }
 
-        .btn-icon.warning:hover {
-            color: #b54708;
-            border-color: #fec84b;
-            background: #fffaeb;
+        .btn-icon.info:hover {
+            color: #026aa2;
+            border-color: #b9e6fe;
+            background: #f0f9ff;
         }
     </style>
 </head>
@@ -282,43 +239,40 @@
         <main class="main-content">
             <header class="top-nav">
                 <div>
-                    <h1 style="margin:0; font-size: 1.5rem; font-weight: 700;">Gestion des Stocks & Annonces</h1>
-                    <p style="margin:0; font-size: 0.85rem; color: var(--text-sub);">Contrôle du catalogue industriel et
-                        validation des publications</p>
+                    <h1 style="margin:0; font-size: 1.5rem; font-weight: 700;">Annonces Refusées</h1>
+                    <p style="margin:0; font-size: 0.85rem; color: var(--text-sub);">Gestion des rejets, motifs de
+                        non-conformité et demandes de correction</p>
                 </div>
                 <div style="display: flex; gap: 0.75rem;">
                     <button class="btn btn-secondary" style="border: 1px solid var(--card-border); background: white;">
-                        <i class="fas fa-filter"></i> Tri Avancé
-                    </button>
-                    <button class="btn btn-primary">
-                        <i class="fas fa-plus"></i> Créer Stock (Admin)
+                        <i class="fas fa-file-export"></i> Dossiers Rejetés
                     </button>
                 </div>
             </header>
 
             <div class="dashboard-container">
 
-                <!-- Stock KPIs -->
+                <!-- Refusal Stats -->
                 <div class="stat-grid">
                     <div class="stat-card">
-                        <span class="stat-label">Total Annonces</span>
-                        <p class="stat-value">2,482</p>
-                        <span class="stat-subtext" style="color: #027a48;">+124 cette semaine</span>
+                        <span class="stat-label">Total Refusées</span>
+                        <p class="stat-value">124</p>
+                        <span class="stat-subtext" style="color: var(--danger-main);">Catalogage rejeté</span>
                     </div>
                     <div class="stat-card">
-                        <span class="stat-label">Attente de Validation</span>
-                        <p class="stat-value" style="color: #b54708;">42</p>
-                        <span class="stat-subtext" style="color: #b54708;">Priorité Haute</span>
+                        <span class="stat-label">Attente Modification</span>
+                        <p class="stat-value" style="color: var(--warning-main);">18</p>
+                        <span class="stat-subtext" style="color: var(--warning-main);">Vendeurs notifiés</span>
                     </div>
                     <div class="stat-card">
-                        <span class="stat-label">Valeur du Catalogue</span>
-                        <p class="stat-value">12.8M MAD</p>
-                        <span class="stat-subtext" style="color: var(--text-sub);">Stocks mondiaux</span>
+                        <span class="stat-label">Taux de Rejet</span>
+                        <p class="stat-value">8.4%</p>
+                        <span class="stat-subtext" style="color: #026aa2;">Qualité Fluxence</span>
                     </div>
                     <div class="stat-card">
-                        <span class="stat-label">Taux de Rotation</span>
-                        <p class="stat-value">64%</p>
-                        <span class="stat-subtext" style="color: #027a48;">+8.2% vs mois dernier</span>
+                        <span class="stat-label">Suspicion Fraude</span>
+                        <p class="stat-value" style="color: var(--danger-main);">2</p>
+                        <span class="stat-subtext" style="color: var(--danger-main);">Bloqués définitivement</span>
                     </div>
                 </div>
 
@@ -327,20 +281,21 @@
                         <table class="admin-table">
                             <thead>
                                 <tr>
-                                    <th>ID / Titre Annonce</th>
-                                    <th>Catégorie / Sous-catégorie</th>
+                                    <th>ID / Titre Produit</th>
+                                    <th>Catégorie / Sous-caté.</th>
                                     <th>Vendeur / Entreprise</th>
                                     <th>Quantité / Unité</th>
-                                    <th>Unit Price / Total Valeur</th>
-                                    <th>État / Localisation</th>
-                                    <th>Statut</th>
-                                    <th>Engagement (Vues/Offres)</th>
-                                    <th>Cycle de vie (Pub/Exp)</th>
+                                    <th>Prix Unitaire</th>
+                                    <th>Localisation (Pays / Ville)</th>
+                                    <th>Motif du Refus</th>
+                                    <th>Statut Actuel</th>
+                                    <th>Dates (Soum. / Rejet)</th>
+                                    <th>Commentaire Admin</th>
                                     <th style="text-align: right;">Actions Globales</th>
                                 </tr>
                             </thead>
-                            <tbody id="stocks-table-body">
-                                <!-- JS Injected -->
+                            <tbody id="refused-stocks-body">
+                                <!-- Data injected via JS -->
                             </tbody>
                         </table>
                     </div>
@@ -352,46 +307,50 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            Components.renderAdminSidebar('admin-posts.html');
+            Components.renderAdminSidebar('admin-refused-posts.html');
 
-            const stocks = [
+            const refusedQueue = [
                 {
-                    id: 'STK-9821', title: 'Moteur Industriel WEG 150HP', cat: 'Équipements', subCat: 'Moteurs',
-                    vendeur: 'Omar Alami', company: 'Atlas Mining Group', quantity: 2, unit: 'Pièce',
-                    price: '45,000 MAD', totalValue: '90,000 MAD', condition: 'Neuf',
-                    country: 'Maroc', city: 'Casablanca', status: 'published',
-                    views: 452, offers: 3, publishedAt: '01/03/2026', expiresAt: '01/09/2026'
+                    id: 'STK-0138', title: 'Moteur Industriel WEG 50HP', cat: 'Équipements', subCat: 'Moteurs',
+                    vendeur: 'Mehdi Tazi', company: 'Kenitra Metals', quantity: 2, unit: 'Pièce',
+                    price: '28,000 MAD', country: 'Maroc', city: 'Kenitra',
+                    reason: 'Informations incomplètes', status: 'waiting_mod',
+                    submittedAt: '01/03/2026', refusedAt: '02/03/2026',
+                    comment: 'Fiche technique manquante et photos de mauvaise qualité.'
                 },
                 {
-                    id: 'STK-9822', title: 'Acier Inox 316L - Bobines', cat: 'Matières Premières', subCat: 'Acier',
-                    vendeur: 'Mehdi Tazi', company: 'Kenitra Metals', quantity: 12, unit: 'Tonne',
-                    price: '18,200 MAD', totalValue: '218,400 MAD', condition: 'Surplus',
-                    country: 'Maroc', city: 'Kenitra', status: 'pending',
-                    views: 12, offers: 0, publishedAt: '04/03/2026', expiresAt: '04/09/2026'
+                    id: 'STK-0135', title: 'Bobines Cuivre Grade C', cat: 'Matières Premières', subCat: 'Métaux',
+                    vendeur: 'Youssef Mansouri', company: 'ElectroParts SARL', quantity: 5, unit: 'Tonne',
+                    price: '42,000 MAD', country: 'Maroc', city: 'Rabat',
+                    reason: 'Suspicion fraude', status: 'refused',
+                    submittedAt: '25/02/2026', refusedAt: '26/02/2026',
+                    comment: 'ICE de lentreprise non reconnu, suspicion de faux documents.'
                 },
                 {
-                    id: 'STK-9823', title: 'Excavatrice Caterpillar 320D', cat: 'Engins', subCat: 'Terrassement',
+                    id: 'STK-0130', title: 'Palettes Neutres Occasion', cat: 'Logistique', subCat: 'Manutention',
+                    vendeur: 'Leila Bennani', company: 'Safi Logistics Global', quantity: 500, unit: 'Pièce',
+                    price: '110 MAD', country: 'Maroc', city: 'Safi',
+                    reason: 'Non conformité', status: 'waiting_mod',
+                    submittedAt: '20/02/2026', refusedAt: '21/02/2026',
+                    comment: 'État du produit déclaré comme Neuf alors que les photos montrent de l’occasion.'
+                },
+                {
+                    id: 'STK-0128', title: 'Excavatrice Cat 320D', cat: 'Engins', subCat: 'Chantier',
                     vendeur: 'Hamza El Amrani', company: 'Global Build Inc', quantity: 1, unit: 'Pièce',
-                    price: '1.2M MAD', totalValue: '1.2M MAD', condition: 'Occasion',
-                    country: 'Maroc', city: 'Agadir', status: 'sold',
-                    views: 2841, offers: 14, publishedAt: '12/01/2026', expiresAt: '12/07/2026'
-                },
-                {
-                    id: 'STK-9824', title: 'Palettes Europe Neutres', cat: 'Emballage', subCat: 'Manutention',
-                    vendeur: 'Yasmine Benani', company: 'Safi Logistics Global', quantity: 500, unit: 'Pièce',
-                    price: '120 MAD', totalValue: '60,000 MAD', condition: 'Occasion',
-                    country: 'Maroc', city: 'Safi', status: 'refused',
-                    views: 89, offers: 0, publishedAt: '25/02/2026', expiresAt: '25/08/2026'
+                    price: '850,000 MAD', country: 'Maroc', city: 'Agadir',
+                    reason: 'Description incorrecte', status: 'waiting_mod',
+                    submittedAt: '15/02/2026', refusedAt: '16/02/2026',
+                    comment: 'Logiciel de bord déclaré 2025 alors que le modèle est 2018.'
                 }
             ];
 
-            const tbody = document.getElementById('stocks-table-body');
+            const tbody = document.getElementById('refused-stocks-body');
 
-            function renderStocks(list) {
+            function renderQueue(list) {
                 tbody.innerHTML = list.map(s => `
                     <tr>
                         <td>
-                            <div style="font-weight: 700; color: var(--text-main); font-size: 0.9rem;">${s.title}</div>
+                            <div style="font-weight: 700; color: var(--text-main);">${s.title}</div>
                             <div style="font-size: 0.7rem; color: var(--text-sub); font-family: monospace;">${s.id}</div>
                         </td>
                         <td>
@@ -400,49 +359,50 @@
                         </td>
                         <td>
                             <div style="font-weight: 700;">${s.vendeur}</div>
-                            <div style="font-size: 0.75rem; color: #026aa2; font-weight: 600;">${s.company}</div>
+                            <div style="font-size: 0.7rem; color: #026aa2; font-weight: 700;">${s.company}</div>
                         </td>
-                        <td>
+                        <td style="text-align: center;">
                             <div style="font-weight: 800; font-size: 1rem;">${s.quantity}</div>
                             <div style="font-size: 0.7rem; color: var(--text-sub); text-transform: uppercase;">${s.unit}s</div>
                         </td>
                         <td>
-                            <div style="font-weight: 700; color: #027a48;">${s.price} / unit</div>
-                            <div style="font-size: 0.75rem; color: var(--text-sub);">Total: ${s.totalValue}</div>
+                            <div style="font-weight: 700;">${s.price}</div>
                         </td>
                         <td>
-                            <div style="margin-bottom: 4px;"><span class="condition-tag">${s.condition}</span></div>
-                            <div style="font-size: 0.75rem; color: var(--text-sub);"><i class="fas fa-map-marker-alt"></i> ${s.country}, ${s.city}</div>
+                            <div style="font-size: 0.75rem; font-weight: 600;">${s.country}, ${s.city}</div>
                         </td>
                         <td>
-                            <span class="badge badge-${s.status}">
-                                ${s.status === 'published' ? 'Publiée' : (s.status === 'pending' ? 'En attente' : (s.status === 'sold' ? 'Vendue' : (s.status === 'refused' ? 'Refusée' : 'Expirée')))}
+                            <span class="reason-tag">${s.reason}</span>
+                        </td>
+                        <td>
+                            <span class="badge badge-${s.status === 'refused' ? 'refused' : 'waiting-mod'}">
+                                ${s.status === 'refused' ? 'Refusée Définitivement' : 'En attente de modif.'}
                             </span>
                         </td>
-                        <td style="text-align: center;">
-                            <div style="font-weight: 700;"><i class="fas fa-eye"></i> ${s.views}</div>
-                            <div style="font-size: 0.7rem; color: #026aa2; font-weight: 700;"><i class="fas fa-file-invoice-dollar"></i> ${s.offers} offres</div>
+                        <td>
+                            <div style="font-size: 0.65rem;">Soum: ${s.submittedAt}</div>
+                            <div style="font-size: 0.65rem; color: var(--danger-main);">Rejet: ${s.refusedAt}</div>
                         </td>
                         <td>
-                            <div style="font-size: 0.75rem;">Pub: ${s.publishedAt}</div>
-                            <div style="font-size: 0.75rem; color: #ef4444;">Exp: ${s.expiresAt}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-sub); white-space: normal; max-width: 180px; font-style: italic;">
+                                "${s.comment}"
+                            </div>
                         </td>
                         <td style="text-align: right;">
                             <div class="action-btns">
                                 <button class="btn-icon" title="Voir l'annonce"><i class="fas fa-external-link-alt"></i></button>
-                                <button class="btn-icon" title="Voir vendeur"><i class="fas fa-user"></i></button>
-                                <button class="btn-icon success" title="Valider annonce"><i class="fas fa-check-circle"></i></button>
-                                <button class="btn-icon danger" title="Refuser annonce"><i class="fas fa-times-circle"></i></button>
-                                <button class="btn-icon" title="Modifier annonce"><i class="fas fa-edit"></i></button>
-                                <button class="btn-icon warning" title="Suspendre annonce"><i class="fas fa-pause"></i></button>
-                                <button class="btn-icon danger" title="Supprimer annonce"><i class="fas fa-trash-alt"></i></button>
+                                <button class="btn-icon" title="Voir profil vendeur"><i class="fas fa-user-shield"></i></button>
+                                <button class="btn-icon info" title="Voir motif détaillé"><i class="fas fa-search-plus"></i></button>
+                                <button class="btn-icon success" title="Autoriser modification"><i class="fas fa-edit"></i></button>
+                                <button class="btn-icon success" title="Revalider annonce"><i class="fas fa-check-circle"></i></button>
+                                <button class="btn-icon danger" title="Supprimer définitivement"><i class="fas fa-trash-alt"></i></button>
                             </div>
                         </td>
                     </tr>
                 `).join('');
             }
 
-            renderStocks(stocks);
+            renderQueue(refusedQueue);
         });
     </script>
 </body>

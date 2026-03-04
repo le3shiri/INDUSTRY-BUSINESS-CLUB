@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fluxence Admin | Gestion des Utilisateurs</title>
+    <title>Fluxence Admin | Gestion des Vendeurs</title>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -135,7 +135,7 @@
             font-size: 0.9rem;
         }
 
-        /* High Density Corporate Table */
+        /* Admin Table Styling */
         .table-outer {
             background: white;
             border: 1px solid var(--card-border);
@@ -159,8 +159,8 @@
             background: #f9fafb;
             padding: 0.75rem 1rem;
             text-align: left;
-            font-size: 0.7rem;
-            font-weight: 700;
+            font-size: 0.65rem;
+            font-weight: 800;
             color: var(--text-sub);
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -177,16 +177,12 @@
             vertical-align: middle;
         }
 
-        .admin-table tr:hover td {
-            background: #fcfcfd;
-        }
-
-        /* Status & Tags */
+        /* Badge Logic */
         .badge {
             padding: 2px 8px;
             border-radius: 6px;
-            font-size: 0.7rem;
-            font-weight: 700;
+            font-size: 0.65rem;
+            font-weight: 800;
             text-transform: uppercase;
             display: inline-flex;
             align-items: center;
@@ -196,25 +192,28 @@
         .badge-active {
             background: #ecfdf3;
             color: #027a48;
-        }
-
-        .badge-suspended {
-            background: #fef3f2;
-            color: #b42318;
+            border: 1px solid #6ce9a6;
         }
 
         .badge-pending {
             background: #fffaeb;
             color: #b54708;
+            border: 1px solid #fec84b;
         }
 
-        .badge-verified {
+        .badge-suspended {
+            background: #fef3f2;
+            color: #b42318;
+            border: 1px solid #fda29b;
+        }
+
+        .badge-kyc-verified {
             background: #f0f9ff;
             color: #026aa2;
             border: 1px solid #b9e6fe;
         }
 
-        .badge-unverified {
+        .badge-kyc-pending {
             background: #f2f4f7;
             color: #344054;
             border: 1px solid #eaecf0;
@@ -275,56 +274,59 @@
 <body>
 
     <div class="layout-dashboard">
+        <!-- Sidebar Navigation -->
         <aside id="sidebar-container"></aside>
 
+        <!-- Main Content -->
         <main class="main-content">
             <header class="top-nav">
                 <div>
-                    <h1 style="margin:0; font-size: 1.5rem; font-weight: 700;">Gestion des Utilisateurs</h1>
-                    <p style="margin:0; font-size: 0.85rem; color: var(--text-sub);">Administration des accès et
-                        surveillance des comptes individuels</p>
+                    <h1 style="margin:0; font-size: 1.5rem; font-weight: 700;">Liste des Vendeurs</h1>
+                    <p style="margin:0; font-size: 0.85rem; color: var(--text-sub);">Administration et surveillance des
+                        performances des fournisseurs</p>
                 </div>
             </header>
 
             <div class="dashboard-container">
 
-                <!-- 1. KPI Summary for Users -->
-                <div class="stat-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 2.5rem;">
+                <!-- 1. KPI Summary -->
+                <div class="stat-grid">
                     <div class="stat-card">
-                        <span class="stat-label">Total Utilisateurs</span>
-                        <p class="stat-value">2,945</p>
-                        <span class="stat-subtext" style="color: #027a48;">+12% ce mois</span>
+                        <span class="stat-label">Total Vendeurs</span>
+                        <p class="stat-value">58</p>
+                        <span class="stat-subtext" style="color: #027a48;">+5 ce mois</span>
                     </div>
                     <div class="stat-card">
-                        <span class="stat-label">Comptes Actifs</span>
-                        <p class="stat-value">2,810</p>
-                        <span class="stat-subtext" style="color: var(--text-sub);">95.4% du total</span>
+                        <span class="stat-label">Vendeurs Vérifiés</span>
+                        <p class="stat-value">42</p>
+                        <span class="stat-subtext" style="color: #026aa2;">72% de conformité</span>
                     </div>
                     <div class="stat-card">
-                        <span class="stat-label">En Attente KYC</span>
-                        <p class="stat-value" style="color: #b54708;">84</p>
-                        <span class="stat-subtext" style="color: #b54708;">Action requise</span>
+                        <span class="stat-label">En attente KYC</span>
+                        <p class="stat-value" style="color: #b54708;">6</p>
+                        <span class="stat-subtext" style="color: #b54708;">Priorité Haute</span>
                     </div>
-                    <div class="stat-card">
-                        <span class="stat-label">Comptes Suspendus</span>
-                        <p class="stat-value" style="color: #b42318;">51</p>
-                        <span class="stat-subtext" style="color: #b42318;">Risque modéré</span>
+                    <div class="stat-card" style="border-color: #fda29b;">
+                        <span class="stat-label" style="color: #b42318;">Vendeurs Suspendus</span>
+                        <p class="stat-value" style="color: #b42318;">3</p>
+                        <span class="stat-subtext" style="color: #b42318;">Anomalies détectées</span>
                     </div>
                 </div>
 
+                <!-- 2. Table Controls -->
                 <div class="table-controls">
                     <div class="search-container">
                         <i class="fas fa-search"></i>
-                        <input type="text" id="user-search" class="search-input"
-                            placeholder="Rechercher par nom, email, entreprise ou ID...">
+                        <input type="text" id="seller-search" class="search-input"
+                            placeholder="Rechercher par nom, entreprise, ICE ou ID...">
                     </div>
                     <div style="display: flex; gap: 0.75rem;">
-                        <select class="form-select" id="filter-type"
+                        <select class="form-select" id="filter-sector"
                             style="border-radius: 8px; font-size: 0.85rem; border: 1px solid var(--card-border); padding: 0.5rem 1rem;">
-                            <option value="all">Tous les types</option>
-                            <option value="Acheteur">Acheteurs</option>
-                            <option value="Vendeur">Vendeurs</option>
-                            <option value="Mixte">Mixte (V+A)</option>
+                            <option value="all">Tous les secteurs</option>
+                            <option value="Raw Materials">Matières Premières</option>
+                            <option value="Manufacturing">Manufacturing</option>
+                            <option value="Logistics">Logistique</option>
                         </select>
                         <select class="form-select" id="filter-status"
                             style="border-radius: 8px; font-size: 0.85rem; border: 1px solid var(--card-border); padding: 0.5rem 1rem;">
@@ -336,39 +338,35 @@
                     </div>
                 </div>
 
+                <!-- 3. Table UI -->
                 <div class="table-outer">
                     <div class="table-responsive">
                         <table class="admin-table">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Nom / Prénom</th>
-                                    <th>Entreprise</th>
-                                    <th>Type</th>
-                                    <th>Email</th>
-                                    <th>Téléphone</th>
-                                    <th>Pays / Ville</th>
+                                    <th>ID / Vendeur</th>
+                                    <th>Entreprise / Secteur</th>
+                                    <th>Coordonnées</th>
+                                    <th>Localisation</th>
                                     <th>Statut Compte</th>
-                                    <th>Vérifié</th>
-                                    <th>Inscription</th>
-                                    <th>Dernière connexion</th>
-                                    <th>Annonces</th>
-                                    <th>Achats</th>
-                                    <th>Ventes</th>
-                                    <th>Volume total</th>
+                                    <th>Statut KYC</th>
+                                    <th>Stocks (Tot/Act/Att)</th>
+                                    <th>Ventes / Volume</th>
                                     <th>Litiges</th>
+                                    <th>Historique</th>
                                     <th style="text-align: right;">Actions Admin</th>
                                 </tr>
                             </thead>
-                            <tbody id="users-table-body">
-                                <!-- Injected via JS -->
+                            <tbody id="sellers-table-body">
+                                <!-- Data injected via JS -->
                             </tbody>
                         </table>
                     </div>
 
+                    <!-- Pagination -->
                     <div class="pagination">
-                        <span>Affichage de <strong id="range-start">1</strong> à <strong id="range-end">5</strong> sur
-                            <strong id="total-count">5</strong> utilisateurs</span>
+                        <span>Affichage de <strong id="range-start">1</strong> à <strong id="range-end">4</strong> sur
+                            <strong id="total-count">4</strong> vendeurs</span>
                         <div style="display: flex; gap: 0.5rem;">
                             <button class="btn btn-secondary"
                                 style="padding: 0.4rem 1rem; font-size: 0.8rem;">Précédent</button>
@@ -382,56 +380,71 @@
         </main>
     </div>
 
-    <!-- Modals or Context Menus could go here -->
-
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            Components.renderAdminSidebar('admin-users.html');
+            Components.renderAdminSidebar('admin-sellers.html');
 
-            // Expanded Mock Data to fulfill all 18 requested columns
-            const users = [
-                { id: 'USR-2941', name: 'Omar Alami', company: 'Atlas Mining Group', type: 'Mixte', email: 'o.alami@atlasmining.ma', phone: '+212 661-443322', country: 'Maroc', city: 'Casablanca', status: 'active', verifiedCo: true, joined: '12/01/2026', lastLogin: 'Il y a 2 min', ads: 14, purchases: 8, sales: 42, volume: '1.2M MAD', disputes: 0 },
-                { id: 'USR-2942', name: 'Yasmine Benani', company: 'Safi Logistics SA', type: 'Acheteur', email: 'yasmine@safilogistics.ma', phone: '+212 662-118899', country: 'Maroc', city: 'Safi', status: 'active', verifiedCo: true, joined: '22/02/2026', lastLogin: 'Il y a 1h', ads: 0, purchases: 25, sales: 0, volume: '450k MAD', disputes: 1 },
-                { id: 'USR-2943', name: 'Reda Hakimi', company: 'BuildIt SA', type: 'Vendeur', email: 'reda@buildit.ma', phone: '+212 663-887766', country: 'Maroc', city: 'Tanger', status: 'pending', verifiedCo: false, joined: '24/02/2026', lastLogin: 'Hier', ads: 8, purchases: 0, sales: 12, volume: '185k MAD', disputes: 0 },
-                { id: 'USR-2944', name: 'Mehdi Tazi', company: 'Kenitra Metals', type: 'Mixte', email: 'm.tazi@kmetals.ma', phone: '+212 664-990011', country: 'Maroc', city: 'Kenitra', status: 'suspended', verifiedCo: true, joined: '15/01/2026', lastLogin: 'Il y a 3 jours', ads: 45, purchases: 4, sales: 110, volume: '2.8M MAD', disputes: 14 },
-                { id: 'USR-2945', name: 'Leila Mansouri', company: 'Intech Solutions', type: 'Acheteur', email: 'leila@intech.ma', phone: '+212 665-223344', country: 'Maroc', city: 'Rabat', status: 'active', verifiedCo: false, joined: '01/03/2026', lastLogin: 'À l\'instant', ads: 0, purchases: 2, sales: 0, volume: '15k MAD', disputes: 0 }
+            const sellers = [
+                { id: 'SEL-001', name: 'Omar Alami', company: 'Atlas Mining Group', sector: 'Raw Materials', email: 'o.alami@atlasmining.ma', phone: '+212 661-443322', country: 'Maroc', city: 'Casablanca', status: 'active', kyc: 'verified', adsTotal: 14, adsActive: 12, adsPending: 2, sales: 42, volume: '1.2M MAD', disputes: 0, joined: '12/01/2026', lastActive: 'Il y a 2 min' },
+                { id: 'SEL-002', name: 'Reda Hakimi', company: 'BuildIt SA', sector: 'Manufacturing', email: 'reda@buildit.ma', phone: '+212 663-887766', country: 'Maroc', city: 'Tanger', status: 'pending', kyc: 'pending', adsTotal: 8, adsActive: 0, adsPending: 8, sales: 0, volume: '0 MAD', disputes: 0, joined: '24/02/2026', lastActive: 'Hier' },
+                { id: 'SEL-003', name: 'Mehdi Tazi', company: 'Kenitra Metals', sector: 'Manufacturing', email: 'm.tazi@kmetals.ma', phone: '+212 664-990011', country: 'Maroc', city: 'Kenitra', status: 'suspended', kyc: 'verified', adsTotal: 45, adsActive: 0, adsPending: 0, sales: 110, volume: '2.8M MAD', disputes: 14, joined: '15/01/2026', lastActive: 'Il y a 3 jours' },
+                { id: 'SEL-004', name: 'Hamza El Amrani', company: 'Global Fab Inc', sector: 'Logistics', email: 'h.elamrani@globalfab.ma', phone: '+212 665-001122', country: 'Maroc', city: 'Agadir', status: 'active', kyc: 'verified', adsTotal: 22, adsActive: 20, adsPending: 2, sales: 18, volume: '850k MAD', disputes: 1, joined: '05/02/2026', lastActive: 'Il y a 1h' }
             ];
 
-            const tbody = document.getElementById('users-table-body');
+            const tbody = document.getElementById('sellers-table-body');
 
-            function renderUsers(list) {
-                tbody.innerHTML = list.map(u => `
+            function renderSellers(list) {
+                tbody.innerHTML = list.map(s => `
                     <tr>
-                        <td style="font-family: monospace; font-weight: 700; color: var(--text-sub);">${u.id}</td>
-                        <td>
-                            <div style="font-weight: 700; color: var(--text-main);">${u.name}</div>
+                        <td style="font-family: monospace; font-weight: 700; color: var(--text-sub);">
+                            ${s.id}
+                            <div style="font-size: 0.85rem; color: var(--text-main); font-family: var(--font-main);">${s.name}</div>
                         </td>
-                        <td><div style="font-weight: 600;">${u.company}</div></td>
-                        <td><span style="font-size: 0.8rem; font-weight: 600; color: var(--text-sub);">${u.type}</span></td>
-                        <td>${u.email}</td>
-                        <td style="font-family: monospace;">${u.phone}</td>
                         <td>
-                            <div style="font-weight: 600;">${u.country}</div>
-                            <div style="font-size: 0.75rem; color: var(--text-sub);">${u.city}</div>
+                            <div style="font-weight: 700;">${s.company}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-sub);">${s.sector}</div>
                         </td>
-                        <td><span class="badge badge-${u.status}">${u.status === 'active' ? 'Actif' : (u.status === 'suspended' ? 'Suspendu' : 'En attente')}</span></td>
-                        <td><span class="badge ${u.verifiedCo ? 'badge-verified' : 'badge-unverified'}">${u.verifiedCo ? 'OUI' : 'NON'}</span></td>
-                        <td>${u.joined}</td>
-                        <td style="font-size: 0.8rem; color: var(--text-sub);">${u.lastLogin}</td>
-                        <td style="text-align: center; font-weight: 700;">${u.ads}</td>
-                        <td style="text-align: center; font-weight: 700;">${u.purchases}</td>
-                        <td style="text-align: center; font-weight: 700;">${u.sales}</td>
-                        <td style="font-weight: 800; color: var(--text-main);">${u.volume}</td>
+                        <td>
+                            <div style="font-size: 0.85rem;">${s.email}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-sub);">${s.phone}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 600;">${s.country}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-sub);">${s.city}</div>
+                        </td>
+                        <td>
+                            <span class="badge ${s.status === 'active' ? 'badge-active' : (s.status === 'suspended' ? 'badge-suspended' : 'badge-pending')}">
+                                ${s.status === 'active' ? 'Actif' : (s.status === 'suspended' ? 'Suspendu' : 'En attente')}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge ${s.kyc === 'verified' ? 'badge-kyc-verified' : 'badge-kyc-pending'}">
+                                ${s.kyc === 'verified' ? 'Vérifié' : 'En attente'}
+                            </span>
+                        </td>
                         <td style="text-align: center;">
-                            <span style="font-weight: 700; color: ${u.disputes > 0 ? '#b42318' : '#667085'};">${u.disputes}</span>
+                            <div style="font-weight: 700; color: var(--text-main);">${s.adsTotal}</div>
+                            <div style="font-size: 0.7rem; color: var(--text-sub);">Act: ${s.adsActive} / Att: ${s.adsPending}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700;">${s.sales} ventes</div>
+                            <div style="font-size: 0.75rem; color: var(--text-sub);">${s.volume}</div>
+                        </td>
+                        <td style="text-align: center;">
+                            <span style="font-weight: 700; color: ${s.disputes > 0 ? '#b42318' : '#667085'};">${s.disputes}</span>
+                        </td>
+                        <td>
+                            <div style="font-size: 0.75rem;">Inscrit: ${s.joined}</div>
+                            <div style="font-size: 0.7rem; color: var(--text-sub);">Activ: ${s.lastActive}</div>
                         </td>
                         <td style="text-align: right;">
                             <div class="action-btns">
-                                <button class="btn-icon" title="Voir profil"><i class="fas fa-eye"></i></button>
-                                <button class="btn-icon" title="Modifier"><i class="fas fa-edit"></i></button>
+                                <button class="btn-icon" title="Voir profil vendeur"><i class="fas fa-id-card"></i></button>
+                                <button class="btn-icon" title="Voir annonces"><i class="fas fa-boxes"></i></button>
+                                <button class="btn-icon" title="Voir transactions"><i class="fas fa-handshake"></i></button>
                                 <button class="btn-icon success" title="Vérifier compte"><i class="fas fa-user-check"></i></button>
-                                <button class="btn-icon danger" title="Suspendre compte"><i class="fas fa-user-slash"></i></button>
-                                <button class="btn-icon danger" title="Supprimer compte"><i class="fas fa-trash-alt"></i></button>
+                                <button class="btn-icon danger" title="Suspendre vendeur"><i class="fas fa-user-slash"></i></button>
+                                <button class="btn-icon danger" title="Supprimer vendeur"><i class="fas fa-trash-alt"></i></button>
                             </div>
                         </td>
                     </tr>
@@ -442,34 +455,34 @@
                 document.getElementById('range-end').textContent = list.length;
             }
 
-            renderUsers(users);
+            renderSellers(sellers);
 
             // Filtering & Search
-            const searchInput = document.getElementById('user-search');
-            const typeFilter = document.getElementById('filter-type');
+            const searchInput = document.getElementById('seller-search');
+            const sectorFilter = document.getElementById('filter-sector');
             const statusFilter = document.getElementById('filter-status');
 
             function applyFilters() {
                 const search = searchInput.value.toLowerCase();
-                const type = typeFilter.value;
+                const sector = sectorFilter.value;
                 const status = statusFilter.value;
 
-                const filtered = users.filter(u => {
-                    const matchesSearch = u.name.toLowerCase().includes(search) ||
-                        u.email.toLowerCase().includes(search) ||
-                        u.company.toLowerCase().includes(search) ||
-                        u.id.toLowerCase().includes(search);
-                    const matchesType = type === 'all' || u.type === type;
-                    const matchesStatus = status === 'all' || u.status === status;
+                const filtered = sellers.filter(s => {
+                    const matchesSearch = s.name.toLowerCase().includes(search) ||
+                        s.company.toLowerCase().includes(search) ||
+                        s.email.toLowerCase().includes(search) ||
+                        s.id.toLowerCase().includes(search);
+                    const matchesSector = sector === 'all' || s.sector === sector;
+                    const matchesStatus = status === 'all' || s.status === status;
 
-                    return matchesSearch && matchesType && matchesStatus;
+                    return matchesSearch && matchesSector && matchesStatus;
                 });
 
-                renderUsers(filtered);
+                renderSellers(filtered);
             }
 
             searchInput.addEventListener('input', applyFilters);
-            typeFilter.addEventListener('change', applyFilters);
+            sectorFilter.addEventListener('change', applyFilters);
             statusFilter.addEventListener('change', applyFilters);
         });
     </script>
