@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence Admin | Liens d’invitation</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="js/components.js"></script>
+    <script src="js/admin-data.js"></script>
+
+    <style>
+        :root {
+            --admin-bg: #fcfcfd;
+            --card-border: #eaecf0;
+            --text-main: #101828;
+            --text-sub: #475467;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --primary-corporate: #101828;
+            --success-main: #027a48;
+            --success-bg: #ecfdf3;
+            --warning-main: #b54708;
+            --warning-bg: #fffaeb;
+            --danger-main: #b42318;
+            --danger-bg: #fef3f2;
+            --info-main: #026aa2;
+            --info-bg: #f0f9ff;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--admin-bg);
+            color: var(--text-main);
+            letter-spacing: -0.01em;
+        }
+
+        .main-content {
+            padding: 0;
+            background: var(--admin-bg);
+        }
+
+        .top-nav {
+            background: white;
+            border-bottom: 1px solid var(--card-border);
+            padding: 1.25rem 2.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-container {
+            padding: 2.5rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* KPI Grid */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin: 0;
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.25rem;
+            align-items: flex-end;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .filter-label {
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+        }
+
+        .filter-control {
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            font-family: inherit;
+            font-size: 0.85rem;
+            color: var(--text-main);
+        }
+
+        /* Table Design */
+        .table-outer {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            overflow-x: auto;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        .admin-table th {
+            background: #f9fafb;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .admin-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--card-border);
+            font-size: 0.85rem;
+            vertical-align: middle;
+        }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge-active {
+            background: var(--success-bg);
+            color: var(--success-main);
+        }
+
+        .badge-disabled {
+            background: #f2f4f7;
+            color: var(--text-sub);
+        }
+
+        .badge-expired {
+            background: var(--danger-bg);
+            color: var(--danger-main);
+        }
+
+        .type-badge {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            background: #f0f9ff;
+            color: #026aa2;
+            border: 1px solid #b9e6fe;
+        }
+
+        /* Actions */
+        .action-btns {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: flex-end;
+        }
+
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            background: white;
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-icon:hover {
+            background: #f9fafb;
+            color: var(--text-main);
+            border-color: var(--text-main);
+        }
+
+        .btn-icon.copy:hover {
+            color: var(--info-main);
+            border-color: var(--info-main);
+        }
+
+        .btn-filter {
+            height: 42px;
+            padding: 0 1.5rem;
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            color: var(--text-main);
+        }
+
+        .btn-filter:hover {
+            background: #f9fafb;
+            border-color: var(--text-main);
+        }
+
+        .url-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            max-width: 200px;
+        }
+
+        .url-text {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: var(--info-main);
+            font-size: 0.8rem;
+            font-family: monospace;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+        <aside id="sidebar-container"></aside>
+
+        <main class="main-content">
+            <header class="top-nav">
+                <div>
+                    <h1 style="margin:0; font-size: 1.5rem; font-weight: 700;">Gestion des Liens d'Invitation</h1>
+                    <p style="margin:0; font-size: 0.85rem; color: var(--text-sub);">Contrôle des accès restrictifs et
+                        onboarding privilégié</p>
+                </div>
+                <div style="display: flex; gap: 0.75rem; align-items: center;">
+                    <button class="btn btn-primary" id="create-invite-btn"
+                        style="display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px;"><i
+                            class="fas fa-plus"></i> Créer un lien d'invitation</button>
+                </div>
+            </header>
+
+            <div class="dashboard-container">
+
+                <!-- KPI Overview -->
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <span class="stat-label">Liens Actifs</span>
+                        <p class="stat-value">12</p>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Inscriptions via Liens</span>
+                        <p class="stat-value">342</p>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Invitations Expirées</span>
+                        <p class="stat-value">45</p>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Taux d'utilisation</span>
+                        <p class="stat-value">72%</p>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label class="filter-label">Recherche</label>
+                        <input type="text" class="filter-control" placeholder="Code ou créateur...">
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Statut</label>
+                        <select class="filter-control">
+                            <option value="">Tous les statuts</option>
+                            <option value="active">Actif</option>
+                            <option value="disabled">Désactivé</option>
+                            <option value="expired">Expiré</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Type d'accès</label>
+                        <select class="filter-control">
+                            <option value="">Tous les types</option>
+                            <option value="buyer">Acheteur</option>
+                            <option value="seller">Vendeur</option>
+                            <option value="both">Les deux</option>
+                        </select>
+                    </div>
+                    <button class="btn-filter"><i class="fas fa-search"></i> Filtrer</button>
+                </div>
+
+                <!-- Data Table -->
+                <div class="table-outer">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Code Invitation</th>
+                                <th>Créé par</th>
+                                <th>Accès Autorisé</th>
+                                <th>URL d'invitation</th>
+                                <th>Utilisations (Restant/Max)</th>
+                                <th>Inscrits</th>
+                                <th>Entreprises</th>
+                                <th>Dates</th>
+                                <th>Statut</th>
+                                <th style="text-align: right;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="invite-links-body">
+                            <!-- Populated via script -->
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            Components.renderAdminSidebar('admin-invite-links.html');
+
+            const inviteLinks = [
+                {
+                    id: 'LNK-2001',
+                    code: 'FLUX-VIP-2026',
+                    author: 'Admin Sarah',
+                    access: 'Les deux',
+                    url: 'https://fluxence.com/inv/FLUX-VIP-2026',
+                    usage: { current: 42, remaining: 8, max: 50 },
+                    registered: 42,
+                    allowedCompanies: 'Apple, Google, MSFT',
+                    dates: { created: '01/03/2026', expires: '01/06/2026' },
+                    status: 'Actif'
+                },
+                {
+                    id: 'LNK-2002',
+                    code: 'BUYER-ONLY-MA',
+                    author: 'Admin Reda',
+                    access: 'Acheteur',
+                    url: 'https://fluxence.com/inv/BUYER-ONLY-MA',
+                    usage: { current: 150, remaining: 0, max: 150 },
+                    registered: 150,
+                    allowedCompanies: 'Tout Maroc',
+                    dates: { created: '15/02/2026', expires: '15/05/2026' },
+                    status: 'Expiré'
+                },
+                {
+                    id: 'LNK-2003',
+                    code: 'PARTNER-VND-99',
+                    author: 'Super Admin',
+                    access: 'Vendeur',
+                    url: 'https://fluxence.com/inv/PARTNER-VND-99',
+                    usage: { current: 5, remaining: 20, max: 25 },
+                    registered: 5,
+                    allowedCompanies: 'Libre',
+                    dates: { created: '04/03/2026', expires: '04/04/2026' },
+                    status: 'Actif'
+                },
+                {
+                    id: 'LNK-2004',
+                    code: 'TEMP-OFF-X',
+                    author: 'Admin Sarah',
+                    access: 'Les deux',
+                    url: 'https://fluxence.com/inv/TEMP-OFF-X',
+                    usage: { current: 0, remaining: 10, max: 10 },
+                    registered: 0,
+                    allowedCompanies: 'Libre',
+                    dates: { created: '01/03/2026', expires: '01/03/2027' },
+                    status: 'Désactivé'
+                }
+            ];
+
+            const tbody = document.getElementById('invite-links-body');
+
+            function renderInvites(list) {
+                tbody.innerHTML = list.map(item => `
+                    <tr>
+                        <td style="font-family: monospace; font-weight: 700; color: var(--text-sub);">${item.id}</td>
+                        <td style="font-weight: 700;">${item.code}</td>
+                        <td style="font-size: 0.8rem;">${item.author}</td>
+                        <td><span class="type-badge">${item.access}</span></td>
+                        <td>
+                            <div class="url-box">
+                                <span class="url-text">${item.url}</span>
+                                <button class="btn-icon copy" title="Copier lien"><i class="fas fa-copy" style="font-size: 0.7rem;"></i></button>
+                            </div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700;">${item.usage.remaining} / ${item.usage.max}</div>
+                            <div style="font-size: 0.7rem; color: var(--text-sub);">Restant</div>
+                        </td>
+                        <td style="font-weight: 800; color: var(--info-main);">${item.registered}</td>
+                        <td>
+                            <div style="font-size: 0.75rem; white-space: normal; max-width: 150px;">${item.allowedCompanies}</div>
+                        </td>
+                        <td>
+                            <div style="font-size: 0.75rem;">Créé: ${item.dates.created}</div>
+                            <div style="font-size: 0.75rem; color: var(--danger-main);">Exp: ${item.dates.expires}</div>
+                        </td>
+                        <td>
+                            <span class="badge ${item.status === 'Actif' ? 'badge-active' : (item.status === 'Désactivé' ? 'badge-disabled' : 'badge-expired')}">
+                                ${item.status}
+                            </span>
+                        </td>
+                        <td style="text-align: right;">
+                            <div class="action-btns">
+                                <button class="btn-icon" title="Modifier lien"><i class="fas fa-edit"></i></button>
+                                <button class="btn-icon" title="Voir utilisateurs inscrits"><i class="fas fa-users"></i></button>
+                                <button class="btn-icon ${item.status === 'Désactivé' ? '' : 'danger'}" title="${item.status === 'Désactivé' ? 'Activer' : 'Désactiver'}">
+                                    <i class="fas ${item.status === 'Désactivé' ? 'fa-play' : 'fa-stop'}"></i>
+                                </button>
+                                <button class="btn-icon danger" title="Supprimer"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            renderInvites(inviteLinks);
+        });
+    </script>
+</body>
+
+</html>

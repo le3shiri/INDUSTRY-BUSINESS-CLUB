@@ -292,6 +292,18 @@ const Components = {
                     <a href="admin-docs-products.html" class="nav-item ${activePage.includes('admin-docs-products') ? 'active' : ''}">Documents produits</a>
                 </div>
 
+                <!-- DROPDOWN: ACCES -->
+                <div class="nav-item nav-item-dropdown-trigger open" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('active')">
+                    <div style="display: flex; align-items: center; gap: 0.85rem;"><i class="fas fa-key"></i> <span>Gestion accès</span></div>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </div>
+                <div class="nav-dropdown active">
+                    <a href="admin-invite-links.html" class="nav-item ${activePage.includes('admin-invite-links') ? 'active' : ''}">Liens d’invitation</a>
+                    <a href="admin-invites-sent.html" class="nav-item ${activePage.includes('admin-invites-sent') ? 'active' : ''}">Invitations envoyées</a>
+                    <a href="admin-invited-users.html" class="nav-item ${activePage.includes('admin-invited-users') ? 'active' : ''}">Utilisateurs invités</a>
+                    <a href="admin-invites-expired.html" class="nav-item ${activePage.includes('admin-invites-expired') ? 'active' : ''}">Invitations expirées</a>
+                </div>
+
             </nav>
 
             <div style="margin-top: auto; padding-bottom: 0.5rem; background: var(--white); border-top: 1px solid var(--border-color);">

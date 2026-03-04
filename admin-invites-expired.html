@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence Admin | Invitations expirées</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="js/components.js"></script>
+    <script src="js/admin-data.js"></script>
+
+    <style>
+        :root {
+            --admin-bg: #fcfcfd;
+            --card-border: #eaecf0;
+            --text-main: #101828;
+            --text-sub: #475467;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --primary-corporate: #101828;
+            --success-main: #027a48;
+            --success-bg: #ecfdf3;
+            --warning-main: #b54708;
+            --warning-bg: #fffaeb;
+            --danger-main: #b42318;
+            --danger-bg: #fef3f2;
+            --info-main: #026aa2;
+            --info-bg: #f0f9ff;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--admin-bg);
+            color: var(--text-main);
+            letter-spacing: -0.01em;
+        }
+
+        .main-content {
+            padding: 0;
+            background: var(--admin-bg);
+        }
+
+        .top-nav {
+            background: white;
+            border-bottom: 1px solid var(--card-border);
+            padding: 1.25rem 2.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-container {
+            padding: 2.5rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* KPI Grid */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin: 0;
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.25rem;
+            align-items: flex-end;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .filter-label {
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+        }
+
+        .filter-control {
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            font-family: inherit;
+            font-size: 0.85rem;
+            color: var(--text-main);
+        }
+
+        /* Table Design */
+        .table-outer {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            overflow-x: auto;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        .admin-table th {
+            background: #f9fafb;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .admin-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--card-border);
+            font-size: 0.85rem;
+            vertical-align: middle;
+        }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge-expired {
+            background: var(--danger-bg);
+            color: var(--danger-main);
+        }
+
+        .badge-unused {
+            background: #f2f4f7;
+            color: var(--text-sub);
+        }
+
+        .type-badge {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            background: #f0f9ff;
+            color: #026aa2;
+            border: 1px solid #b9e6fe;
+        }
+
+        /* Actions */
+        .action-btns {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: flex-end;
+        }
+
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            background: white;
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-icon:hover {
+            background: #f9fafb;
+            color: var(--text-main);
+            border-color: var(--text-main);
+        }
+
+        .btn-icon.success:hover {
+            color: var(--success-main);
+            border-color: var(--success-main);
+            background: var(--success-bg);
+        }
+
+        .btn-icon.danger:hover {
+            color: var(--danger-main);
+            border-color: var(--danger-main);
+            background: var(--danger-bg);
+        }
+
+        .btn-filter {
+            height: 42px;
+            padding: 0 1.5rem;
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            color: var(--text-main);
+        }
+
+        .btn-filter:hover {
+            background: #f9fafb;
+            border-color: var(--text-main);
+        }
+
+        .email-text {
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .code-pill {
+            font-family: monospace;
+            font-size: 0.75rem;
+            padding: 2px 6px;
+            background: #f9fafb;
+            border: 1px solid var(--card-border);
+            border-radius: 4px;
+            color: var(--text-sub);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+        <aside id="sidebar-container"></aside>
+
+        <main class="main-content">
+            <header class="top-nav">
+                <div>
+                    <h1 style="margin:0; font-size: 1.5rem; font-weight: 700;">Invitations Expirées</h1>
+                    <p style="margin:0; font-size: 0.85rem; color: var(--text-sub);">Audit des opportunités d'onboarding
+                        manquées et gestion des réactivations</p>
+                </div>
+                <div style="display: flex; gap: 0.75rem; align-items: center;">
+                    <button class="btn btn-secondary"
+                        style="background: white; display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px;"><i
+                            class="fas fa-trash-alt"></i> Nettoyer l'historique</button>
+                </div>
+            </header>
+
+            <div class="dashboard-container">
+
+                <!-- Stats Overview -->
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <span class="stat-label">Total Expirées</span>
+                        <p class="stat-value">145</p>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Non Utilisées</span>
+                        <p class="stat-value">128</p>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Taux d'échec Onboarding</span>
+                        <p class="stat-value">12%</p>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Réactivations suggérées</span>
+                        <p class="stat-value">18</p>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label class="filter-label">Recherche</label>
+                        <input type="text" class="filter-control" placeholder="Email ou Code...">
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Type d'accès</label>
+                        <select class="filter-control">
+                            <option value="">Acheteur & Vendeur</option>
+                            <option value="buyer">Acheteur</option>
+                            <option value="seller">Vendeur</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Admin Responsable</label>
+                        <select class="filter-control">
+                            <option value="">Tous les Admins</option>
+                            <option value="sarah">Admin Sarah</option>
+                            <option value="reda">Admin Reda</option>
+                        </select>
+                    </div>
+                    <button class="btn-filter"><i class="fas fa-search"></i> Filtrer</button>
+                </div>
+
+                <!-- Data Table -->
+                <div class="table-outer">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>ID Invitation</th>
+                                <th>Invité (Email)</th>
+                                <th>Lien / Code Utilisé</th>
+                                <th>Type Accès</th>
+                                <th>Envoyée par</th>
+                                <th>Date Envoi</th>
+                                <th>Date Expiration</th>
+                                <th>Statut</th>
+                                <th>Utilisations Restantes</th>
+                                <th style="text-align: right;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="invites-expired-body">
+                            <!-- Populated via script -->
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            Components.renderAdminSidebar('admin-invites-expired.html');
+
+            const expiredInvites = [
+                {
+                    id: 'EXP-9901',
+                    email: 'director@mining-corp.ma',
+                    code: 'FLUX-VIP-2026',
+                    access: 'Les deux',
+                    admin: 'Admin Sarah',
+                    sentDate: '10/01/2026',
+                    expiredDate: '10/02/2026',
+                    status: 'Expirée',
+                    remaining: 0
+                },
+                {
+                    id: 'EXP-9902',
+                    email: 'procure@africa-energy.dz',
+                    code: 'BUYER-ONLY-MA',
+                    access: 'Acheteur',
+                    admin: 'Admin Reda',
+                    sentDate: '01/02/2026',
+                    expiredDate: '01/03/2026',
+                    status: 'Non utilisée',
+                    remaining: 1
+                },
+                {
+                    id: 'EXP-9903',
+                    email: 'contact@spare-parts-tn.com',
+                    code: 'PARTNER-VND-99',
+                    access: 'Vendeur',
+                    admin: 'Super Admin',
+                    sentDate: '20/12/2025',
+                    expiredDate: '20/01/2026',
+                    status: 'Expirée',
+                    remaining: 0
+                },
+                {
+                    id: 'EXP-9904',
+                    email: 'buyer@export-group.ma',
+                    code: 'FLUX-VIP-2026',
+                    access: 'Les deux',
+                    admin: 'Admin Sarah',
+                    sentDate: '05/02/2026',
+                    expiredDate: '01/03/2026',
+                    status: 'Non utilisée',
+                    remaining: 4
+                }
+            ];
+
+            const tbody = document.getElementById('invites-expired-body');
+
+            function renderInvites(list) {
+                tbody.innerHTML = list.map(item => `
+                    <tr>
+                        <td style="font-family: monospace; font-weight: 700; color: var(--text-sub);">${item.id}</td>
+                        <td class="email-text">${item.email}</td>
+                        <td><span class="code-pill">${item.code}</span></td>
+                        <td><span class="type-badge">${item.access}</span></td>
+                        <td style="font-size: 0.8rem;">${item.admin}</td>
+                        <td style="font-size: 0.8rem;">${item.sentDate}</td>
+                        <td style="font-size: 0.8rem; color: var(--danger-main); font-weight: 700;">${item.expiredDate}</td>
+                        <td>
+                            <span class="badge ${item.status === 'Expirée' ? 'badge-expired' : 'badge-unused'}">
+                                ${item.status}
+                            </span>
+                        </td>
+                        <td style="text-align: center; font-weight: 700;">${item.remaining}</td>
+                        <td style="text-align: right;">
+                            <div class="action-btns">
+                                <button class="btn-icon" title="Voir invitation"><i class="fas fa-eye"></i></button>
+                                <button class="btn-icon success" title="Réactiver"><i class="fas fa-undo"></i></button>
+                                <button class="btn-icon info" title="Renvoyer"><i class="fas fa-paper-plane"></i></button>
+                                <button class="btn-icon danger" title="Supprimer"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            renderUsers(expiredInvites); // Error fix below
+            renderInvites(expiredInvites);
+        });
+    </script>
+</body>
+
+</html>
