@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Revenue | Fluxence</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="js/components.js"></script>
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar-container"></aside>
+
+        <main class="main-content">
+            <header class="top-nav">
+                <h1 style="font-size: 1.5rem; font-weight: 800; color: var(--text-primary); margin: 0;">Revenue &
+                    Transactions</h1>
+            </header>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="text-muted" style="font-size: 0.9rem; font-weight: 600;">Total Revenue</span>
+                        <div class="stat-icon" style="background: #dcfce7; color: #15803d;"><i class="fas fa-coins"></i>
+                        </div>
+                    </div>
+                    <p class="stat-value">452,000 MAD</p>
+                    <span class="stat-trend trend-up">+8% this month</span>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="text-muted" style="font-size: 0.9rem; font-weight: 600;">Transaction Volume</span>
+                        <div class="stat-icon" style="background: #e0f2fe; color: #0369a1;"><i
+                                class="fas fa-exchange-alt"></i></div>
+                    </div>
+                    <p class="stat-value">18.5M MAD</p>
+                    <span class="stat-trend trend-up">+12.5% volume</span>
+                </div>
+            </div>
+
+            <div class="data-section">
+                <div class="section-header">
+                    <h2 style="font-size: 1.25rem; font-weight: 700; margin: 0;">Recent Transactions</h2>
+                    <button class="btn btn-secondary" style="width: auto;">Export CSV</button>
+                </div>
+                <div class="table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Transaction ID</th>
+                                <th>Entity</th>
+                                <th>Method</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>#TXN-99821</strong></td>
+                                <td>Tangent Steel</td>
+                                <td>Platform Escrow</td>
+                                <td><strong>85,000 MAD</strong></td>
+                                <td><span class="status-badge status-verified">Completed</span></td>
+                                <td>Feb 25, 2026</td>
+                            </tr>
+                            <tr>
+                                <td><strong>#TXN-99820</strong></td>
+                                <td>Atlas Mining</td>
+                                <td>Bank Transfer</td>
+                                <td><strong>242,000 MAD</strong></td>
+                                <td><span class="status-badge status-pending">Processing</span></td>
+                                <td>Feb 24, 2026</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+</body>
+
+</html>

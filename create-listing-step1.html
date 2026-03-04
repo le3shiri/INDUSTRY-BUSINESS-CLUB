@@ -57,9 +57,54 @@
 
                 <!-- Step Content -->
                 <div class="shadow-box" style="padding: 2.5rem;">
-                    <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem;">What are you selling?</h2>
+                    <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 2rem; color: var(--primary-color);">
+                        1. Identification & Général</h2>
+
+                    <!-- SECTION 1 : Informations générales -->
+                    <div
+                        style="background: var(--admin-accent-light); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; border-left: 4px solid var(--admin-accent);">
+                        <h3
+                            style="font-size: 1rem; font-weight: 700; margin-bottom: 1rem; color: var(--admin-accent-dark);">
+                            Section 1: Informations Générales</h3>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                            <div class="form-group">
+                                <label class="form-label">Nom de l’entreprise *</label>
+                                <input type="text" id="company_name" class="form-input" value="Acme Industrial Corp">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">ICE / RC *</label>
+                                <input type="text" id="ice_rc" class="form-input" value="001524388000045">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Personne de contact *</label>
+                                <input type="text" id="contact_person" class="form-input" placeholder="Nom complet">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Téléphone professionnel *</label>
+                                <input type="text" id="phone" class="form-input" placeholder="+212 ...">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email *</label>
+                                <input type="email" id="email" class="form-input" placeholder="contact@entreprise.ma">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Ville / Pays *</label>
+                                <input type="text" id="location" class="form-input" placeholder="Ex: Casablanca, Maroc">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SECTION 2 : Informations produit -->
+                    <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1.5rem;">Section 2: Informations du
+                        Produit</h3>
+
+                    <div class="form-group">
+                        <label class="form-label">Titre de l’annonce *</label>
+                        <input type="text" id="title" class="form-input" placeholder="e.g. 5 Tons of Aluminum Scraps">
+                    </div>
 
                     <div class="form-group mb-6">
+<<<<<<< HEAD
                         <label class="form-label">Category *</label>
                         <div class="role-group" style="grid-template-columns: repeat(3, 1fr);">
                             <!-- Using role-card style but smaller -->
@@ -111,25 +156,125 @@
                                 style="padding: 1rem;">
                                 <i class="fas fa-bolt role-icon" style="font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
                                 <span style="font-size: 0.85rem; font-weight: 600;">Énergie & Technique</span>
+=======
+                        <label class="form-label">Catégorie Principale *</label>
+                        <div class="role-group" style="grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+                            <div class="role-card" onclick="selectCategory(this, 'Matières premières industrielles')"
+                                style="padding: 0.75rem; text-align: center;">
+                                <i class="fas fa-industry role-icon"
+                                    style="font-size: 1.2rem; margin-bottom: 0.25rem;"></i>
+                                <span style="font-size: 0.8rem; font-weight: 600; display: block;">Matières
+                                    premières</span>
+                            </div>
+                            <div class="role-card" onclick="selectCategory(this, 'Matériaux de construction')"
+                                style="padding: 0.75rem; text-align: center;">
+                                <i class="fas fa-hammer role-icon"
+                                    style="font-size: 1.2rem; margin-bottom: 0.25rem;"></i>
+                                <span style="font-size: 0.8rem; font-weight: 600; display: block;">Construction</span>
+                            </div>
+                            <div class="role-card" onclick="selectCategory(this, 'Équipements & machines')"
+                                style="padding: 0.75rem; text-align: center;">
+                                <i class="fas fa-cogs role-icon" style="font-size: 1.2rem; margin-bottom: 0.25rem;"></i>
+                                <span style="font-size: 0.8rem; font-weight: 600; display: block;">Machines</span>
+                            </div>
+                            <div class="role-card" onclick="selectCategory(this, 'Surstocks produits finis')"
+                                style="padding: 0.75rem; text-align: center;">
+                                <i class="fas fa-box role-icon" style="font-size: 1.2rem; margin-bottom: 0.25rem;"></i>
+                                <span style="font-size: 0.8rem; font-weight: 600; display: block;">Surstocks</span>
+                            </div>
+                            <div class="role-card" onclick="selectCategory(this, 'Agroalimentaire B2B')"
+                                style="padding: 0.75rem; text-align: center;">
+                                <i class="fas fa-utensils role-icon"
+                                    style="font-size: 1.2rem; margin-bottom: 0.25rem;"></i>
+                                <span
+                                    style="font-size: 0.8rem; font-weight: 600; display: block;">Agroalimentaire</span>
+                            </div>
+                            <div class="role-card" onclick="selectCategory(this, 'Informatique & bureautique')"
+                                style="padding: 0.75rem; text-align: center;">
+                                <i class="fas fa-laptop role-icon"
+                                    style="font-size: 1.2rem; margin-bottom: 0.25rem;"></i>
+                                <span style="font-size: 0.8rem; font-weight: 600; display: block;">Informatique</span>
+                            </div>
+                            <div class="role-card" onclick="selectCategory(this, 'Hôtellerie & restauration')"
+                                style="padding: 0.75rem; text-align: center;">
+                                <i class="fas fa-hotel role-icon"
+                                    style="font-size: 1.2rem; margin-bottom: 0.25rem;"></i>
+                                <span style="font-size: 0.8rem; font-weight: 600; display: block;">Hôtellerie</span>
+                            </div>
+                            <div class="role-card" onclick="selectCategory(this, 'Logistique & stockage')"
+                                style="padding: 0.75rem; text-align: center;">
+                                <i class="fas fa-truck role-icon"
+                                    style="font-size: 1.2rem; margin-bottom: 0.25rem;"></i>
+                                <span style="font-size: 0.8rem; font-weight: 600; display: block;">Logistique</span>
+                            </div>
+                            <div class="role-card" onclick="selectCategory(this, 'Énergie & équipements techniques')"
+                                style="padding: 0.75rem; text-align: center;">
+                                <i class="fas fa-bolt role-icon" style="font-size: 1.2rem; margin-bottom: 0.25rem;"></i>
+                                <span style="font-size: 0.8rem; font-weight: 600; display: block;">Énergie</span>
+                            </div>
+                            <div class="role-card" onclick="selectCategory(this, 'Autres Produits B2B')"
+                                style="padding: 0.75rem; text-align: center;">
+                                <i class="fas fa-plus-circle role-icon"
+                                    style="font-size: 1.2rem; margin-bottom: 0.25rem;"></i>
+                                <span style="font-size: 0.8rem; font-weight: 600; display: block;">Autres</span>
+>>>>>>> 1d0625aeb0ff012b0d2bf7b9a20d1434e106aa0c
                             </div>
                         </div>
                         <input type="hidden" id="category" required>
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label">Listing Title *</label>
-                        <input type="text" id="title" class="form-input" placeholder="e.g. 5 Tons of Aluminum Scraps">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                        <div class="form-group" id="subcategory-wrapper"
+                            style="opacity: 0.5; pointer-events: none; transition: all 0.3s ease;">
+                            <label class="form-label">Sous-catégorie *</label>
+                            <select id="subcategory" class="form-input" onchange="checkSubSelect(this)">
+                                <option value="">Sélectionnez d'abord une catégorie</option>
+                            </select>
+                            <input type="text" id="subcategory-custom" class="form-input"
+                                style="display: none; margin-top: 0.5rem;" placeholder="Saisissez la sous-catégorie">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Marque (si applicable)</label>
+                            <input type="text" id="brand" class="form-input" placeholder="Marque du produit">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Modèle / Référence</label>
+                            <input type="text" id="model" class="form-input" placeholder="Référence technique">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Année de fabrication</label>
+                            <input type="number" id="mfg_year" class="form-input" placeholder="AAAA">
+                        </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">Description *</label>
-                        <textarea id="description" class="form-input" rows="5"
-                            placeholder="Describe the item condition, origin, and specific details..."></textarea>
+                        <label class="form-label">Description technique complète *</label>
+                        <textarea id="description" class="form-input" rows="4"
+                            placeholder="Détails techniques, dimensions, matières..."></textarea>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                        <div class="form-group">
+                            <label class="form-label">Usage précédent (si occasion)</label>
+                            <input type="text" id="previous_usage" class="form-input"
+                                placeholder="Comment a-t-il été utilisé?">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Raison de la mise en vente *</label>
+                            <select id="sale_reason" class="form-input">
+                                <option value="">Choisir une raison...</option>
+                                <option value="surstock">Surstock</option>
+                                <option value="fin_serie">Fin de série</option>
+                                <option value="liquidation">Liquidation / Destockage</option>
+                                <option value="renouvellement">Renouvellement matériel</option>
+                                <option value="autre">Autre</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="mt-6 text-right">
                         <button class="btn btn-primary" id="next-step-1" style="width: auto; min-width: 150px;">
-                            Continue <i class="fas fa-arrow-right" style="margin-left: 0.5rem;"></i>
+                            Suivant: Quantités & État <i class="fas fa-arrow-right" style="margin-left: 0.5rem;"></i>
                         </button>
                     </div>
 
@@ -140,25 +285,100 @@
 
     <script src="js/app.js"></script>
     <script>
+        const subCategories = {
+            'Matières premières industrielles': ['Métaux ferreux', 'Métaux non-ferreux', 'Plastiques & Polymères', 'Chimie & Solvants', 'Textiles techniques', 'Bois & Papier'],
+            'Matériaux de construction': ['Ciment & Béton', 'Acier de construction', 'Isolants', 'Plomberie & Sanitaire', 'Électricité bâtiment', 'Vitrage'],
+            'Équipements & machines': ['Machines-outils', 'Engins de chantier', 'Manutention & Levage', 'Pompes & Compresseurs', 'Froid industriel'],
+            'Surstocks produits finis': ['Électroménager', 'Mobilier de bureau', 'Emballages', 'Pièces détachées'],
+            'Agroalimentaire B2B': ['Ingrédients & Additifs', 'Céréales & Grains', 'Produits laitiers', 'Huiles & Graisses'],
+            'Informatique & bureautique': ['Serveurs & Réseaux', 'PC & Périphériques', 'Logiciels Pro', 'Consommables'],
+            'Hôtellerie & restauration': ['Équipement cuisine', 'Mobilier CHR', 'Arts de la table', 'Linge pro'],
+            'Logistique & stockage': ['Palettisation', 'Rayonnage', 'Chariots', 'Logiciels WMS'],
+            'Énergie & équipements techniques': ['Groupes électrogènes', 'Solaire & ENR', 'Transformateurs', 'Batteries industrielles']
+        };
+
         function selectCategory(el, val) {
             document.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'));
             el.classList.add('selected');
             document.getElementById('category').value = val;
+
+            const subWrapper = document.getElementById('subcategory-wrapper');
+            const subSelect = document.getElementById('subcategory');
+            const subCustom = document.getElementById('subcategory-custom');
+
+            subSelect.innerHTML = '<option value="">Choisir une sous-catégorie...</option>';
+            subCustom.style.display = 'none';
+            subSelect.style.display = 'block';
+
+            if (val === 'Autres Produits B2B') {
+                subSelect.style.display = 'none';
+                subCustom.style.display = 'block';
+                subWrapper.style.opacity = '1';
+                subWrapper.style.pointerEvents = 'auto';
+            } else if (subCategories[val]) {
+                subCategories[val].forEach(sub => {
+                    const opt = document.createElement('option');
+                    opt.value = sub;
+                    opt.textContent = sub;
+                    subSelect.appendChild(opt);
+                });
+                const optOther = document.createElement('option');
+                optOther.value = '_other';
+                optOther.textContent = 'Autre...';
+                subSelect.appendChild(optOther);
+
+                subWrapper.style.opacity = '1';
+                subWrapper.style.pointerEvents = 'auto';
+            } else {
+                subWrapper.style.opacity = '0.5';
+                subWrapper.style.pointerEvents = 'none';
+            }
+        }
+
+        function checkSubSelect(select) {
+            const custom = document.getElementById('subcategory-custom');
+            if (select.value === '_other') {
+                custom.style.display = 'block';
+                custom.focus();
+            } else {
+                custom.style.display = 'none';
+            }
         }
 
         document.getElementById('next-step-1').addEventListener('click', () => {
-            const cat = document.getElementById('category').value;
-            const title = document.getElementById('title').value;
-            const desc = document.getElementById('description').value;
+            let subcat = document.getElementById('subcategory').value;
+            const custom = document.getElementById('subcategory-custom');
+            if (subcat === '_other' || document.getElementById('category').value === 'Autres Produits B2B') {
+                subcat = custom.value;
+            }
 
-            if (cat && title && desc) {
+            const fields = {
+                company_name: document.getElementById('company_name').value,
+                ice_rc: document.getElementById('ice_rc').value,
+                contact_person: document.getElementById('contact_person').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value,
+                location: document.getElementById('location').value,
+                title: document.getElementById('title').value,
+                category: document.getElementById('category').value,
+                subcategory: subcat,
+                brand: document.getElementById('brand').value,
+                model: document.getElementById('model').value,
+                mfg_year: document.getElementById('mfg_year').value,
+                description: document.getElementById('description').value,
+                previous_usage: document.getElementById('previous_usage').value,
+                sale_reason: document.getElementById('sale_reason').value
+            };
+
+            // Basic validation
+            if (fields.title && fields.category && fields.description && fields.sale_reason) {
                 // Save to localStorage
                 const listing = JSON.parse(localStorage.getItem('temp_listing') || '{}');
-                listing.step1 = { category: cat, title, description: desc };
+                listing.step1 = fields;
                 localStorage.setItem('temp_listing', JSON.stringify(listing));
                 window.location.href = 'create-listing-step2.html';
             } else {
-                alert("Please fill all required fields.");
+                alert("Veuillez remplir les champs obligatoires (*).");
             }
         });
     </script>

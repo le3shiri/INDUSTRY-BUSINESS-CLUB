@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - KYC Review | Fluxence</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="js/components.js"></script>
+    <script src="js/admin-data.js"></script>
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar-container"></aside>
+
+        <main class="main-content">
+            <header class="top-nav">
+                <h1 style="font-size: 1.5rem; font-weight: 800; color: var(--text-primary); margin: 0;">Verification
+                    Queue</h1>
+            </header>
+
+            <div class="data-section">
+                <div class="section-header">
+                    <h2 style="font-size: 1.1rem; font-weight: 700; margin: 0;">Pending Document Reviews</h2>
+                </div>
+                <div class="table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Entity</th>
+                                <th>Documents</th>
+                                <th>Submission Date</th>
+                                <th>Risk Score</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="kyc-table-body">
+                            <!-- Data injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="review-panel" class="data-section" style="padding: 2rem; display: none;">
+                <h3 id="review-title"
+                    style="margin-bottom: 2rem; border-left: 4px solid var(--primary-color); padding-left: 1rem;">Review
+                    Details</h3>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                    <div>
+                        <div
+                            style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; text-align: center;">
+                            <i class="far fa-file-pdf fa-4x"
+                                style="color: var(--text-secondary); margin-bottom: 1rem;"></i>
+                            <p style="font-size: 0.9rem; font-weight: 600;">Registration_Commerce.pdf</p>
+                            <button class="btn btn-secondary" style="width: auto; margin-top: 1rem;">Preview
+                                Document</button>
+                        </div>
+                    </div>
+                    <div>
+                        <div
+                            style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; text-align: center;">
+                            <i class="far fa-file-image fa-4x"
+                                style="color: var(--text-secondary); margin-bottom: 1rem;"></i>
+                            <p style="font-size: 0.9rem; font-weight: 600;">Bank_RIB_Details.png</p>
+                            <button class="btn btn-secondary" style="width: auto; margin-top: 1rem;">Preview
+                                Image</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    style="margin-top: 2rem; display: flex; gap: 1rem; border-top: 1px solid var(--border-color); padding-top: 2rem;">
+                    <button class="btn btn-primary" style="flex: 1;" id="approve-btn">Approve Company</button>
+                    <button class="btn btn-secondary"
+                        style="flex: 1; border-color: var(--error-color); color: var(--error-color);">Reject
+                        Verification</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let selectedId = null;
+
+        function renderKYC() {
+            const kyc = AdminData.getData(AdminData.KEYS.KYC);
+            const tbody = document.getElementById('kyc-table-body');
+
+            if (kyc.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 2rem; color: var(--text-secondary);">No pending verifications</td></tr>';
+                document.getElementById('review-panel').style.display = 'none';
+                return;
+            }
+
+            tbody.innerHTML = kyc.map(item => `
+                <tr style="cursor: pointer;" onclick="openReview(${item.id}, '${item.company}')">
+                    <td><strong>${item.company}</strong> ${selectedId == item.id ? '<i class="fas fa-chevron-right" style="color: var(--primary-color); margin-left: 0.5rem;"></i>' : ''}</td>
+                    <td class="text-secondary">${item.docs.join(', ')}</td>
+                    <td>${item.date}</td>
+                    <td><span style="color: ${item.risk === 'HIGH' ? 'var(--error-color)' : (item.risk === 'MEDIUM' ? '#f59e0b' : 'var(--success-color)')}; font-weight: 700;">${item.risk}</span></td>
+                    <td><button class="btn btn-primary" style="width: auto; padding: 0.4rem 1rem;">View Files</button></td>
+                </tr>
+            `).join('');
+        }
+
+        function openReview(id, company) {
+            selectedId = id;
+            document.getElementById('review-panel').style.display = 'block';
+            document.getElementById('review-title').textContent = 'Review Details: ' + company;
+            renderKYC();
+
+            document.getElementById('approve-btn').onclick = () => {
+                AdminData.approveKYC(id);
+                selectedId = null;
+                renderKYC();
+                alert('Company ' + company + ' has been verified successfully.');
+            };
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderKYC();
+        });
+    </script>
+</body>
+
+</html>

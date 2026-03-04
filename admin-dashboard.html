@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence Admin - Central Control</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="js/components.js"></script>
+    <script src="js/admin-data.js"></script>
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar-container"></aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- Top Navbar -->
+            <header class="top-nav">
+                <div class="search-bar">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Search users, transactions, logs...">
+                </div>
+
+                <div class="nav-actions">
+                    <div style="text-align: right; margin-right: 1rem;">
+                        <p style="margin: 0; font-size: 0.8rem; color: var(--text-secondary);">Platform State</p>
+                        <p style="margin: 0; font-size: 0.9rem; font-weight: 700; color: var(--success-color);"><i
+                                class="fas fa-circle" style="font-size: 0.6rem; margin-right: 4px;"></i> Systems
+                            Operational</p>
+                    </div>
+                    <button class="btn btn-primary" style="width: auto;">
+                        <i class="fas fa-download" style="margin-right: 0.5rem;"></i> Generate Report
+                    </button>
+                </div>
+            </header>
+
+            <!-- Welcome Section -->
+            <section style="margin-bottom: 2.5rem;">
+                <h1
+                    style="font-size: 2.25rem; font-weight: 800; color: var(--text-primary); margin-bottom: 0.5rem; letter-spacing: -0.02em;">
+                    Platform Overview</h1>
+                <p class="text-secondary" style="font-size: 1rem;">Core monitoring dashboard for Fluxence - Industry
+                    Business Club.</p>
+            </section>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="text-muted" style="font-size: 0.9rem; font-weight: 600;">Total GMV</span>
+                        <div class="stat-icon" style="background: #e0f2fe; color: #0369a1;"><i
+                                class="fas fa-dollar-sign"></i></div>
+                    </div>
+                    <p class="stat-value">2.4M MAD</p>
+                    <span class="stat-trend trend-up"><i class="fas fa-arrow-up"></i> 12.5% vs last month</span>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="text-muted" style="font-size: 0.9rem; font-weight: 600;">Live Negotiations</span>
+                        <div class="stat-icon" style="background: #fef3c7; color: #b45309;"><i
+                                class="fas fa-handshake"></i></div>
+                    </div>
+                    <p class="stat-value" id="count-deals">0</p>
+                    <span class="stat-trend trend-up"><i class="fas fa-arrow-up"></i> 8 new today</span>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="text-muted" style="font-size: 0.9rem; font-weight: 600;">Companies</span>
+                        <div class="stat-icon" style="background: #dcfce7; color: #15803d;"><i
+                                class="fas fa-building"></i></div>
+                    </div>
+                    <p class="stat-value" id="count-companies">0</p>
+                    <span class="stat-trend trend-up"><i class="fas fa-arrow-up"></i> 24 this week</span>
+                </div>
+                <div class="stat-card" style="cursor: pointer;" onclick="window.location.href='admin-posts.html'">
+                    <div class="stat-header">
+                        <span class="text-muted" style="font-size: 0.9rem; font-weight: 600;">Pending Posts</span>
+                        <div class="stat-icon" style="background: #fdf2f2; color: var(--error-color);"><i
+                                class="fas fa-box"></i></div>
+                    </div>
+                    <p class="stat-value" id="count-pending-posts">0</p>
+                    <span class="stat-trend" style="color: var(--error-color);"><i class="fas fa-clock"></i> Action
+                        Required</span>
+                </div>
+            </div>
+
+            <!-- Main Data View -->
+            <div class="dashboard-row">
+
+                <!-- New Company Verifications -->
+                <div class="data-section">
+                    <div class="section-header">
+                        <h2 style="font-size: 1.25rem; font-weight: 700; margin: 0;">Verification Queue</h2>
+                        <button class="btn btn-secondary" style="width: auto; padding: 0.4rem 1rem; font-size: 0.85rem;"
+                            onclick="window.location.href='admin-kyc.html'">View All</button>
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Company</th>
+                                    <th>Submission</th>
+                                    <th>Risk</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="kyc-table-body">
+                                <!-- Data injected by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Activity Feed -->
+                <div class="data-section">
+                    <div class="section-header">
+                        <h2 style="font-size: 1.25rem; font-weight: 700; margin: 0;">System Logs</h2>
+                    </div>
+                    <div class="activity-list" id="logs-list">
+                        <!-- Data injected by JS -->
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Recently Joined Companies -->
+            <div class="data-section">
+                <div class="section-header">
+                    <h2 style="font-size: 1.25rem; font-weight: 700; margin: 0;">Recently Joined Companies</h2>
+                </div>
+                <div class="table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Industry</th>
+                                <th>Joined</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="companies-table-body">
+                            <!-- Data injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Render Stats
+            const companies = AdminData.getData(AdminData.KEYS.COMPANIES);
+            const deals = AdminData.getData(AdminData.KEYS.DEALS);
+            const kyc = AdminData.getData(AdminData.KEYS.KYC);
+            const logs = AdminData.getData(AdminData.KEYS.LOGS);
+
+            document.getElementById('count-companies').textContent = companies.length;
+            document.getElementById('count-deals').textContent = deals.length;
+
+            const stats = AdminData.getStats();
+            document.getElementById('count-pending-posts').textContent = stats.pendingPosts;
+
+            // Render KYC Table (Dashboard version)
+            const kycBody = document.getElementById('kyc-table-body');
+            kycBody.innerHTML = kyc.slice(0, 3).map(item => `
+                <tr>
+                    <td><strong>${item.company}</strong></td>
+                    <td>${item.date}</td>
+                    <td><span style="color: ${item.risk === 'HIGH' ? 'var(--error-color)' : (item.risk === 'MEDIUM' ? '#f59e0b' : 'var(--success-color)')}; font-weight: 700;">${item.risk}</span></td>
+                    <td><button class="btn btn-primary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem; width: auto;" onclick="window.location.href='admin-kyc.html'">Review</button></td>
+                </tr>
+            `).join('');
+
+            // Render Logs
+            const logsList = document.getElementById('logs-list');
+            logsList.innerHTML = logs.slice(0, 5).map(log => `
+                <div class="activity-item">
+                    <div class="activity-content" style="${log.type === 'error' ? 'color: var(--error-color);' : (log.type === 'success' ? 'color: var(--success-color);' : '')}">
+                        <p class="activity-text">${log.message}</p>
+                        <p class="activity-time">${log.time}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            // Render Companies Table
+            const compBody = document.getElementById('companies-table-body');
+            compBody.innerHTML = companies.slice(0, 5).map(c => `
+                <tr>
+                    <td><strong>${c.name}</strong></td>
+                    <td>${c.industry}</td>
+                    <td>${c.joined}</td>
+                    <td><span class="status-badge status-${c.status}">${c.status}</span></td>
+                    <td><button class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem; width: auto;" onclick="window.location.href='admin-companies.html'">Manage</button></td>
+                </tr>
+            `).join('');
+        });
+    </script>
+</body>
+
+</html>
