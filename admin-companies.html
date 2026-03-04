@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Companies | Fluxence</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="js/components.js"></script>
+    <script src="js/admin-data.js"></script>
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar-container"></aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-nav">
+                <div class="search-bar">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="company-search" class="search-input" placeholder="Search companies...">
+                </div>
+                <div class="nav-actions">
+                    <button class="btn btn-primary" style="width: auto;"><i class="fas fa-plus"></i> Add Entity</button>
+                </div>
+            </header>
+
+            <section style="margin-bottom: 2rem;">
+                <h1 style="font-size: 2rem; font-weight: 800; color: var(--text-primary);">Company Directory</h1>
+                <p class="text-secondary">Manage and verify all industrial entities on the platform.</p>
+            </section>
+
+            <div class="data-section">
+                <div class="section-header">
+                    <h2 style="font-size: 1.25rem; font-weight: 700; margin: 0;">Active Companies</h2>
+                </div>
+                <div class="table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Company</th>
+                                <th>ICE Number</th>
+                                <th>Industry</th>
+                                <th>Status</th>
+                                <th>Joined</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="companies-table-body">
+                            <!-- Data injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function renderCompanies(filter = '') {
+            const companies = AdminData.getData(AdminData.KEYS.COMPANIES);
+            const tbody = document.getElementById('companies-table-body');
+
+            const filtered = companies.filter(c =>
+                c.name.toLowerCase().includes(filter.toLowerCase()) ||
+                c.ice.includes(filter)
+            );
+
+            tbody.innerHTML = filtered.map(c => `
+                <tr style="cursor: pointer;" onclick="window.location.href='admin-company-detail.html?id=${c.id}'">
+                    <td>
+                        <div style="font-weight: 700; color: var(--primary-color);">${c.name}</div>
+                        <small class="text-muted">${c.industry}</small>
+                    </td>
+                    <td class="text-secondary">${c.ice}</td>
+                    <td><span style="font-size: 0.85rem;">${c.industry}</span></td>
+                    <td><span class="status-badge status-${c.status}">${c.status}</span></td>
+                    <td>${c.joined}</td>
+                    <td>
+                        <a href="admin-company-detail.html?id=${c.id}" class="btn btn-secondary" style="width: auto; padding: 0.4rem 0.8rem; font-size: 0.8rem; text-decoration: none; display: inline-block;">View 360</a>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCompanies();
+            document.getElementById('company-search').addEventListener('input', (e) => {
+                renderCompanies(e.target.value);
+            });
+        });
+    </script>
+</body>
+
+</html>

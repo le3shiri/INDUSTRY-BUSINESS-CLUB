@@ -8,6 +8,10 @@ const Components = {
      * Sidebar Component
      * @param {string} activePage - The ID or href of the active navigation item
      */
+    /**
+     * User Sidebar Component
+     * @param {string} activePage - The ID or href of the active navigation item
+     */
     renderSidebar: function (activePage = 'dashboard.html') {
         const sidebarHTML = `
             <div class="sidebar-header">
@@ -43,6 +47,55 @@ const Components = {
                     <p style="margin: 0; font-size: 0.75rem; color: var(--text-secondary);">Enterprise Plan</p>
                 </div>
                 <i class="fas fa-sign-out-alt" style="margin-left: auto; color: var(--text-secondary);"></i>
+            </div>
+        `;
+        const container = document.getElementById('sidebar-container');
+        if (container) {
+            container.innerHTML = sidebarHTML;
+            container.className = 'sidebar';
+        }
+    },
+
+    /**
+     * Admin Sidebar Component
+     * @param {string} activePage - The ID or href of the active navigation item
+     */
+    renderAdminSidebar: function (activePage = 'admin-dashboard.html') {
+        const sidebarHTML = `
+            <div class="sidebar-header">
+                <svg class="sidebar-logo" viewBox="0 0 100 100" fill="none">
+                    <circle cx="50" cy="50" r="45" stroke="var(--primary-color)" stroke-width="6" />
+                    <path d="M35 50L45 60L65 40" stroke="var(--text-primary)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <h2 style="font-size: 1.1rem; font-weight: 700; color: var(--text-primary); margin: 0; letter-spacing: -0.5px;">Fluxence <span style="color: var(--primary-color); font-size: 0.65rem; vertical-align: middle; background: var(--primary-light); padding: 2px 6px; border-radius: 4px; margin-left: 4px;">ADMIN</span></h2>
+            </div>
+
+            <nav class="nav-links">
+                <a href="admin-dashboard.html" class="nav-item ${activePage.includes('admin-dashboard') ? 'active' : ''}"><i class="fas fa-chart-pie"></i> <span>Overview</span></a>
+                <a href="admin-companies.html" class="nav-item ${activePage.includes('admin-companies') ? 'active' : ''}"><i class="fas fa-building"></i> <span>Companies</span></a>
+                <a href="admin-users.html" class="nav-item ${activePage.includes('admin-users') ? 'active' : ''}"><i class="fas fa-users"></i> <span>Users</span></a>
+                <a href="admin-deals.html" class="nav-item ${activePage.includes('admin-deals') ? 'active' : ''}"><i class="fas fa-handshake"></i> <span>Live Deals</span></a>
+                <a href="admin-posts.html" class="nav-item ${activePage.includes('admin-posts') ? 'active' : ''}"><i class="fas fa-box"></i> <span>Posts Mgt</span> <span class="badge" id="pending-posts-badge" style="position: static; margin-left: auto; display: none;">0</span></a>
+                <a href="admin-kyc.html" class="nav-item ${activePage.includes('admin-kyc') ? 'active' : ''}"><i class="fas fa-shield-alt"></i> <span>KYC Review</span> <span class="badge" style="position: static; margin-left: auto;">5</span></a>
+                <a href="admin-moderation.html" class="nav-item ${activePage.includes('admin-moderation') ? 'active' : ''}"><i class="fas fa-comments"></i> <span>Moderation</span></a>
+                <a href="admin-revenue.html" class="nav-item ${activePage.includes('admin-revenue') ? 'active' : ''}"><i class="fas fa-file-invoice-dollar"></i> <span>Revenue</span></a>
+                <a href="admin-settings.html" class="nav-item ${activePage.includes('admin-settings') ? 'active' : ''}"><i class="fas fa-cog"></i> <span>Settings</span></a>
+            </nav>
+
+            <div style="margin-top: auto; padding: 1rem 1.5rem; border-top: 1px solid var(--border-color);">
+                <a href="dashboard.html" class="nav-item" style="color: var(--text-secondary); text-decoration: none; display: flex; align-items: center; gap: 0.75rem; font-size: 0.9rem;">
+                    <i class="fas fa-arrow-left"></i> <span>Back to User View</span>
+                </a>
+            </div>
+
+            <div class="user-profile-mini">
+                <div style="width: 40px; height: 40px; background: var(--pure-black); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--white); font-weight: 700;">
+                    SA
+                </div>
+                <div>
+                    <p style="margin: 0; font-weight: 600; font-size: 0.9rem;">Super Admin</p>
+                    <p style="margin: 0; font-size: 0.75rem; color: var(--text-secondary);">Root Access</p>
+                </div>
             </div>
         `;
         const container = document.getElementById('sidebar-container');
@@ -194,6 +247,7 @@ const Components = {
                     <input type="text" id="command-input" placeholder="Search pages, tools, or companies... (Esc to close)" autocomplete="off">
                 </div>
                 <div class="command-palette-results" id="command-results">
+                    <div class="command-item" onclick="window.location.href='admin-dashboard.html'"><i class="fas fa-user-shield"></i> <span>Super Admin Panel</span> <kbd>G + A</kbd></div>
                     <div class="command-item" onclick="window.location.href='dashboard.html'"><i class="fas fa-home"></i> <span>Dashboard</span> <kbd>G + D</kbd></div>
                     <div class="command-item" onclick="window.location.href='search.html'"><i class="fas fa-search"></i> <span>Search Materials</span> <kbd>G + S</kbd></div>
                     <div class="command-item" onclick="window.location.href='negotiations.html'"><i class="fas fa-handshake"></i> <span>Active Deals</span> <kbd>G + N</kbd></div>
@@ -264,11 +318,22 @@ const Components = {
 
 // Auto-initialize components if placeholders exist
 document.addEventListener('DOMContentLoaded', () => {
-    // Determine active page for sidebar
-    const currentPath = window.location.pathname.split('/').pop() || 'dashboard.html';
+    // Determine active page
+    const currentPath = window.location.pathname.split('/').pop() || 'index.html';
 
     if (document.getElementById('sidebar-container')) {
-        Components.renderSidebar(currentPath);
+        if (currentPath.startsWith('admin-')) {
+            Components.renderAdminSidebar(currentPath);
+            // Update badges
+            const stats = AdminData.getStats();
+            const postsBadge = document.getElementById('pending-posts-badge');
+            if (postsBadge && stats.pendingPosts > 0) {
+                postsBadge.textContent = stats.pendingPosts;
+                postsBadge.style.display = 'flex';
+            }
+        } else {
+            Components.renderSidebar(currentPath);
+        }
     }
 
     if (document.getElementById('footer-container')) {

@@ -52,62 +52,63 @@
                 </div>
 
                 <div class="shadow-box" style="padding: 2.5rem;">
-                    <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem;">Technical Specifications
-                    </h2>
+                    <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 2rem; color: var(--primary-color);">
+                        3. Logistique</h2>
 
-                    <div class="form-group mb-6">
-                        <label class="form-label">Condition *</label>
-                        <div class="condition-grid">
-                            <div class="condition-option" onclick="selectCondition(this, 'New')">
-                                <i class="fas fa-star"
-                                    style="color: var(--success-color); font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
-                                <div style="font-weight: 600;">New / Unused</div>
+                    <!-- SECTION 5 : Logistique -->
+                    <div
+                        style="background: #eff6ff; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; border-left: 4px solid #2563eb;">
+                        <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 1rem; color: #1e40af;">Section 5:
+                            Logistique</h3>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                            <div class="form-group">
+                                <label class="form-label">Localisation du stock *</label>
+                                <input type="text" id="warehouse_location" class="form-input"
+                                    placeholder="Ville, Zone Industrielle...">
                             </div>
-                            <div class="condition-option" onclick="selectCondition(this, 'Used')">
-                                <i class="fas fa-tasks"
-                                    style="color: #f59e0b; font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
-                                <div style="font-weight: 600;">Used - Good</div>
+                            <div class="form-group">
+                                <label class="form-label">Conditions de stockage</label>
+                                <input type="text" id="storage_conditions" class="form-input"
+                                    placeholder="Ex: Température ambiante, Sec, Sous abri...">
                             </div>
-                            <div class="condition-option" onclick="selectCondition(this, 'Refurbished')">
-                                <i class="fas fa-tools"
-                                    style="color: var(--brand-blue); font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
-                                <div style="font-weight: 600;">Refurbished</div>
+                            <div class="form-group">
+                                <label class="form-label">Incoterm proposé *</label>
+                                <select id="incoterm" class="form-input">
+                                    <option value="EXW">EXW (À l'usine)</option>
+                                    <option value="FOB">FOB (Franco à bord)</option>
+                                    <option value="CIF">CIF (Coût, Assurance et Frêt)</option>
+                                    <option value="DDP">DDP (Rendu droits acquittés)</option>
+                                    <option value="Autre">Autre</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Mode de livraison possible</label>
+                                <input type="text" id="delivery_mode" class="form-input"
+                                    placeholder="Ex: Camion, Container, Enlèvement client...">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Délais de mise à disposition *</label>
+                                <input type="text" id="lead_time" class="form-input"
+                                    placeholder="Ex: Immédiat, 48h, 1 semaine...">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Possibilité d’inspection sur place ?</label>
+                                <select id="inspection_possible" class="form-input">
+                                    <option value="Oui">Oui</option>
+                                    <option value="Non">Non</option>
+                                </select>
                             </div>
                         </div>
-                        <input type="hidden" id="condition" required>
                     </div>
 
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-                        <div class="form-group">
-                            <label class="form-label">Dimensions (LxWxH)</label>
-                            <input type="text" class="form-input" placeholder="e.g. 2m x 1m x 0.5m">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Weight (Approx)</label>
-                            <input type="text" class="form-input" placeholder="e.g. 500kg">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Safety / Analysis Certificate (PDF)</label>
-                        <div class="upload-area-themed" style="padding: 1.5rem;"
-                            onclick="document.getElementById('cert-upload').click()">
-                            <input type="file" id="cert-upload" hidden onchange="showFileName(this)">
-                            <i class="fas fa-file-pdf"
-                                style="font-size: 2rem; color: var(--text-secondary); margin-bottom: 0.5rem;"></i>
-                            <p style="font-size: 0.9rem; color: var(--text-secondary);">Click to upload document</p>
-                            <p id="file-name"
-                                style="margin-top: 0.5rem; font-weight: 700; color: var(--brand-green); display: none;">
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="mt-6" style="display: flex; justify-content: space-between;">
+                    <div class="mt-6"
+                        style="display: flex; justify-content: space-between; border-top: 1px solid var(--border-color); padding-top: 2rem;">
                         <a href="create-listing-step2.html" class="btn btn-secondary" style="width: auto;">
-                            <i class="fas fa-arrow-left"></i> Back
+                            <i class="fas fa-arrow-left"></i> Retour
                         </a>
                         <button class="btn btn-primary" id="next-step-3" style="width: auto; min-width: 150px;">
-                            Continue <i class="fas fa-arrow-right" style="margin-left: 0.5rem;"></i>
+                            Suivant: Paiement & Validation <i class="fas fa-arrow-right"
+                                style="margin-left: 0.5rem;"></i>
                         </button>
                     </div>
 
@@ -133,15 +134,22 @@
         }
 
         document.getElementById('next-step-3').addEventListener('click', () => {
-            const cond = document.getElementById('condition').value;
-            if (cond) {
-                // Save
+            const step3Data = {
+                warehouse_location: document.getElementById('warehouse_location').value,
+                storage_conditions: document.getElementById('storage_conditions').value,
+                incoterm: document.getElementById('incoterm').value,
+                delivery_mode: document.getElementById('delivery_mode').value,
+                lead_time: document.getElementById('lead_time').value,
+                inspection_possible: document.getElementById('inspection_possible').value
+            };
+
+            if (step3Data.warehouse_location && step3Data.incoterm && step3Data.lead_time) {
                 const listing = JSON.parse(localStorage.getItem('temp_listing') || '{}');
-                listing.step3 = { condition: cond };
+                listing.step3 = step3Data;
                 localStorage.setItem('temp_listing', JSON.stringify(listing));
                 window.location.href = 'create-listing-step4.html';
             } else {
-                alert("Please select item condition.");
+                alert("Veuillez remplir les informations logistiques obligatoires.");
             }
         });
     </script>

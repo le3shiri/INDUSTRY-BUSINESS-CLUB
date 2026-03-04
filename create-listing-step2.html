@@ -52,30 +52,113 @@
                 </div>
 
                 <div class="shadow-box" style="padding: 2.5rem;">
-                    <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem;">Photos & Media</h2>
+                    <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 2rem; color: var(--primary-color);">
+                        2. Quantités, État & Médias</h2>
 
-                    <div class="form-group mb-6">
-                        <label class="form-label">Upload Images (Up to 10)</label>
-                        <div class="image-upload-zone" id="drop-area">
-                            <input type="file" id="fileElem" multiple accept="image/*" style="display:none"
-                                onchange="handleFiles(this.files)">
-                            <i class="fas fa-cloud-upload-alt"
-                                style="font-size: 2.5rem; color: var(--text-secondary); margin-bottom: 0.5rem;"></i>
-                            <p style="font-size: 0.95rem; font-weight: 500; color: var(--text-primary); margin: 0;">
-                                Click to upload or drag and drop</p>
-                            <p style="font-size: 0.8rem; color: var(--text-secondary); margin: 0;">JPEG, PNG, WEBP (Max
-                                5MB)</p>
+                    <!-- SECTION 3 : Données quantitatives -->
+                    <div
+                        style="background: #f0fdf4; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; border-left: 4px solid var(--success-color);">
+                        <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 1rem; color: #166534;">Section 3:
+                            Données Quantitatives</h3>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label">Quantité disponible *</label>
+                                <input type="number" id="quantity" class="form-input" placeholder="0">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Unité *</label>
+                                <select id="unit" class="form-input">
+                                    <option value="kg">kilogramme (kg)</option>
+                                    <option value="tonne">tonne</option>
+                                    <option value="palette">palette</option>
+                                    <option value="piece">pièce</option>
+                                    <option value="lot">lot</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Min. Commande (MOQ) *</label>
+                                <input type="number" id="moq" class="form-input" placeholder="1">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Prix unitaire (MAD) *</label>
+                                <input type="number" id="price" class="form-input" placeholder="0.00">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Prix négociable ?</label>
+                                <select id="negotiable" class="form-input">
+                                    <option value="Oui">Oui</option>
+                                    <option value="Non">Non</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Remise Volume ?</label>
+                                <select id="volume_discount" class="form-input">
+                                    <option value="Non">Non</option>
+                                    <option value="Oui">Oui</option>
+                                </select>
+                            </div>
                         </div>
-
-                        <div class="preview-grid" id="gallery"></div>
                     </div>
 
-                    <div class="mt-6" style="display: flex; justify-content: space-between;">
+                    <!-- SECTION 4 : État & conformité -->
+                    <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1.5rem;">Section 4: État & Conformité
+                    </h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                        <div class="form-group">
+                            <label class="form-label">État de l'article *</label>
+                            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                    <input type="radio" name="condition" value="Neuf" checked> Neuf
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                    <input type="radio" name="condition" value="Surplus"> Surplus
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                    <input type="radio" name="condition" value="Reconditionné"> Reconditionné
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                    <input type="radio" name="condition" value="Occasion"> Occasion
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Certifications (CE, ISO, ...) *</label>
+                            <input type="text" id="certifications" class="form-input" placeholder="Ex: ISO 9001, CE">
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-6">
+                        <label class="form-label">Photos obligatoires (Min. 3) *</label>
+                        <div class="image-upload-zone" id="drop-area" style="border-style: dashed; padding: 2rem;">
+                            <input type="file" id="fileElem" multiple accept="image/*" style="display:none"
+                                onchange="handleFiles(this.files)">
+                            <i class="fas fa-camera"
+                                style="font-size: 2rem; color: var(--primary-color); margin-bottom: 0.5rem;"></i>
+                            <p style="font-size: 0.95rem; font-weight: 600; margin: 0;">Ajouter des photos</p>
+                            <p style="font-size: 0.8rem; color: var(--text-secondary);">Indispensable pour la validation
+                                admin</p>
+                        </div>
+                        <div class="preview-grid" id="gallery" style="margin-top: 1rem;"></div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                        <div class="form-group">
+                            <label class="form-label">Fiche technique (PDF/Image)</label>
+                            <input type="file" id="spec_sheet" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Lien Vidéo (Optionnel)</label>
+                            <input type="url" id="video_url" class="form-input" placeholder="YouTube, Vimeo, Cloud...">
+                        </div>
+                    </div>
+
+                    <div class="mt-6"
+                        style="display: flex; justify-content: space-between; border-top: 1px solid var(--border-color); padding-top: 2rem;">
                         <a href="create-listing-step1.html" class="btn btn-secondary" style="width: auto;">
-                            <i class="fas fa-arrow-left"></i> Back
+                            <i class="fas fa-arrow-left"></i> Retour
                         </a>
                         <button class="btn btn-primary" id="next-step-2" style="width: auto; min-width: 150px;">
-                            Continue <i class="fas fa-arrow-right" style="margin-left: 0.5rem;"></i>
+                            Suivant: Logistique <i class="fas fa-arrow-right" style="margin-left: 0.5rem;"></i>
                         </button>
                     </div>
 
@@ -143,8 +226,27 @@
 
         // Next
         document.getElementById('next-step-2').addEventListener('click', () => {
-            // Simply proceed in prototype
-            window.location.href = 'create-listing-step3.html';
+            const step2Data = {
+                quantity: document.getElementById('quantity').value,
+                unit: document.getElementById('unit').value,
+                moq: document.getElementById('moq').value,
+                price: document.getElementById('price').value,
+                negotiable: document.getElementById('negotiable').value,
+                volume_discount: document.getElementById('volume_discount').value,
+                condition: document.querySelector('input[name="condition"]:checked').value,
+                certifications: document.getElementById('certifications').value,
+                video_url: document.getElementById('video_url').value
+            };
+
+            // Basic validation
+            if (step2Data.quantity && step2Data.price) {
+                const listing = JSON.parse(localStorage.getItem('temp_listing') || '{}');
+                listing.step2 = step2Data;
+                localStorage.setItem('temp_listing', JSON.stringify(listing));
+                window.location.href = 'create-listing-step3.html';
+            } else {
+                alert("Veuillez remplir les informations de quantité et de prix.");
+            }
         });
     </script>
 </body>

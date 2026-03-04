@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Settings | Fluxence</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="js/components.js"></script>
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar-container"></aside>
+
+        <main class="main-content">
+            <header class="top-nav">
+                <h1 style="font-size: 1.5rem; font-weight: 800; color: var(--text-primary); margin: 0;">System Settings
+                </h1>
+            </header>
+
+            <div class="data-section" style="padding: 2rem;">
+                <div style="max-width: 600px;">
+                    <div style="margin-bottom: 2rem;">
+                        <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Platform Fees</h3>
+                        <p class="text-secondary" style="font-size: 0.9rem; margin-bottom: 1rem;">Configure the service
+                            fee percentage for transactions.</p>
+                        <div style="display: flex; gap: 1rem; align-items: center;">
+                            <input type="number" class="search-input" value="2.5" style="width: 100px;">
+                            <span>% per deal</span>
+                            <button class="btn btn-primary" style="width: auto;">Update</button>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 2rem; border-top: 1px solid var(--border-color); padding-top: 2rem;">
+                        <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Moderation Auto-Flags</h3>
+                        <p class="text-secondary" style="font-size: 0.9rem; margin-bottom: 1rem;">List keywords that
+                            trigger automatic alerts in conversations.</p>
+                        <textarea class="search-input"
+                            style="height: 100px; padding: 1rem;">whatsapp, skype, phone, direct, call me, email me</textarea>
+                        <button class="btn btn-primary" style="width: auto; margin-top: 1rem;">Save Keywords</button>
+                    </div>
+
+                    <div style="margin-bottom: 2rem; border-top: 1px solid var(--border-color); padding-top: 2rem;">
+                        <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--error-color);">Maintenance
+                            Mode</h3>
+                        <p class="text-secondary" style="font-size: 0.9rem; margin-bottom: 1rem;">Downtime prevents any
+                            new negotiations or listings.</p>
+                        <button class="btn btn-secondary"
+                            style="width: auto; color: var(--error-color); border-color: var(--error-color);">Activate
+                            Maintenance</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+</body>
+
+</html>

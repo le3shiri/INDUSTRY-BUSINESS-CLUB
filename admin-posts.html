@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Posts Management | Fluxence</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="js/components.js"></script>
+    <script src="js/admin-data.js"></script>
+    <style>
+        .filter-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        #post-images img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar-container"></aside>
+
+        <main class="main-content">
+            <header class="top-nav">
+                <h1 style="font-size: 1.5rem; font-weight: 800; color: var(--text-primary); margin: 0;">Posts Management
+                </h1>
+                <div class="nav-actions">
+                    <span class="status-badge status-pending" id="pending-posts-count">Pending: 0</span>
+                </div>
+            </header>
+
+            <section style="margin-bottom: 2rem;">
+                <p class="text-secondary">Review and validate new listings before they go live on the marketplace.</p>
+            </section>
+
+            <div class="data-section">
+                <div class="section-header">
+                    <h2 style="font-size: 1.1rem; font-weight: 700; margin: 0;">Marketplace Listings</h2>
+                    <div style="display: flex; gap: 0.5rem;" id="filter-container">
+                        <button class="btn btn-secondary filter-btn active" onclick="filterPosts('all')">All</button>
+                        <button class="btn btn-secondary filter-btn" onclick="filterPosts('pending')">Pending</button>
+                        <button class="btn btn-secondary filter-btn" onclick="filterPosts('approved')">Approved</button>
+                        <button class="btn btn-secondary filter-btn" onclick="filterPosts('rejected')">Rejected</button>
+                    </div>
+                </div>
+                <div class="table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Listing</th>
+                                <th>Seller</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="posts-table-body">
+                            <!-- Data injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Post Detail View -->
+            <div id="post-detail-panel" class="data-section"
+                style="padding: 2rem; display: none; border-top: 4px solid var(--primary-color); background: #fafafa;">
+                <div
+                    style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem;">
+                    <div>
+                        <h2 id="detail-title"
+                            style="font-size: 1.8rem; font-weight: 800; margin: 0; color: var(--text-primary);">Post
+                            Detail</h2>
+                        <p id="detail-seller" class="text-secondary" style="font-size: 1.1rem; margin-top: 0.5rem;">
+                            Seller: ...</p>
+                    </div>
+                    <button class="btn btn-secondary" style="width: auto;" onclick="closeDetail()">Close Panel</button>
+                </div>
+
+                <div class="dashboard-row">
+                    <div style="flex: 1;">
+                        <div
+                            style="background: white; padding: 2rem; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 2rem;">
+                            <h3
+                                style="font-size: 1rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-secondary); text-transform: uppercase; border-bottom: 1px solid var(--border-light); padding-bottom: 0.5rem;">
+                                Section 2: Description Technique</h3>
+                            <p id="detail-desc"
+                                style="line-height: 1.8; color: var(--text-primary); font-size: 1.05rem; margin-bottom: 1.5rem;">
+                            </p>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                                <div>
+                                    <h3
+                                        style="font-size: 0.9rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase;">
+                                        Section 3: Quantités & Prix</h3>
+                                    <p style="margin: 0.5rem 0;"><strong>Prix:</strong> <span id="detail-price"
+                                            style="color: var(--primary-color);"></span></p>
+                                    <p style="margin: 0.5rem 0;"><strong>Qté Dispo:</strong> <span
+                                            id="detail-qty"></span></p>
+                                    <p style="margin: 0.5rem 0;"><strong>MOQ:</strong> <span id="detail-moq"></span></p>
+                                </div>
+                                <div>
+                                    <h3
+                                        style="font-size: 0.9rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase;">
+                                        Section 5: Logistique</h3>
+                                    <p style="margin: 0.5rem 0;"><strong>Incoterm:</strong> <span
+                                            id="detail-incoterm"></span></p>
+                                    <p style="margin: 0.5rem 0;"><strong>Stock à:</strong> <span
+                                            id="detail-location"></span></p>
+                                    <p style="margin: 0.5rem 0;"><strong>Délai:</strong> <span
+                                            id="detail-leadtime"></span></p>
+                                </div>
+                            </div>
+
+                            <div
+                                style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border-light);">
+                                <h3
+                                    style="font-size: 0.9rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-secondary); text-transform: uppercase;">
+                                    Média & Documents</h3>
+                                <div id="post-images"
+                                    style="display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1rem;">
+                                    <!-- Images placeholder -->
+                                </div>
+                                <div id="spec-sheet-link" style="display: none;">
+                                    <a href="#" class="btn btn-secondary" style="width: auto; font-size: 0.85rem;"><i
+                                            class="fas fa-file-pdf"></i> Voir Fiche Technique</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            style="background: var(--admin-accent-light); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--admin-accent);">
+                            <h3
+                                style="font-size: 0.9rem; font-weight: 700; color: var(--admin-accent-dark); text-transform: uppercase;">
+                                Section 6: Conditions Commerciales</h3>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.5rem;">
+                                <p style="margin: 0;"><strong>Paiement:</strong> <span id="detail-payment"></span></p>
+                                <p style="margin: 0;"><strong>Validité:</strong> <span id="detail-validity"></span></p>
+                                <p style="margin: 0;"><strong>Garantie:</strong> <span id="detail-warranty">--</span>
+                                </p>
+                                <p style="margin: 0;"><strong>Retours:</strong> <span id="detail-returns">--</span></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="width: 350px;">
+                        <div
+                            style="background: white; padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color); position: sticky; top: 2rem;">
+                            <h3
+                                style="font-size: 0.9rem; font-weight: 700; margin-bottom: 1.5rem; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.05em;">
+                                Review Action</h3>
+
+                            <div id="validation-controls">
+                                <button class="btn btn-primary"
+                                    style="width: 100%; margin-bottom: 1rem; height: 3rem; font-weight: 700;"
+                                    onclick="approvePost()">
+                                    <i class="fas fa-check-circle" style="margin-right: 8px;"></i> Approve Listing
+                                </button>
+
+                                <div style="margin: 2rem 0; display: flex; align-items: center; gap: 1rem;">
+                                    <div style="flex: 1; height: 1px; background: var(--border-color);"></div>
+                                    <span style="font-size: 0.75rem; color: var(--text-secondary); font-weight: 700;">OR
+                                        REJECT</span>
+                                    <div style="flex: 1; height: 1px; background: var(--border-color);"></div>
+                                </div>
+
+                                <label
+                                    style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--text-primary);">Internal
+                                    Remark / Reason</label>
+                                <textarea id="rejection-remark" class="search-input"
+                                    style="width: 100%; height: 120px; padding: 1rem; margin-bottom: 1.5rem; background: #fdfdfd; font-family: inherit; resize: none; border: 1.5px solid var(--border-color);"
+                                    placeholder="Explain why this listing is being rejected (sent to seller)..."></textarea>
+
+                                <button class="btn btn-secondary"
+                                    style="width: 100%; border-color: var(--error-color); color: var(--error-color); height: 3rem; font-weight: 600;"
+                                    onclick="rejectPost()">
+                                    <i class="fas fa-times-circle" style="margin-right: 8px;"></i> Reject Post
+                                </button>
+                                <p
+                                    style="font-size: 0.75rem; color: var(--text-secondary); text-align: center; margin-top: 1rem;">
+                                    Rejecting will notify the seller with your remark.</p>
+                            </div>
+
+                            <div id="status-display" style="display: none; text-align: center; padding: 1rem;">
+                                <div id="final-status-container" style="margin-bottom: 1.5rem;">
+                                    <span id="final-status-badge" class="status-badge"
+                                        style="font-size: 1.1rem; padding: 0.6rem 2rem;"></span>
+                                </div>
+                                <div id="remark-display-box"
+                                    style="padding: 1rem; background: #f8fafc; border-radius: 8px; border-left: 4px solid var(--border-color); text-align: left;">
+                                    <small
+                                        style="display: block; color: var(--text-secondary); margin-bottom: 0.5rem; text-transform: uppercase; font-weight: 700;">Admin
+                                        Remark:</small>
+                                    <p id="final-remark"
+                                        style="margin: 0; font-size: 0.95rem; line-height: 1.5; color: var(--text-primary);">
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let selectedPostId = null;
+        let currentFilter = 'all';
+
+        function renderPosts() {
+            const posts = AdminData.getData(AdminData.KEYS.POSTS);
+            const tbody = document.getElementById('posts-table-body');
+            const pendingCount = posts.filter(p => p.status === 'pending').length;
+            document.getElementById('pending-posts-count').textContent = 'Pending: ' + pendingCount;
+
+            const filteredPosts = currentFilter === 'all' ? posts : posts.filter(p => p.status === currentFilter);
+
+            if (filteredPosts.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 3rem; color: var(--text-secondary);">No ${currentFilter === 'all' ? '' : currentFilter} posts found.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filteredPosts.map(p => `
+                <tr style="cursor: pointer;" onclick="openDetail(${p.id})">
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                             <div style="width: 40px; height: 40px; background: #f1f5f9; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: var(--primary-color);">
+                                <i class="fas ${p.category?.includes('Matériaux') ? 'fa-hammer' :
+                    p.category?.includes('Machines') ? 'fa-tractor' :
+                        p.category?.includes('Déchets') ? 'fa-recycle' :
+                            p.category?.includes('Énergie') ? 'fa-bolt' :
+                                'fa-industry'
+                }"></i>
+                             </div>
+                             <div>
+                                <strong>${p.title}</strong><br>
+                                <small class="text-secondary">${p.category}</small>
+                             </div>
+                        </div>
+                    </td>
+                    <td>${p.seller}</td>
+                    <td><span style="font-size: 0.85rem; color: var(--text-secondary);">${p.category}</span></td>
+                    <td><strong>${p.price}</strong></td>
+                    <td><span style="font-size: 0.85rem;">${p.date}</span></td>
+                    <td><span class="status-badge status-${p.status}">${p.status}</span></td>
+                    <td><button class="btn btn-secondary" style="width: auto; padding: 0.4rem 0.8rem; font-size: 0.8rem;">Review</button></td>
+                </tr>
+            `).join('');
+        }
+
+        function openDetail(id) {
+            const posts = AdminData.getData(AdminData.KEYS.POSTS);
+            const post = posts.find(p => p.id == id);
+            if (!post) return;
+
+            selectedPostId = id;
+            document.getElementById('post-detail-panel').style.display = 'block';
+            document.getElementById('detail-title').textContent = post.title;
+            document.getElementById('detail-seller').textContent = 'Seller: ' + post.seller;
+            document.getElementById('detail-desc').textContent = post.description || 'No description provided by the seller.';
+
+            // Populate Section 3 & 5
+            document.getElementById('detail-price').textContent = post.price || 'N/A';
+            document.getElementById('detail-qty').textContent = post.quantity ? `${post.quantity} ${post.unit || ''}` : 'N/A';
+            document.getElementById('detail-moq').textContent = post.moq || '1';
+            document.getElementById('detail-incoterm').textContent = post.incoterm || 'EXW';
+            document.getElementById('detail-location').textContent = post.location || 'N/A';
+            document.getElementById('detail-leadtime').textContent = post.lead_time || 'N/A';
+
+            // Populate Section 6
+            document.getElementById('detail-payment').textContent = post.payment_terms || 'Virement';
+            document.getElementById('detail-validity').textContent = post.offer_validity || '30 jours';
+            document.getElementById('detail-warranty').textContent = post.warranty || '--';
+            document.getElementById('detail-returns').textContent = post.returns_accepted || 'Non';
+
+            // Render images
+            const imgContainer = document.getElementById('post-images');
+            if (post.images && post.images.length > 0) {
+                imgContainer.innerHTML = post.images.map(img => `
+                    <div style="position: relative; width: 150px; height: 150px; overflow: hidden; border-radius: 8px;">
+                        <img src="https://via.placeholder.com/150x150?text=${encodeURIComponent(post.title)}" style="width: 100%; height: 100%; object-fit: cover;" alt="Product">
+                    </div>
+                `).join('');
+            } else {
+                imgContainer.innerHTML = '<p class="text-secondary" style="font-style: italic;">No images uploaded.</p>';
+            }
+
+            // Spec sheet
+            const specSheet = document.getElementById('spec-sheet-link');
+            if (post.has_spec_sheet) {
+                specSheet.style.display = 'block';
+            } else {
+                specSheet.style.display = 'none';
+            }
+
+            const validationControls = document.getElementById('validation-controls');
+            const statusDisplay = document.getElementById('status-display');
+
+            if (post.status === 'pending') {
+                validationControls.style.display = 'block';
+                statusDisplay.style.display = 'none';
+                document.getElementById('rejection-remark').value = '';
+            } else {
+                validationControls.style.display = 'none';
+                statusDisplay.style.display = 'block';
+                const badge = document.getElementById('final-status-badge');
+                badge.textContent = post.status.toUpperCase();
+                badge.className = 'status-badge status-' + post.status;
+
+                const remarkBox = document.getElementById('remark-display-box');
+                if (post.remark) {
+                    remarkBox.style.display = 'block';
+                    document.getElementById('final-remark').textContent = post.remark;
+                } else {
+                    remarkBox.style.display = 'none';
+                }
+            }
+
+            document.getElementById('post-detail-panel').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function closeDetail() {
+            document.getElementById('post-detail-panel').style.display = 'none';
+            selectedPostId = null;
+        }
+
+        function filterPosts(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.toLowerCase() === filter) btn.classList.add('active');
+                if (filter === 'all' && btn.textContent === 'All') btn.classList.add('active');
+            });
+            renderPosts();
+            closeDetail();
+        }
+
+        function approvePost() {
+            if (!selectedPostId) return;
+            if (confirm('Approve this listing for the marketplace? It will become visible to all buyers.')) {
+                AdminData.updatePostStatus(selectedPostId, 'approved');
+                renderPosts();
+                openDetail(selectedPostId);
+                updateSidebarBadge();
+            }
+        }
+
+        function rejectPost() {
+            if (!selectedPostId) return;
+            const remark = document.getElementById('rejection-remark').value.trim();
+            if (!remark) {
+                alert('Please provide a remark for rejection. The seller needs to know why their post was declined.');
+                return;
+            }
+            if (confirm('Are you sure you want to reject this listing?')) {
+                AdminData.updatePostStatus(selectedPostId, 'rejected', remark);
+                renderPosts();
+                openDetail(selectedPostId);
+                updateSidebarBadge();
+            }
+        }
+
+        function updateSidebarBadge() {
+            const stats = AdminData.getStats();
+            const badge = document.getElementById('pending-posts-badge');
+            if (badge) {
+                if (stats.pendingPosts > 0) {
+                    badge.textContent = stats.pendingPosts;
+                    badge.style.display = 'flex';
+                } else {
+                    badge.style.display = 'none';
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderPosts();
+        });
+    </script>
+</body>
+
+</html>

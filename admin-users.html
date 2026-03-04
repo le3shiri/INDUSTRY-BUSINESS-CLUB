@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Users | Fluxence</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="js/components.js"></script>
+    <script src="js/admin-data.js"></script>
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar-container"></aside>
+
+        <main class="main-content">
+            <header class="top-nav">
+                <div class="search-bar">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="user-search" class="search-input"
+                        placeholder="Search users by name or email...">
+                </div>
+            </header>
+
+            <section style="margin-bottom: 2rem;">
+                <h1 style="font-size: 2rem; font-weight: 800; color: var(--text-primary);">User Management</h1>
+                <p class="text-secondary">Oversee all registered company representatives and individuals.</p>
+            </section>
+
+            <div class="data-section">
+                <div class="section-header">
+                    <h2 style="font-size: 1.25rem; font-weight: 700; margin: 0;">Platform Users</h2>
+                </div>
+                <div class="table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Company</th>
+                                <th>Role</th>
+                                <th>Last Online</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table-body">
+                            <!-- Data injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function renderUsers(filter = '') {
+            const users = AdminData.getData(AdminData.KEYS.USERS);
+            const tbody = document.getElementById('users-table-body');
+
+            const filtered = users.filter(u =>
+                u.name.toLowerCase().includes(filter.toLowerCase()) ||
+                u.email.toLowerCase().includes(filter.toLowerCase()) ||
+                u.company.toLowerCase().includes(filter.toLowerCase())
+            );
+
+            tbody.innerHTML = filtered.map(u => `
+                <tr>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--primary-light); color: var(--primary-color); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem;">
+                                ${u.name.split(' ').map(n => n[0]).join('')}
+                            </div>
+                            <div>
+                                <strong>${u.name}</strong>
+                                <div style="font-size: 0.75rem; color: var(--text-secondary);">${u.email}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${u.company}</td>
+                    <td>${u.role}</td>
+                    <td>${u.lastOnline}</td>
+                    <td><button class="btn btn-secondary" style="width: auto; padding: 0.4rem 0.8rem;">Manage</button></td>
+                </tr>
+            `).join('');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderUsers();
+
+            document.getElementById('user-search').addEventListener('input', (e) => {
+                renderUsers(e.target.value);
+            });
+        });
+    </script>
+</body>
+
+</html>
