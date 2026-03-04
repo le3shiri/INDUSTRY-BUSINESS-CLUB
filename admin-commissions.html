@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence Admin | Gestion des Commissions</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="js/components.js"></script>
+    <script src="js/admin-data.js"></script>
+
+    <style>
+        :root {
+            --admin-bg: #fcfcfd;
+            --card-border: #eaecf0;
+            --text-main: #101828;
+            --text-sub: #475467;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --primary-corporate: #101828;
+            --info-main: #026aa2;
+            --info-bg: #f0f9ff;
+            --success-main: #027a48;
+            --success-bg: #ecfdf3;
+            --warning-main: #b54708;
+            --warning-bg: #fffaeb;
+            --danger-main: #b42318;
+            --danger-bg: #fef3f2;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--admin-bg);
+            color: var(--text-main);
+            letter-spacing: -0.01em;
+        }
+
+        .main-content {
+            padding: 0;
+            background: var(--admin-bg);
+        }
+
+        .top-nav {
+            background: white;
+            border-bottom: 1px solid var(--card-border);
+            padding: 1.25rem 2.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-container {
+            padding: 2rem 2.5rem;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        /* KPI Grid System */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin: 0;
+        }
+
+        .stat-subtext {
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            display: block;
+        }
+
+        /* Analytics Grid */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .analytics-box {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .analytics-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Filter Header */
+        .filter-header {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .filter-label {
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .filter-control {
+            padding: 0.6rem;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-family: inherit;
+        }
+
+        /* Admin Table Styling */
+        .table-outer {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            scrollbar-width: thin;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        .admin-table th {
+            background: #f9fafb;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--card-border);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .admin-table td {
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid var(--card-border);
+            font-size: 0.85rem;
+            vertical-align: middle;
+        }
+
+        /* Status & Badges */
+        .badge {
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge-pending {
+            background: var(--warning-bg);
+            color: var(--warning-main);
+            border: 1px solid #fec84b;
+        }
+
+        .badge-confirmed {
+            background: var(--success-bg);
+            color: var(--success-main);
+            border: 1px solid #6ce9a6;
+        }
+
+        .badge-cancelled {
+            background: var(--danger-bg);
+            color: var(--danger-main);
+            border: 1px solid #fda29b;
+        }
+
+        .percentage-tag {
+            background: #f2f4f7;
+            color: #344054;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            border: 1px solid #eaecf0;
+        }
+
+        /* Actions Shell */
+        .action-btns {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .btn-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            border: 1px solid var(--card-border);
+            background: white;
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+
+        .btn-icon:hover {
+            border-color: var(--text-main);
+            color: var(--text-main);
+            background: #f9fafb;
+        }
+
+        .btn-icon.info:hover {
+            color: var(--info-main);
+            border-color: #b9e6fe;
+            background: var(--info-bg);
+        }
+
+        /* Mini Chart Layouts */
+        .chart-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .chart-bar-bg {
+            flex: 1;
+            height: 8px;
+            background: #f2f4f7;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .chart-bar-fill {
+            height: 100%;
+            background: var(--info-main);
+            border-radius: 10px;
+        }
+
+        .chart-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            min-width: 100px;
+        }
+
+        .chart-value {
+            font-size: 0.75rem;
+            font-weight: 700;
+            min-width: 60px;
+            text-align: right;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+        <aside id="sidebar-container"></aside>
+
+        <main class="main-content">
+            <header class="top-nav">
+                <div>
+                    <h1 style="margin:0; font-size: 1.5rem; font-weight: 700;">Commissions</h1>
+                    <p style="margin:0; font-size: 0.85rem; color: var(--text-sub);">Analyse de rentabilité, perception
+                        des frais plateforme et reporting revenus</p>
+                </div>
+                <div style="display: flex; gap: 0.75rem;">
+                    <button class="btn btn-secondary" style="border: 1px solid var(--card-border); background: white;">
+                        <i class="fas fa-file-export"></i> Exporter Commissions
+                    </button>
+                    <button class="btn btn-primary"><i class="fas fa-file-download"></i> Télécharger Rapport</button>
+                </div>
+            </header>
+
+            <div class="dashboard-container">
+
+                <!-- Financial Stats -->
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <span class="stat-label">Total Commissions (GMV)</span>
+                        <p class="stat-value">741,250 MAD</p>
+                        <span class="stat-subtext" style="color: var(--success-main);">+12.5% vs mois dernier</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Commissions Confirmées</span>
+                        <p class="stat-value" style="color: var(--success-main);">685.4k MAD</p>
+                        <span class="stat-subtext" style="color: var(--success-main);">Fonds sécurisés</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Commissions en Attente</span>
+                        <p class="stat-value" style="color: var(--warning-main);">55.8k MAD</p>
+                        <span class="stat-subtext" style="color: var(--warning-main);">Transactions en cours</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Taux Moyen</span>
+                        <p class="stat-value">5.2%</p>
+                        <span class="stat-subtext" style="color: var(--info-main);">Optimisation constante</span>
+                    </div>
+                </div>
+
+                <!-- Strategic Analytics -->
+                <div class="analytics-grid">
+                    <div class="analytics-box">
+                        <div class="analytics-title"><i class="fas fa-chart-line"></i> Revenus par Catégorie de Stock
+                        </div>
+                        <div class="chart-row">
+                            <span class="chart-label">Matières Premières</span>
+                            <div class="chart-bar-bg">
+                                <div class="chart-bar-fill" style="width: 75%;"></div>
+                            </div>
+                            <span class="chart-value">284k MAD</span>
+                        </div>
+                        <div class="chart-row">
+                            <span class="chart-label">Équipements Indus.</span>
+                            <div class="chart-bar-bg">
+                                <div class="chart-bar-fill" style="width: 55%; background: #027a48;"></div>
+                            </div>
+                            <span class="chart-value">162k MAD</span>
+                        </div>
+                        <div class="chart-row">
+                            <span class="chart-label">Énergie & Solaire</span>
+                            <div class="chart-bar-bg">
+                                <div class="chart-bar-fill" style="width: 40%; background: #6366f1;"></div>
+                            </div>
+                            <span class="chart-value">98k MAD</span>
+                        </div>
+                        <div class="chart-row">
+                            <span class="chart-label">Logistique</span>
+                            <div class="chart-bar-bg">
+                                <div class="chart-bar-fill" style="width: 25%; background: #f79009;"></div>
+                            </div>
+                            <span class="chart-value">42k MAD</span>
+                        </div>
+                    </div>
+                    <div class="analytics-box">
+                        <div class="analytics-title"><i class="fas fa-users-cog"></i> Top Vendeurs (Générateurs)</div>
+                        <div style="font-size: 0.8rem;">
+                            <div
+                                style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f2f4f7;">
+                                <span style="font-weight: 600;">Atlas Mining Group</span>
+                                <span style="font-weight: 800; color: #027a48;">42.5k MAD</span>
+                            </div>
+                            <div
+                                style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f2f4f7;">
+                                <span style="font-weight: 600;">Kenitra Metals</span>
+                                <span style="font-weight: 800; color: #027a48;">38.1k MAD</span>
+                            </div>
+                            <div
+                                style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f2f4f7;">
+                                <span style="font-weight: 600;">Intech Solutions</span>
+                                <span style="font-weight: 800; color: #027a48;">31.8k MAD</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 8px 0;">
+                                <span style="font-weight: 600;">Global Build Inc</span>
+                                <span style="font-weight: 800; color: #027a48;">22.4k MAD</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Advanced Filters -->
+                <div class="filter-header">
+                    <div class="filter-group">
+                        <span class="filter-label">Recherche</span>
+                        <input type="text" class="filter-control" placeholder="ID Commission, Deal...">
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">Statut</span>
+                        <select class="filter-control">
+                            <option>Tous</option>
+                            <option>En attente</option>
+                            <option>Confirmée</option>
+                            <option>Annulée</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">Catégorie</span>
+                        <select class="filter-control">
+                            <option>Toutes les catégories</option>
+                            <option>Matières Premières</option>
+                            <option>Équipements</option>
+                            <option>Logistique</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">Vendeur</span>
+                        <input type="text" class="filter-control" placeholder="Nom entreprise...">
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">Période</span>
+                        <input type="date" class="filter-control">
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">Montant Min</span>
+                        <input type="number" class="filter-control" placeholder="MAD">
+                    </div>
+                    <button class="btn btn-secondary" style="height: 38px;">Filtrer</button>
+                </div>
+
+                <div class="table-outer">
+                    <div class="table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Comm. / Deal</th>
+                                    <th>Produit / Catégorie</th>
+                                    <th>Vendeur / Entreprise</th>
+                                    <th>Acheteur / Entreprise</th>
+                                    <th>Audit Financier (Brut / Taux / Net)</th>
+                                    <th>Montant Commission</th>
+                                    <th>Statut Revenu</th>
+                                    <th>Dates (Trans. / Paiement)</th>
+                                    <th>Mode Paiement</th>
+                                    <th style="text-align: right;">Actions Globales</th>
+                                </tr>
+                            </thead>
+                            <tbody id="commissions-table-body">
+                                <!-- Data injected via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            Components.renderAdminSidebar('admin-commissions.html');
+
+            const commissions = [
+                {
+                    id: 'COM-9482', dealId: 'DEAL-842',
+                    product: 'Acier Inox 316L', cat: 'Matières Premières',
+                    vendeur: 'Omar Alami', sellerCo: 'Atlas Mining Group',
+                    acheteur: 'Yasmine Benani', buyerCo: 'Safi Logistics',
+                    total: '218,400 MAD', rate: '5%', netVendeur: '207,480 MAD',
+                    amount: '10,920 MAD',
+                    status: 'confirmed',
+                    dates: { trans: '04/03/2026', pay: '04/03/2026' },
+                    payMode: 'Swift Transfer'
+                },
+                {
+                    id: 'COM-9480', dealId: 'DEAL-840',
+                    product: 'Moteur WEG 50HP', cat: 'Équipements',
+                    vendeur: 'Mehdi Tazi', sellerCo: 'Kenitra Metals',
+                    acheteur: 'Reda Hakimi', buyerCo: 'BuildIt SA',
+                    total: '56,000 MAD', rate: '5%', netVendeur: '53,200 MAD',
+                    amount: '2,800 MAD',
+                    status: 'pending',
+                    dates: { trans: '03/03/2026', pay: '--' },
+                    payMode: 'Escrow (Virement)'
+                },
+                {
+                    id: 'COM-9475', dealId: 'DEAL-838',
+                    product: 'Bobines Cuivre Grade A', cat: 'Matières Premières',
+                    vendeur: 'Leila Mansouri', sellerCo: 'Intech Solutions',
+                    acheteur: 'Julien Durand', buyerCo: 'LogiFrance',
+                    total: '325,000 MAD', rate: '5%', netVendeur: '308,750 MAD',
+                    amount: '16,250 MAD',
+                    status: 'confirmed',
+                    dates: { trans: '02/03/2026', pay: '03/03/2026' },
+                    payMode: 'Swift Transfer'
+                },
+                {
+                    id: 'COM-9470', dealId: 'DEAL-835',
+                    product: 'Lot 500 Palettes', cat: 'Logistique',
+                    vendeur: 'Hamza El Amrani', sellerCo: 'Global Build Inc',
+                    acheteur: 'Omar Alami', buyerCo: 'Atlas Mining Group',
+                    total: '12,000 MAD', rate: '5%', netVendeur: '11,400 MAD',
+                    amount: '600 MAD',
+                    status: 'cancelled',
+                    dates: { trans: '01/03/2026', pay: '--' },
+                    payMode: 'Carte Bancaire'
+                }
+            ];
+
+            const tbody = document.getElementById('commissions-table-body');
+
+            function renderCommissions(list) {
+                tbody.innerHTML = list.map(c => `
+                    <tr>
+                        <td>
+                            <div style="font-weight: 700; color: var(--info-main); font-family: monospace;">${c.id}</div>
+                            <div style="font-size: 0.7rem; color: var(--text-sub);">Deal: ${c.dealId}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700;">${c.product}</div>
+                            <div style="font-size: 0.7rem; color: #026aa2; font-weight: 700;">${c.cat}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700;">${c.vendeur}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-sub);">${c.sellerCo}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700;">${c.acheteur}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-sub);">${c.buyerCo}</div>
+                        </td>
+                        <td>
+                            <div style="font-size: 0.75rem; color: var(--text-main);">Brut: <strong>${c.total}</strong></div>
+                            <div style="display: flex; align-items: center; gap: 8px; margin-top: 2px;">
+                                <span class="percentage-tag">${c.rate}</span>
+                                <span style="font-size: 0.7rem; color: #027a48; font-weight: 700;">Net Ven: ${c.netVendeur}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div style="font-size: 1.1rem; font-weight: 800; color: var(--info-main);">${c.amount}</div>
+                        </td>
+                        <td>
+                            <span class="badge ${getStatusBadgeClass(c.status)}">
+                                ${getStatusLabel(c.status)}
+                            </span>
+                        </td>
+                        <td>
+                            <div style="font-size: 0.65rem;">Trans: ${c.dates.trans}</div>
+                            <div style="font-size: 0.65rem; color: #027a48; font-weight: 700;">Pay: ${c.dates.pay}</div>
+                        </td>
+                        <td>
+                            <div style="font-size: 0.75rem; font-weight: 600;"><i class="fas fa-wallet"></i> ${c.payMode}</div>
+                        </td>
+                        <td style="text-align: right;">
+                            <div class="action-btns">
+                                <button class="btn-icon" title="Voir transaction"><i class="fas fa-search-dollar"></i></button>
+                                <button class="btn-icon info" title="Voir paiement"><i class="fas fa-handshake"></i></button>
+                                <button class="btn-icon info" title="Voir facture"><i class="fas fa-file-pdf"></i></button>
+                                <button class="btn-icon" title="Exporter"><i class="fas fa-download"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            function getStatusBadgeClass(status) {
+                switch (status) {
+                    case 'pending': return 'badge-pending';
+                    case 'confirmed': return 'badge-confirmed';
+                    case 'cancelled': return 'badge-cancelled';
+                    default: return '';
+                }
+            }
+
+            function getStatusLabel(status) {
+                switch (status) {
+                    case 'pending': return 'En attente';
+                    case 'confirmed': return 'Confirmée';
+                    case 'cancelled': return 'Annulée';
+                    default: return status;
+                }
+            }
+
+            renderCommissions(commissions);
+        });
+    </script>
+</body>
+
+</html>

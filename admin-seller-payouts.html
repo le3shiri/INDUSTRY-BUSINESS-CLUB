@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence Admin | Reversements Vendeurs</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="js/components.js"></script>
+    <script src="js/admin-data.js"></script>
+
+    <style>
+        :root {
+            --admin-bg: #fcfcfd;
+            --card-border: #eaecf0;
+            --text-main: #101828;
+            --text-sub: #475467;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --success-main: #027a48;
+            --success-bg: #ecfdf3;
+            --warning-main: #b54708;
+            --warning-bg: #fffaeb;
+            --info-main: #026aa2;
+            --info-bg: #f0f9ff;
+            --danger-main: #b42318;
+            --danger-bg: #fef3f2;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--admin-bg);
+            color: var(--text-main);
+            letter-spacing: -0.01em;
+        }
+
+        .main-content {
+            padding: 0;
+            background: var(--admin-bg);
+        }
+
+        .top-nav {
+            background: white;
+            border-bottom: 1px solid var(--card-border);
+            padding: 1.25rem 2.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-container {
+            padding: 2rem 2.5rem;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        /* KPI Grid System */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin: 0;
+        }
+
+        .stat-subtext {
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            display: block;
+        }
+
+        /* Admin Table Styling */
+        .table-outer {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            scrollbar-width: thin;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        .admin-table th {
+            background: #f9fafb;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--card-border);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .admin-table td {
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid var(--card-border);
+            font-size: 0.85rem;
+            vertical-align: middle;
+        }
+
+        /* Status & Badges */
+        .badge {
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge-pending {
+            background: var(--warning-bg);
+            color: var(--warning-main);
+            border: 1px solid #fec84b;
+        }
+
+        .badge-processing {
+            background: var(--info-bg);
+            color: #026aa2;
+            border: 1px solid #b9e6fe;
+        }
+
+        .badge-done {
+            background: var(--success-bg);
+            color: var(--success-main);
+            border: 1px solid #6ce9a6;
+        }
+
+        .badge-failed {
+            background: var(--danger-bg);
+            color: var(--danger-main);
+            border: 1px solid #fda29b;
+        }
+
+        .bank-info-box {
+            font-size: 0.7rem;
+            color: var(--text-sub);
+            line-height: 1.4;
+            background: #f9fafb;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #eaecf0;
+            max-width: 200px;
+            white-space: normal;
+        }
+
+        .iban-code {
+            font-family: monospace;
+            font-weight: 700;
+            color: var(--text-main);
+            display: block;
+            margin-top: 4px;
+        }
+
+        .payout-item {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        /* Actions Shell */
+        .action-btns {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .btn-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            border: 1px solid var(--card-border);
+            background: white;
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+
+        .btn-icon:hover {
+            border-color: var(--text-main);
+            color: var(--text-main);
+            background: #f9fafb;
+        }
+
+        .btn-icon.success:hover {
+            color: #027a48;
+            border-color: #6ce9a6;
+            background: #ecfdf3;
+        }
+
+        .btn-icon.info:hover {
+            color: #026aa2;
+            border-color: #b9e6fe;
+            background: var(--info-bg);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+        <aside id="sidebar-container"></aside>
+
+        <main class="main-content">
+            <header class="top-nav">
+                <div>
+                    <h1 style="margin:0; font-size: 1.5rem; font-weight: 700;">Reversements Vendeurs</h1>
+                    <p style="margin:0; font-size: 0.85rem; color: var(--text-sub);">Transferts de fonds post-réception,
+                        reversement des nets vendeurs et suivi bancaire</p>
+                </div>
+                <div style="display: flex; gap: 0.75rem;">
+                    <button class="btn btn-secondary" style="border: 1px solid var(--card-border); background: white;">
+                        <i class="fas fa-file-invoice-dollar"></i> Ordres de Virement
+                    </button>
+                    <button class="btn btn-primary"><i class="fas fa-play"></i> Lancer les transferts</button>
+                </div>
+            </header>
+
+            <div class="dashboard-container">
+
+                <!-- Payout Summary Stats -->
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <span class="stat-label">Attente Reversement</span>
+                        <p class="stat-value" style="color: var(--warning-main);">124,500 MAD</p>
+                        <span class="stat-subtext" style="color: var(--warning-main);">Dossiers confirmés reçus</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Net Reversé (Mois)</span>
+                        <p class="stat-value">3,142k MAD</p>
+                        <span class="stat-subtext" style="color: var(--success-main);">Flux vendeur sécurisés</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Commissions Plateforme</span>
+                        <p class="stat-value">165.2k MAD</p>
+                        <span class="stat-subtext" style="color: var(--info-main);">Rétention confirmée</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Échecs Transfert</span>
+                        <p class="stat-value" style="color: var(--danger-main);">1</p>
+                        <span class="stat-subtext" style="color: var(--danger-main);">RIB non conforme</span>
+                    </div>
+                </div>
+
+                <div class="table-outer">
+                    <div class="table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Rev. / Transaction</th>
+                                    <th>Vendeur / Entreprise</th>
+                                    <th>Produit / Catégorie</th>
+                                    <th>Acheteur / Entreprise</th>
+                                    <th>Audit Financier (Brut / Com / Net)</th>
+                                    <th>Banque & IBAN Vendeur</th>
+                                    <th>Statut Reversement</th>
+                                    <th>Dates (Conf. / Rev.)</th>
+                                    <th>Réf. / Mode</th>
+                                    <th style="text-align: right;">Actions Finance</th>
+                                </tr>
+                            </thead>
+                            <tbody id="payouts-table-body">
+                                <!-- Data injected via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            Components.renderAdminSidebar('admin-seller-payouts.html');
+
+            const payouts = [
+                {
+                    id: 'REV-9421', dealId: 'DEAL-842',
+                    vendeur: 'Omar Alami', sellerCo: 'Atlas Mining Group',
+                    product: 'Acier Inox 316L', cat: 'Matières Premières',
+                    acheteur: 'Yasmine Benani', buyerCo: 'Safi Logistics',
+                    brut: '218,400 MAD', commission: '10,920 MAD', net: '207,480 MAD',
+                    bank: { owner: 'ATLAS MINING GROUP SA', bankName: 'BMCE Bank of Africa', iban: 'MA64 011 780 000123456789 01', swift: 'BMCE MAMC' },
+                    status: 'pending', mode: 'virement',
+                    dates: { confirmation: '04/03/2026', payout: '--' },
+                    ref: '--'
+                },
+                {
+                    id: 'REV-9418', dealId: 'DEAL-840',
+                    vendeur: 'Mehdi Tazi', sellerCo: 'Kenitra Metals',
+                    product: 'Moteur WEG 50HP', cat: 'Équipements',
+                    acheteur: 'Reda Hakimi', buyerCo: 'BuildIt SA',
+                    brut: '56,000 MAD', commission: '2,800 MAD', net: '53,200 MAD',
+                    bank: { owner: 'MEHDI TAZI BUSINESS', bankName: 'Attijariwafa Bank', iban: 'MA45 007 120 110022334455 66', swift: 'BCMA MAMC' },
+                    status: 'processing', mode: 'virement',
+                    dates: { confirmation: '03/03/2026', payout: '--' },
+                    ref: 'BJK-7712-X'
+                },
+                {
+                    id: 'REV-9412', dealId: 'DEAL-830',
+                    vendeur: 'Leila Mansouri', sellerCo: 'Intech Solutions',
+                    product: 'Bobines Cuivre 5mm', cat: 'Matières Premières',
+                    acheteur: 'Julien Durand', buyerCo: 'LogiFrance',
+                    brut: '65,000 MAD', commission: '3,250 MAD', net: '61,750 MAD',
+                    bank: { owner: 'INTECH SOLUTIONS SARL', bankName: 'CIH Bank', iban: 'MA33 230 450 000088997766 55', swift: 'CIH MAMC' },
+                    status: 'done', mode: 'wallet',
+                    dates: { confirmation: '28/02/2026', payout: '02/03/2026' },
+                    ref: 'WLT-REV-882'
+                },
+                {
+                    id: 'REV-9405', dealId: 'DEAL-821',
+                    vendeur: 'Hamza El Amrani', sellerCo: 'Global Build Inc',
+                    product: 'Excavatrice Cat 320D', cat: 'Engins',
+                    acheteur: 'Omar Alami', buyerCo: 'Atlas Mining Group',
+                    brut: '850,000 MAD', commission: '42,500 MAD', net: '807,500 MAD',
+                    bank: { owner: 'GLOBAL BUILD INC', bankName: 'Société Générale', iban: 'MA12 022 560 123456789012 34', swift: 'SOGE MAMC' },
+                    status: 'failed', mode: 'virement',
+                    dates: { confirmation: '25/02/2026', payout: '--' },
+                    ref: '--'
+                }
+            ];
+
+            const tbody = document.getElementById('payouts-table-body');
+
+            function renderPayouts(list) {
+                tbody.innerHTML = list.map(p => `
+                    <tr>
+                        <td>
+                            <div style="font-weight: 700; color: var(--text-main); font-family: monospace;">${p.id}</div>
+                            <div style="font-size: 0.7rem; color: var(--text-sub);">Transaction: ${p.dealId}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700;">${p.vendeur}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-sub);">${p.sellerCo}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700;">${p.product}</div>
+                            <div style="font-size: 0.7rem; color: #026aa2; font-weight: 700;">${p.cat}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700;">${p.acheteur}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-sub);">${p.buyerCo}</div>
+                        </td>
+                        <td>
+                            <div class="payout-item">
+                                <span style="font-size: 0.7rem; color: var(--text-sub);">Brut: ${p.brut}</span>
+                                <span style="font-size: 0.7rem; color: #b42318;">Com: -${p.commission}</span>
+                                <span style="font-size: 0.85rem; font-weight: 800; color: #027a48;">NET: ${p.net}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="bank-info-box">
+                                <span style="display: block; font-weight: 700; font-size: 0.65rem;">${p.bank.owner}</span>
+                                <span style="display: block;">${p.bank.bankName} (${p.bank.swift})</span>
+                                <span class="iban-code">${p.bank.iban}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge ${getStatusBadgeClass(p.status)}">
+                                ${getStatusLabel(p.status)}
+                            </span>
+                        </td>
+                        <td>
+                            <div style="font-size: 0.65rem;">Conf: ${p.dates.confirmation}</div>
+                            <div style="font-size: 0.65rem; color: #027a48; font-weight: 700;">Rev: ${p.dates.payout}</div>
+                        </td>
+                        <td>
+                            <div style="font-size: 0.75rem; font-weight: 700; text-transform: capitalize;"><i class="fas ${p.mode === 'virement' ? 'fa-university' : 'fa-wallet'}"></i> ${p.mode}</div>
+                            <div style="font-size: 0.65rem; font-family: monospace;">Ref: ${p.ref}</div>
+                        </td>
+                        <td style="text-align: right;">
+                            <div class="action-btns">
+                                <button class="btn-icon" title="Détails transaction"><i class="fas fa-search-dollar"></i></button>
+                                <button class="btn-icon info" title="Voir paiement acheteur"><i class="fas fa-file-invoice-dollar"></i></button>
+                                <button class="btn-icon success" title="Lancer le reversement"><i class="fas fa-play-circle"></i></button>
+                                <button class="btn-icon success" title="Marquer comme effectué"><i class="fas fa-check-double"></i></button>
+                                <button class="btn-icon" title="Télécharger preuve"><i class="fas fa-download"></i></button>
+                                <button class="btn-icon info" title="Profil vendeur"><i class="fas fa-user-tag"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            function getStatusBadgeClass(status) {
+                switch (status) {
+                    case 'pending': return 'badge-pending';
+                    case 'processing': return 'badge-processing';
+                    case 'done': return 'badge-done';
+                    case 'failed': return 'badge-failed';
+                    default: return '';
+                }
+            }
+
+            function getStatusLabel(status) {
+                switch (status) {
+                    case 'pending': return 'En attente';
+                    case 'processing': return 'En virement';
+                    case 'done': return 'Effectué';
+                    case 'failed': return 'Échoué';
+                    default: return status;
+                }
+            }
+
+            renderPayouts(payouts);
+        });
+    </script>
+</body>
+
+</html>

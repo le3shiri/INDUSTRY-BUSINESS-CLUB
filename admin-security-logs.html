@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence Admin | Logs Système</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="js/components.js"></script>
+    <script src="js/admin-data.js"></script>
+
+    <style>
+        :root {
+            --admin-bg: #fcfcfd;
+            --card-border: #eaecf0;
+            --text-main: #101828;
+            --text-sub: #475467;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --primary-corporate: #101828;
+            --success-main: #027a48;
+            --success-bg: #ecfdf3;
+            --warning-main: #b54708;
+            --warning-bg: #fffaeb;
+            --danger-main: #b42318;
+            --danger-bg: #fef3f2;
+            --info-main: #026aa2;
+            --info-bg: #f0f9ff;
+            --purple-main: #6941c6;
+            --purple-bg: #f9f5ff;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--admin-bg);
+            color: var(--text-main);
+            letter-spacing: -0.01em;
+        }
+
+        .main-content {
+            padding: 0;
+            background: var(--admin-bg);
+        }
+
+        .top-nav {
+            background: white;
+            border-bottom: 1px solid var(--card-border);
+            padding: 1.25rem 2.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-container {
+            padding: 2.5rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 2rem;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr) auto;
+            gap: 1rem;
+            align-items: flex-end;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .filter-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            text-transform: uppercase;
+        }
+
+        .filter-control {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            font-family: inherit;
+            font-size: 0.85rem;
+            color: var(--text-main);
+        }
+
+        /* Logs Table */
+        .table-outer {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        .admin-table th {
+            background: #f9fafb;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .admin-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--card-border);
+            font-size: 0.85rem;
+            vertical-align: middle;
+        }
+
+        /* Status & Module Badges */
+        .badge {
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge-success {
+            background: var(--success-bg);
+            color: var(--success-main);
+            border: 1px solid #6ce9a6;
+        }
+
+        .badge-fail {
+            background: var(--danger-bg);
+            color: var(--danger-main);
+            border: 1px solid #fda29b;
+        }
+
+        .module-tag {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: #f2f4f7;
+            color: var(--text-sub);
+            text-transform: capitalize;
+        }
+
+        .role-tag {
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--info-main);
+            background: var(--info-bg);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        /* User Info Column */
+        .user-cell {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: #eaecf0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.75rem;
+            color: var(--text-sub);
+        }
+
+        /* IP & Locale Column */
+        .ip-info {
+            font-family: monospace;
+            font-size: 0.75rem;
+            color: var(--text-main);
+        }
+
+        .locale-info {
+            font-size: 0.65rem;
+            color: var(--text-sub);
+            display: block;
+        }
+
+        /* Actions Shell */
+        .action-btns {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            background: white;
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+        }
+
+        .btn-icon:hover {
+            border-color: var(--text-main);
+            color: var(--text-main);
+            background: #f9fafb;
+        }
+
+        .pagination {
+            padding: 1rem 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            border-top: 1px solid var(--card-border);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+        <aside id="sidebar-container"></aside>
+
+        <main class="main-content">
+            <header class="top-nav">
+                <div>
+                    <h1 style="margin:0; font-size: 1.5rem; font-weight: 700;">Logs Système</h1>
+                    <p style="margin:0; font-size: 0.85rem; color: var(--text-sub);">Journal d'audit temps réel,
+                        sécurité des accès et traçabilité des opérations</p>
+                </div>
+                <div style="display: flex; gap: 0.75rem;">
+                    <button class="btn btn-secondary" style="border: 1px solid var(--card-border); background: white;">
+                        <i class="fas fa-file-export"></i> Exporter Logs
+                    </button>
+                    <button class="btn btn-secondary"
+                        style="color: var(--danger-main); border-color: #fda29b; background: var(--danger-bg);">
+                        <i class="fas fa-trash-alt"></i> Purger Logs Anciens
+                    </button>
+                </div>
+            </header>
+
+            <div class="dashboard-container">
+
+                <!-- Filter Bar -->
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label class="filter-label">Utilisateur</label>
+                        <input type="text" class="filter-control" placeholder="Nom ou ID...">
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Module</label>
+                        <select class="filter-control">
+                            <option selected>Tous les modules</option>
+                            <option>Utilisateurs</option>
+                            <option>Annonces</option>
+                            <option>Transactions</option>
+                            <option>Paiements</option>
+                            <option>Paramètres</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Action</label>
+                        <select class="filter-control">
+                            <option selected>Toutes actions</option>
+                            <option>Connexion</option>
+                            <option>Création</option>
+                            <option>Modification</option>
+                            <option>Suppression</option>
+                            <option>Validation</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Statut</label>
+                        <select class="filter-control">
+                            <option selected>Tous statuts</option>
+                            <option>Succès</option>
+                            <option>Échec</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Période</label>
+                        <input type="date" class="filter-control">
+                    </div>
+                    <button class="btn btn-primary" style="padding: 10px 20px;"><i class="fas fa-filter"></i>
+                        Filtrer</button>
+                </div>
+
+                <div class="table-outer">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Log ID</th>
+                                <th>Utilisateur & Rôle</th>
+                                <th>Action & Module</th>
+                                <th>Description</th>
+                                <th>IP & Location</th>
+                                <th>Appareil</th>
+                                <th>Statut</th>
+                                <th>Date & Heure</th>
+                                <th style="text-align: right;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="logs-body">
+                            <!-- Injected via JS -->
+                        </tbody>
+                    </table>
+
+                    <div class="pagination">
+                        <span style="font-size: 0.8rem; color: var(--text-sub);">Affichage de 1 à 15 sur 12,480
+                            logs</span>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn btn-secondary"
+                                style="padding: 5px 12px; font-size: 0.75rem;">Précédent</button>
+                            <button class="btn btn-secondary"
+                                style="padding: 5px 12px; font-size: 0.75rem;">Suivant</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            Components.renderAdminSidebar('admin-security-logs.html');
+
+            const logs = [
+                {
+                    id: 'LOG-88241', user: 'Yassir B.', role: 'Admin', avatar: 'YB',
+                    action: 'Modification paramètres', module: 'Paramètres',
+                    desc: 'Mise à jour du taux de commission global (8% -> 10%)',
+                    ip: '196.200.145.32', locale: 'Casablanca, MA',
+                    device: 'Chrome / macOS', status: 'success',
+                    date: '04/03/2026', time: '14:22:15'
+                },
+                {
+                    id: 'LOG-88240', user: 'Atlas Mining', role: 'Vendeur', avatar: 'AM',
+                    action: 'Création annonce', module: 'Annonces',
+                    desc: 'Publication nouvelle offre: "Générateur Industriel 500kVA"',
+                    ip: '105.158.22.11', locale: 'Marrakech, MA',
+                    device: 'Firefox / Win 11', status: 'success',
+                    date: '04/03/2026', time: '14:15:30'
+                },
+                {
+                    id: 'LOG-88239', user: 'Inconnu', role: '--', avatar: '?',
+                    action: 'Connexion', module: 'Auth',
+                    desc: 'Tentative de connexion échouée (Mot de passe incorrect)',
+                    ip: '45.12.33.201', locale: 'Moscow, RU',
+                    device: 'Safari / iPhone 15', status: 'fail',
+                    date: '04/03/2026', time: '13:58:02'
+                },
+                {
+                    id: 'LOG-88238', user: 'Omar Alami', role: 'Acheteur', avatar: 'OA',
+                    action: 'Création transaction', module: 'Transactions',
+                    desc: 'Émission offre d\'achat sur DEAL-2210 (Matériel BTP)',
+                    ip: '41.140.2.88', locale: 'Rabat, MA',
+                    device: 'Chrome / Win 10', status: 'success',
+                    date: '04/03/2026', time: '13:45:10'
+                },
+                {
+                    id: 'LOG-88237', user: 'Support Team', role: 'Admin', avatar: 'ST',
+                    action: 'Validation annonce', module: 'Annonces',
+                    desc: 'Approbation de l\'annonce ID: #99281 (Surplus de câbles)',
+                    ip: '196.200.145.35', locale: 'Casablanca, MA',
+                    device: 'Edge / macOS', status: 'success',
+                    date: '04/03/2026', time: '12:30:55'
+                },
+                {
+                    id: 'LOG-88236', user: 'Kenitra Metals', role: 'Vendeur', avatar: 'KM',
+                    action: 'Suppression annonce', module: 'Annonces',
+                    desc: 'Suppression d\'annonce expirée: "Cuivre usagé 10t"',
+                    ip: '105.152.1.20', locale: 'Kénitra, MA',
+                    device: 'Mobile App / Android', status: 'success',
+                    date: '03/03/2026', time: '18:10:00'
+                }
+            ];
+
+            const tbody = document.getElementById('logs-body');
+
+            function renderLogs(list) {
+                tbody.innerHTML = list.map(l => `
+                    <tr>
+                        <td style="font-family: monospace; font-weight: 700; color: var(--text-sub);">${l.id}</td>
+                        <td>
+                            <div class="user-cell">
+                                <div class="user-avatar">${l.avatar}</div>
+                                <div>
+                                    <div style="font-weight: 700; font-size: 0.85rem;">${l.user}</div>
+                                    <span class="role-tag">${l.role}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700; font-size: 0.85rem;">${l.action}</div>
+                            <span class="module-tag">${l.module}</span>
+                        </td>
+                        <td style="max-width: 280px; white-space: normal; line-height: 1.4; font-size: 0.8rem;">
+                            ${l.desc}
+                        </td>
+                        <td>
+                            <span class="ip-info">${l.ip}</span>
+                            <span class="locale-info"><i class="fas fa-map-marker-alt" style="font-size:0.6rem;"></i> ${l.locale}</span>
+                        </td>
+                        <td style="font-size: 0.75rem; color: var(--text-sub);">
+                            <i class="fas ${l.device.includes('Apple') || l.device.includes('mac') || l.device.includes('iPhone') ? 'fa-apple' : 'fa-laptop'}"></i> ${l.device}
+                        </td>
+                        <td>
+                            <span class="badge ${l.status === 'success' ? 'badge-success' : 'badge-fail'}">
+                                <i class="fas ${l.status === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle'}"></i>
+                                ${l.status === 'success' ? 'SUCCÈS' : 'ÉCHEC'}
+                            </span>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700; font-size: 0.8rem;">${l.date}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-sub);">${l.time}</div>
+                        </td>
+                        <td style="text-align: right;">
+                            <div class="action-btns" style="justify-content: flex-end;">
+                                <button class="btn-icon" title="Voir détails"><i class="fas fa-eye"></i></button>
+                                <button class="btn-icon" title="Filtrer cet utilisateur" onclick="alert('Filtrage par utilisateur: ${l.user}')"><i class="fas fa-user-filter"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            renderLogs(logs);
+        });
+    </script>
+</body>
+
+</html>

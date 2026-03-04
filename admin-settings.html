@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fluxence Admin | Rôles & Permissions</title>
+    <title>Fluxence Admin | Configuration Plateforme</title>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,12 +24,16 @@
             --card-border: #eaecf0;
             --text-main: #101828;
             --text-sub: #475467;
-            --primary-corporate: #101828;
             --font-main: 'Plus Jakarta Sans', sans-serif;
+            --primary-corporate: #101828;
+            --success-main: #027a48;
             --success-bg: #ecfdf3;
-            --success-text: #027a48;
-            --error-bg: #fef3f2;
-            --error-text: #b42318;
+            --warning-main: #b54708;
+            --warning-bg: #fffaeb;
+            --danger-main: #b42318;
+            --danger-bg: #fef3f2;
+            --info-main: #026aa2;
+            --info-bg: #f0f9ff;
         }
 
         body {
@@ -57,148 +61,193 @@
         }
 
         .dashboard-container {
-            padding: 2rem 2.5rem;
+            padding: 2.5rem;
             max-width: 1400px;
             margin: 0 auto;
         }
 
-        /* Grid Layout */
-        .settings-grid {
+        /* Configuration Grid */
+        .config-grid {
             display: grid;
-            grid-template-columns: 1fr 2fr;
+            grid-template-columns: repeat(2, 1fr);
             gap: 2rem;
         }
 
-        /* Sector Styling */
-        .section-box {
+        .config-card {
             background: white;
             border: 1px solid var(--card-border);
-            border-radius: 16px;
+            border-radius: 12px;
             padding: 1.5rem;
-            margin-bottom: 2rem;
             box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
         }
 
-        .section-title {
-            font-size: 1.1rem;
-            font-weight: 800;
-            margin-bottom: 1.5rem;
+        .card-header {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f2f4f7;
         }
 
-        /* Roles List */
-        .role-list {
+        .card-title {
+            font-size: 1rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title i {
+            color: var(--info-main);
+        }
+
+        /* Form Controls */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-corporate);
+            box-shadow: 0 0 0 4px rgba(16, 24, 40, 0.05);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        /* Toggles */
+        .switch-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            border-radius: 8px;
+            background: #f9fafb;
+            margin-bottom: 0.75rem;
+        }
+
+        .switch-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #eaecf0;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: var(--info-main);
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(20px);
+        }
+
+        /* Icon Upload Placeholder */
+        .upload-placeholder {
+            width: 100%;
+            height: 80px;
+            border: 2px dashed var(--card-border);
+            border-radius: 8px;
             display: flex;
             flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .role-item {
-            padding: 1rem;
-            border: 1px solid var(--card-border);
-            border-radius: 12px;
-            display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: center;
+            color: var(--text-sub);
+            font-size: 0.75rem;
             cursor: pointer;
             transition: all 0.2s;
         }
 
-        .role-item:hover,
-        .role-item.active {
-            border-color: var(--primary-corporate);
+        .upload-placeholder:hover {
             background: #f9fafb;
+            border-color: var(--text-sub);
         }
 
-        .role-name {
-            font-weight: 700;
-            font-size: 0.95rem;
+        .save-footer {
+            margin-top: 2.5rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--card-border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
         }
 
-        .role-meta {
-            font-size: 0.75rem;
-            color: var(--text-sub);
-            margin-top: 2px;
-        }
-
-        /* Permissions Table */
-        .permission-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .permission-table th {
-            text-align: left;
-            padding: 0.75rem 1rem;
-            font-size: 0.7rem;
-            font-weight: 800;
-            color: var(--text-sub);
-            text-transform: uppercase;
-            border-bottom: 1px solid var(--card-border);
-        }
-
-        .permission-table td {
-            padding: 1rem;
-            border-bottom: 1px solid var(--card-border);
-            vertical-align: middle;
-        }
-
-        .module-group {
-            background: #f9fafb;
-            font-weight: 800;
-            font-size: 0.75rem;
-            padding: 0.5rem 1rem;
-            border-bottom: 1px solid var(--card-border);
-        }
-
-        /* Status Toggle */
-        .toggle-status {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
+        .status-pill {
             padding: 4px 12px;
             border-radius: 20px;
             font-size: 0.75rem;
             font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .status-granted {
-            background: var(--success-bg);
-            color: var(--success-text);
-        }
-
-        .status-denied {
-            background: var(--error-bg);
-            color: var(--error-text);
-        }
-
-        /* Actions Shell */
-        .action-btns {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .btn-icon-min {
-            width: 28px;
-            height: 28px;
-            border-radius: 6px;
-            border: 1px solid var(--card-border);
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            color: var(--text-sub);
-            cursor: pointer;
-            background: white;
+            gap: 6px;
         }
 
-        .btn-icon-min:hover {
-            color: var(--text-main);
-            border-color: var(--text-main);
+        .status-active {
+            background: var(--success-bg);
+            color: var(--success-main);
+        }
+
+        .status-maintenance {
+            background: var(--warning-bg);
+            color: var(--warning-main);
         }
     </style>
 </head>
@@ -211,57 +260,231 @@
         <main class="main-content">
             <header class="top-nav">
                 <div>
-                    <h1 style="margin:0; font-size: 1.5rem; font-weight: 700;">Permissions & Rôles</h1>
-                    <p style="margin:0; font-size: 0.85rem; color: var(--text-sub);">Architecture des accès et
-                        gouvernance de la plateforme</p>
+                    <h1 style="margin:0; font-size: 1.5rem; font-weight: 700;">Configuration Plateforme</h1>
+                    <p style="margin:0; font-size: 0.85rem; color: var(--text-sub);">Pilotage global des paramètres
+                        système, marketplace et sécurité</p>
+                </div>
+                <div style="display: flex; gap: 0.75rem;">
+                    <div class="status-pill status-active">
+                        <i class="fas fa-check-circle"></i> Plateforme Active
+                    </div>
                 </div>
             </header>
 
             <div class="dashboard-container">
-                <div class="settings-grid">
-                    <!-- 1. GESTION DES RÔLES -->
-                    <div class="section-box">
-                        <div class="section-title">Rôles Définis</div>
 
-                        <button class="btn btn-secondary"
-                            style="width: 100%; margin-bottom: 1.5rem; justify-content: center; border-style: dashed; border-width: 2px;">
-                            <i class="fas fa-plus-circle"></i> Créer Nouveau Rôle
-                        </button>
+                <form id="platform-config-form">
+                    <div class="config-grid">
 
-                        <div class="role-list" id="roles-container">
-                            <!-- Injected via JS -->
-                        </div>
-                    </div>
+                        <!-- 1. INFOS GENERALES -->
+                        <div class="config-card">
+                            <div class="card-header">
+                                <span class="card-title"><i class="fas fa-building"></i> Informations Générales</span>
+                            </div>
 
-                    <!-- 2. CONFIGURATION DES PERMISSIONS -->
-                    <div class="section-box">
-                        <div class="section-title">
-                            <span id="active-role-title">Configuration: Super Admin</span>
-                            <div style="display: flex; gap: 0.5rem;">
-                                <button class="btn btn-secondary"
-                                    style="font-size: 0.75rem; padding: 4px 12px;">Exporter</button>
-                                <button class="btn btn-primary"
-                                    style="font-size: 0.75rem; padding: 4px 12px;">Sauvegarder</button>
+                            <div class="form-group">
+                                <label class="form-label">Nom de la Plateforme</label>
+                                <input type="text" class="form-control" value="Fluxence B2B Marketplace">
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Logo Plateforme (Haut)</label>
+                                    <div class="upload-placeholder">
+                                        <i class="fas fa-image" style="font-size: 1.5rem; margin-bottom: 5px;"></i>
+                                        <span>Cliquer pour uploader</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Favicon (.ico)</label>
+                                    <div class="upload-placeholder">
+                                        <i class="fas fa-icons" style="font-size: 1.5rem; margin-bottom: 5px;"></i>
+                                        <span>Cliquer pour uploader</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Description SEO</label>
+                                <textarea class="form-control"
+                                    style="height: 80px;">Plateforme B2B de mise en relation industrielle pour le déstockage de matières premières et surplus.</textarea>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Email Support</label>
+                                    <input type="email" class="form-control" value="support@fluxence.ma">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Téléphone Support</label>
+                                    <input type="text" class="form-control" value="+212 522 00 00 01">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Adresse Siège Social</label>
+                                <input type="text" class="form-control" value="Technopark, Casablanca, Maroc">
                             </div>
                         </div>
 
-                        <div class="table-outer">
-                            <table class="permission-table">
-                                <thead>
-                                    <tr>
-                                        <th>Module / Permission</th>
-                                        <th>Accès</th>
-                                        <th style="text-align: right;">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="permissions-tbody">
-                                    <!-- Injected -->
-                                </tbody>
-                            </table>
+                        <!-- 2. PARAMETRES MARKETPLACE -->
+                        <div class="config-card">
+                            <div class="card-header">
+                                <span class="card-title"><i class="fas fa-store"></i> Paramètres Marketplace</span>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Devise par Défaut</label>
+                                    <select class="form-control">
+                                        <option selected>MAD (Dirham Marocain)</option>
+                                        <option>EUR (Euro)</option>
+                                        <option>USD (Dollar US)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Langue par Défaut</label>
+                                    <select class="form-control">
+                                        <option selected>Français</option>
+                                        <option>Arabe</option>
+                                        <option>Anglais</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Pays de Service Disponibles</label>
+                                <input type="text" class="form-control" value="Maroc, France, Sénégal, Côte d'Ivoire">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Statut Global Système</label>
+                                <div style="display: flex; gap: 10px;">
+                                    <button type="button" class="btn btn-secondary active"
+                                        style="flex:1; background: var(--success-bg); color: var(--success-main); border-color: #6ce9a6;">Active</button>
+                                    <button type="button" class="btn btn-secondary" style="flex:1;">Maintenance</button>
+                                </div>
+                            </div>
+
+                            <div class="card-header" style="margin-top:2rem;">
+                                <span class="card-title"><i class="fas fa-shield-alt"></i> Sécurité &
+                                    Vérification</span>
+                            </div>
+
+                            <div class="switch-group">
+                                <span class="switch-label">Activation vérification KYC (Utilisateurs)</span>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="switch-group">
+                                <span class="switch-label">Vérification Entreprise (KYB) Obligatoire</span>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="switch-group">
+                                <span class="switch-label">Blocage partage de contacts (Anti-contournement)</span>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
                         </div>
+
+                        <!-- 3. PARAMETRES TRANSACTIONS -->
+                        <div class="config-card">
+                            <div class="card-header">
+                                <span class="card-title"><i class="fas fa-handshake"></i> Flux Transactions &
+                                    Commissions</span>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Commission par Défaut (%)</label>
+                                    <input type="number" class="form-control" value="10">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Commission Minimum (MAD)</label>
+                                    <input type="number" class="form-control" value="50">
+                                </div>
+                            </div>
+
+                            <div class="switch-group">
+                                <span class="switch-label">Validation automatique des annonces</span>
+                                <label class="switch">
+                                    <input type="checkbox">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Délai expiration annonces (Jours)</label>
+                                    <input type="number" class="form-control" value="60">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Délai confirmation réception (Heures)</label>
+                                    <input type="number" class="form-control" value="48">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 4. NOTIFICATIONS SYSTÈME -->
+                        <div class="config-card">
+                            <div class="card-header">
+                                <span class="card-title"><i class="fas fa-bell"></i> Moteur de Notifications</span>
+                            </div>
+
+                            <div class="switch-group">
+                                <span class="switch-label">Envoi d'e-mails transactionnels actif</span>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="switch-group">
+                                <span class="switch-label">Notifications Administrateurs (Alertes)</span>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="switch-group">
+                                <span class="switch-label">Notifications In-App Utilisateurs</span>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div
+                                style="margin-top: 1.5rem; padding: 1rem; border-radius: 8px; border: 1px solid #fffaeb; background: #fffcf0;">
+                                <p style="font-size: 0.75rem; color: #b54708; margin:0; line-height: 1.4;">
+                                    <i class="fas fa-info-circle"></i> Ces paramètres impactent les performances
+                                    serveurs et les coûts de passerelle e-mail (SendGrid/Mailjet).
+                                </p>
+                            </div>
+                        </div>
+
                     </div>
 
-                </div>
+                    <div class="save-footer">
+                        <button type="button" class="btn btn-secondary">
+                            <i class="fas fa-undo"></i> Restaurer par Défaut
+                        </button>
+                        <button type="button" class="btn btn-secondary">
+                            <i class="fas fa-eye"></i> Aperçu Public
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Sauvegarder la Configuration
+                        </button>
+                    </div>
+                </form>
 
             </div>
         </main>
@@ -271,79 +494,11 @@
         document.addEventListener('DOMContentLoaded', () => {
             Components.renderAdminSidebar('admin-settings.html');
 
-            const roles = [
-                { id: 'ROL-01', name: 'Super Admin', desc: 'Accès total sans aucune restriction plateforme.', users: 2, created: '01/01/2026' },
-                { id: 'ROL-02', name: 'Administrateur', desc: 'Gestion opérationnelle complète sauf réglages financiers critiques.', users: 5, created: '02/01/2026' },
-                { id: 'ROL-03', name: 'Modérateur', desc: 'Surveillance des contenus et résolution des litiges.', users: 12, created: '05/01/2026' },
-                { id: 'ROL-04', name: 'Support Client', desc: 'Accès tickets et consultation profils utilisateurs.', users: 24, created: '10/01/2026' },
-                { id: 'ROL-05', name: 'Finance / Comptabilité', desc: 'Gestion des paiements, factures et reversements.', users: 4, created: '15/01/2026' },
-                { id: 'ROL-06', name: 'Vérification KYC', desc: 'Validation exclusive des documents d\'identité (KYB/KYC).', users: 8, created: '18/01/2026' },
-                { id: 'ROL-07', name: 'Gestion Catalogue', desc: 'Validation et organisation des annonces de stocks.', users: 15, created: '20/01/2026' }
-            ];
-
-            const modules = [
-                { name: 'Utilisateurs', perms: ['Voir utilisateurs', 'Modifier utilisateurs', 'Suspendre utilisateurs', 'Supprimer utilisateurs'] },
-                { name: 'Entreprises', perms: ['Voir entreprises', 'Vérifier entreprises', 'Modifier entreprises', 'Suspendre entreprises'] },
-                { name: 'Annonces / Stocks', perms: ['Voir annonces', 'Valider annonces', 'Refuser annonces', 'Supprimer annonces'] },
-                { name: 'Transactions', perms: ['Voir transactions', 'Annuler transactions', 'Gérer litiges'] },
-                { name: 'Paiements', perms: ['Voir paiements', 'Valider paiements', 'Lancer reversements'] },
-                { name: 'KYC / KYB', perms: ['Voir documents KYC', 'Approuver KYC', 'Refuser KYC'] },
-                { name: 'Support', perms: ['Voir tickets', 'Répondre tickets', 'Fermer tickets'] },
-                { name: 'Paramètres', perms: ['Modifier paramètres plateforme', 'Modifier commissions', 'Gérer moyens de paiement'] }
-            ];
-
-            const rolesContainer = document.getElementById('roles-container');
-            const permTable = document.getElementById('permissions-tbody');
-
-            // Render Roles
-            rolesContainer.innerHTML = roles.map((r, i) => `
-                <div class="role-item ${i === 0 ? 'active' : ''}" onclick="selectRole('${r.name}', this)">
-                    <div>
-                        <div class="role-name">${r.name}</div>
-                        <div class="role-meta">${r.users} utilisateurs • Créé le ${r.created}</div>
-                    </div>
-                    <div class="action-btns">
-                        <div class="btn-icon-min" title="Modifier rôle"><i class="fas fa-edit"></i></div>
-                        <div class="btn-icon-min" title="Assigner utilisateurs"><i class="fas fa-user-plus"></i></div>
-                        <div class="btn-icon-min" style="color: #b42318" title="Supprimer rôle"><i class="fas fa-trash-alt"></i></div>
-                    </div>
-                </div>
-            `).join('');
-
-            // Function to render Permissions
-            window.selectRole = (roleName, el) => {
-                document.querySelectorAll('.role-item').forEach(item => item.classList.remove('active'));
-                if (el) el.classList.add('active');
-                document.getElementById('active-role-title').textContent = `Configuration: ${roleName}`;
-
-                let html = '';
-                modules.forEach(m => {
-                    html += `<tr><td colspan="3" class="module-group">${m.name.toUpperCase()}</td></tr>`;
-                    m.perms.forEach(p => {
-                        const isGranted = (roleName === 'Super Admin' || Math.random() > 0.3);
-                        html += `
-                            <tr>
-                                <td style="font-weight: 600; font-size: 0.85rem; padding-left: 1.5rem;">${p}</td>
-                                <td>
-                                    <div class="toggle-status ${isGranted ? 'status-granted' : 'status-denied'}">
-                                        <i class="fas ${isGranted ? 'fa-check' : 'fa-times'}"></i> 
-                                        ${isGranted ? 'AUTORISÉ' : 'REFUSÉ'}
-                                    </div>
-                                </td>
-                                <td style="text-align: right;">
-                                    <div class="action-btns" style="justify-content: flex-end;">
-                                        <div class="btn-icon-min"><i class="fas fa-cog"></i></div>
-                                    </div>
-                                </td>
-                            </tr>
-                        `;
-                    });
-                });
-                permTable.innerHTML = html;
-            };
-
-            // Init call
-            selectRole('Super Admin');
+            const form = document.getElementById('platform-config-form');
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                alert('Configuration sauvegardée avec succès !');
+            });
         });
     </script>
 </body>

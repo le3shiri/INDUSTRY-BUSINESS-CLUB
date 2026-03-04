@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence Admin | Activité Suspecte</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="js/components.js"></script>
+    <script src="js/admin-data.js"></script>
+
+    <style>
+        :root {
+            --admin-bg: #fcfcfd;
+            --card-border: #eaecf0;
+            --text-main: #101828;
+            --text-sub: #475467;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --primary-corporate: #101828;
+            --success-main: #027a48;
+            --success-bg: #ecfdf3;
+            --warning-main: #b54708;
+            --warning-bg: #fffaeb;
+            --danger-main: #b42318;
+            --danger-bg: #fef3f2;
+            --info-main: #026aa2;
+            --info-bg: #f0f9ff;
+            --urgent-main: #912018;
+            --urgent-bg: #fff1f0;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--admin-bg);
+            color: var(--text-main);
+            letter-spacing: -0.01em;
+        }
+
+        .main-content {
+            padding: 0;
+            background: var(--admin-bg);
+        }
+
+        .top-nav {
+            background: white;
+            border-bottom: 1px solid var(--card-border);
+            padding: 1.25rem 2.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-container {
+            padding: 2.5rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* KPI Section */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border-left: 4px solid #eaecf0;
+        }
+
+        .stat-card.risk-high {
+            border-left-color: var(--danger-main);
+        }
+
+        .stat-card.risk-medium {
+            border-left-color: var(--warning-main);
+        }
+
+        .stat-card.in-progress {
+            border-left-color: var(--info-main);
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin: 0;
+        }
+
+        .stat-subtext {
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            display: block;
+        }
+
+        /* Table Components */
+        .table-outer {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        .admin-table th {
+            background: #f9fafb;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .admin-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--card-border);
+            font-size: 0.85rem;
+            vertical-align: middle;
+        }
+
+        /* Status & Risk Badges */
+        .badge {
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            border: 1px solid transparent;
+        }
+
+        /* Risk Levels */
+        .risk-elevated {
+            background: var(--urgent-bg);
+            color: var(--urgent-main);
+            border-color: #fda29b;
+        }
+
+        .risk-medium {
+            background: var(--warning-bg);
+            color: var(--warning-main);
+            border-color: #fedf89;
+        }
+
+        .risk-low {
+            background: var(--success-bg);
+            color: var(--success-main);
+            border-color: #6ce9a6;
+        }
+
+        /* Action Statuses */
+        .status-audit {
+            background: var(--info-bg);
+            color: var(--info-main);
+            border-color: #b9e6fe;
+        }
+
+        .status-waiting {
+            background: #f2f4f7;
+            color: #344054;
+            border-color: #eaecf0;
+        }
+
+        .status-confirmed {
+            background: var(--danger-bg);
+            color: var(--danger-main);
+            border-color: #fda29b;
+        }
+
+        .user-meta {
+            font-size: 0.75rem;
+            color: var(--text-sub);
+        }
+
+        .company-tag {
+            font-weight: 800;
+            font-size: 0.65rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: #f9fafb;
+            border: 1px solid #eaecf0;
+            display: inline-block;
+            margin-top: 4px;
+        }
+
+        /* Actions Shell */
+        .action-btns {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            background: white;
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+        }
+
+        .btn-icon:hover {
+            border-color: var(--text-main);
+            color: var(--text-main);
+            background: #f9fafb;
+        }
+
+        .btn-icon.danger:hover {
+            color: var(--danger-main);
+            border-color: #fda29b;
+            background: var(--danger-bg);
+        }
+
+        .btn-icon.success:hover {
+            color: var(--success-main);
+            border-color: #6ce9a6;
+            background: var(--success-bg);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+        <aside id="sidebar-container"></aside>
+
+        <main class="main-content">
+            <header class="top-nav">
+                <div>
+                    <h1 style="margin:0; font-size: 1.5rem; font-weight: 700;">Activité Suspecte</h1>
+                    <p style="margin:0; font-size: 0.85rem; color: var(--text-sub);">Surveillance comportementale,
+                        détection des anomalies et protection anti-fraude</p>
+                </div>
+                <div style="display: flex; gap: 0.75rem;">
+                    <button class="btn btn-secondary" style="background: white;"><i class="fas fa-history"></i>
+                        Historique Global</button>
+                    <button class="btn btn-primary"><i class="fas fa-shield-alt"></i> Paramètres IA Détection</button>
+                </div>
+            </header>
+
+            <div class="dashboard-container">
+
+                <!-- KPI Section -->
+                <div class="stat-grid">
+                    <div class="stat-card risk-high">
+                        <span class="stat-label">Risques Élevés</span>
+                        <p class="stat-value">08</p>
+                        <span class="stat-subtext" style="color: var(--danger-main);"><i class="fas fa-arrow-up"></i> +2
+                            depuis 24h</span>
+                    </div>
+                    <div class="stat-card risk-medium">
+                        <span class="stat-label">Risques Moyens</span>
+                        <p class="stat-value">14</p>
+                        <span class="stat-subtext" style="color: var(--warning-main);">En attente de revue</span>
+                    </div>
+                    <div class="stat-card in-progress">
+                        <span class="stat-label">Analyses en cours</span>
+                        <p class="stat-value">22</p>
+                        <span class="stat-subtext" style="color: var(--info-main);">Effectuées par l'Agent IA</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Comptes Suspendus</span>
+                        <p class="stat-value">156</p>
+                        <span class="stat-subtext">Depuis le lancement</span>
+                    </div>
+                </div>
+
+                <div class="table-outer">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Alerte ID</th>
+                                <th>Utilisateur & Entreprise</th>
+                                <th>Type d'Activity</th>
+                                <th>Détails & IP</th>
+                                <th>Risque</th>
+                                <th>Statut</th>
+                                <th>Détection</th>
+                                <th style="text-align: right;">Actions Régie</th>
+                            </tr>
+                        </thead>
+                        <tbody id="suspicious-body">
+                            <!-- Injected via JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            Components.renderAdminSidebar('admin-security-suspicious.html');
+
+            const alerts = [
+                {
+                    id: 'ACT-9912', user: 'Mehdi Tazi', role: 'Vendeur', company: 'Tazi Industrial Systems',
+                    type: 'Tentative partage contact',
+                    desc: 'Détection d\'un numéro de téléphone dans le chat privé (DEAL-442).',
+                    ip: '196.200.14.88', locale: 'Casablanca, MA',
+                    risk: 'elevated', status: 'confirmed',
+                    detected: 'Il y a 15 min', device: 'Chrome / Windows'
+                },
+                {
+                    id: 'ACT-9910', user: 'Atlas Mining', role: 'Vendeur', company: 'Atlas Mining Group',
+                    type: 'Connexion pays différents',
+                    desc: 'Connexion depuis Marrakech (MA) suivie d\'une connexion IPv6 (US) en moins de 10 min.',
+                    ip: '104.22.1.20', locale: 'San Francisco, US',
+                    risk: 'medium', status: 'audit',
+                    detected: 'Il y a 1h', device: 'Safari / iPhone'
+                },
+                {
+                    id: 'ACT-9908', user: 'Inconnu', role: 'Acheteur', company: 'Sans Entreprise',
+                    type: 'Connexions multiples inhabituelles',
+                    desc: 'Plus de 15 tentatives de connexion en 1 minute (Brute force suspect).',
+                    ip: '45.18.2.110', locale: 'Moscow, RU',
+                    risk: 'elevated', status: 'audit',
+                    detected: 'Il y a 2h', device: 'Python-requests / Linux'
+                },
+                {
+                    id: 'ACT-9905', user: 'Kenitra Metals', role: 'Vendeur', company: 'Kenitra Metals SARL',
+                    type: 'Messages suspects',
+                    desc: 'Mot-clés "paiement direct", "hors plateforme" détectés dans 3 conversations.',
+                    ip: '105.158.44.12', locale: 'Kénitra, MA',
+                    risk: 'elevated', status: 'waiting',
+                    detected: 'Ce matin, 09:45', device: 'Chrome / Android'
+                },
+                {
+                    id: 'ACT-9892', user: 'Sofia Benani', role: 'Acheteur', company: 'Benani Logistics',
+                    type: 'Accès non autorisé',
+                    desc: 'Tentative d\'accès à la page admin-roles.html sans privilèges.',
+                    ip: '41.140.22.105', locale: 'Rabat, MA',
+                    risk: 'low', status: 'confirmed',
+                    detected: 'Hier, 18:20', device: 'Edge / Windows'
+                }
+            ];
+
+            const tbody = document.getElementById('suspicious-body');
+
+            function renderAlerts(list) {
+                tbody.innerHTML = list.map(a => `
+                    <tr>
+                        <td style="font-family: monospace; font-weight: 700; color: var(--text-sub);">${a.id}</td>
+                        <td>
+                            <div style="font-weight: 700; font-size: 0.85rem;">${a.user}</div>
+                            <div class="user-meta">${a.role}</div>
+                            <span class="company-tag">${a.company}</span>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700; font-size: 0.85rem; max-width: 180px; white-space: normal;">${a.type}</div>
+                        </td>
+                        <td style="max-width: 300px; white-space: normal; line-height: 1.4; font-size: 0.8rem;">
+                            <div style="font-weight: 500; margin-bottom: 4px;">${a.desc}</div>
+                            <div style="font-family: monospace; font-size: 0.75rem; color: var(--info-main);">
+                                <i class="fas fa-globe"></i> ${a.ip} • ${a.locale}
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge ${a.risk === 'elevated' ? 'risk-elevated' : a.risk === 'medium' ? 'risk-medium' : 'risk-low'}">
+                                <i class="fas ${a.risk === 'elevated' ? 'fa-biohazard' : 'fa-exclamation-circle'}"></i>
+                                ${a.risk === 'elevated' ? 'ÉLEVÉ' : a.risk === 'medium' ? 'MOYEN' : 'FAIBLE'}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge ${a.status === 'confirmed' ? 'status-confirmed' : a.status === 'audit' ? 'status-audit' : 'status-waiting'}">
+                                ${a.status === 'confirmed' ? 'Confirmé' : a.status === 'audit' ? 'Analyse...' : 'En attente'}
+                            </span>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700; font-size: 0.8rem;">${a.detected}</div>
+                            <div style="font-size: 0.65rem; color: var(--text-sub);">${a.device}</div>
+                        </td>
+                        <td style="text-align: right;">
+                            <div class="action-btns" style="justify-content: flex-end;">
+                                <button class="btn-icon" title="Voir profil"><i class="fas fa-user"></i></button>
+                                <button class="btn-icon" title="Historique"><i class="fas fa-history"></i></button>
+                                <button class="btn-icon danger" title="Suspendre compte"><i class="fas fa-user-slash"></i></button>
+                                <button class="btn-icon success" title="Marquer traité"><i class="fas fa-check"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            renderAlerts(alerts);
+        });
+    </script>
+</body>
+
+</html>

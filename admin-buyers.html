@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence Admin | Liste des Acheteurs</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="js/components.js"></script>
+    <script src="js/admin-data.js"></script>
+
+    <style>
+        :root {
+            --admin-bg: #fcfcfd;
+            --card-border: #eaecf0;
+            --text-main: #101828;
+            --text-sub: #475467;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --primary-corporate: #101828;
+            --success-main: #027a48;
+            --success-bg: #ecfdf3;
+            --warning-main: #b54708;
+            --warning-bg: #fffaeb;
+            --danger-main: #b42318;
+            --danger-bg: #fef3f2;
+            --info-main: #026aa2;
+            --info-bg: #f0f9ff;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--admin-bg);
+            color: var(--text-main);
+            letter-spacing: -0.01em;
+        }
+
+        .main-content {
+            padding: 0;
+            background: var(--admin-bg);
+        }
+
+        .top-nav {
+            background: white;
+            border-bottom: 1px solid var(--card-border);
+            padding: 1.25rem 2.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-container {
+            padding: 2.5rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* KPI Quick Stats */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin: 0;
+        }
+
+        .stat-sub {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-sub);
+            margin-top: 4px;
+            display: block;
+        }
+
+        /* Filter Section */
+        .filter-bar {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 2rem;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr) auto;
+            gap: 1rem;
+            align-items: flex-end;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .filter-label {
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+        }
+
+        .filter-control {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            font-family: inherit;
+            font-size: 0.85rem;
+            color: var(--text-main);
+            background: #fff;
+        }
+
+        /* High-Density Data Table */
+        .table-outer {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            overflow-x: auto;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        .admin-table th {
+            background: #f9fafb;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .admin-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--card-border);
+            font-size: 0.85rem;
+            vertical-align: middle;
+        }
+
+        .badge {
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge-success {
+            background: var(--success-bg);
+            color: var(--success-main);
+        }
+
+        .badge-warning {
+            background: var(--warning-bg);
+            color: var(--warning-main);
+        }
+
+        .badge-danger {
+            background: var(--danger-bg);
+            color: var(--danger-main);
+        }
+
+        .badge-info {
+            background: var(--info-bg);
+            color: var(--info-main);
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            background: white;
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+        }
+
+        .btn-icon:hover {
+            border-color: var(--text-main);
+            color: var(--text-main);
+            background: #f9fafb;
+        }
+
+        .btn-icon.danger:hover {
+            color: var(--danger-main);
+            border-color: #fda29b;
+            background: var(--danger-bg);
+        }
+
+        .user-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: #f2f4f7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: var(--text-sub);
+            border: 1px solid var(--card-border);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+        <aside id="sidebar-container"></aside>
+
+        <main class="main-content">
+            <header class="top-nav">
+                <div>
+                    <h1 style="margin:0; font-size: 1.5rem; font-weight: 700;">Liste des Acheteurs</h1>
+                    <p style="margin:0; font-size: 0.85rem; color: var(--text-sub);">Gestion centralisée du portefeuille
+                        acheteurs, audit de conformité et suivi transactionnel</p>
+                </div>
+                <div style="display: flex; gap: 0.75rem;">
+                    <button class="btn btn-secondary" style="background: white;"><i class="fas fa-file-export"></i>
+                        Exporter la liste</button>
+                    <button class="btn btn-primary"><i class="fas fa-user-plus"></i> Ajouter un acheteur</button>
+                </div>
+            </header>
+
+            <div class="dashboard-container">
+
+                <!-- KPI Section -->
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <span class="stat-label">Total Acheteurs</span>
+                        <p class="stat-value">5,240</p>
+                        <span class="stat-sub" style="color: var(--success-main); font-weight: 700;">+245 ce mois</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Validés KYC</span>
+                        <p class="stat-value">4,110</p>
+                        <span class="stat-sub">78.4% de conformité</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Volume Achats (Total)</span>
+                        <p class="stat-value">2,845,000 MAD</p>
+                        <span class="stat-sub" style="color: var(--info-main); font-weight: 700;">Cumul
+                            historique</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Actifs (24h)</span>
+                        <p class="stat-value">842</p>
+                        <span class="stat-sub">Engagement quotidien</span>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label class="filter-label">Recherche</label>
+                        <input type="text" class="filter-control" placeholder="ID, Nom ou Entreprise...">
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Statut Compte</label>
+                        <select class="filter-control">
+                            <option selected>Tous les statuts</option>
+                            <option>Actif</option>
+                            <option>Suspendu</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Vérification KYC</label>
+                        <select class="filter-control">
+                            <option selected>Toute conformité</option>
+                            <option>Vérifié</option>
+                            <option>En attente</option>
+                            <option>Refusé</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Zone Géographique</label>
+                        <select class="filter-control">
+                            <option selected>Tous les pays</option>
+                            <option>Maroc</option>
+                            <option>Égypte</option>
+                            <option>Tunisie</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" style="padding: 10px 20px;"><i class="fas fa-filter"></i>
+                        Filtrer</button>
+                </div>
+
+                <!-- Data Table -->
+                <div class="table-outer">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Acheteur ID</th>
+                                <th>Identité / Contact</th>
+                                <th>Entité</th>
+                                <th>Localisation</th>
+                                <th>Statut Compte</th>
+                                <th>Conformité KYC</th>
+                                <th>Volume (Achats)</th>
+                                <th>Transactions</th>
+                                <th>Dernière Activité</th>
+                                <th style="text-align: right;">Régie & Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="buyers-list-body">
+                            <!-- Populated via script -->
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            Components.renderAdminSidebar('admin-buyers.html');
+
+            const buyers = [
+                {
+                    id: 'BYR-9912', name: 'Sara Benani', email: 'sara.b@benani-log.ma', phone: '+212 600 112 233',
+                    company: 'Benani Logistics SARL', country: 'Maroc', city: 'Casablanca',
+                    status: 'actif', kyc: 'vérifié',
+                    stats: { purchases: 42, deals: 15, volume: 320150, disputes: 0 },
+                    signup: '12/01/2026', lastSeen: 'Il y a 10 min'
+                },
+                {
+                    id: 'BYR-9850', name: 'Youssef El Fassi', email: 'y.fassi@fassi-ind.ma', phone: '+212 611 445 566',
+                    company: 'Fassi Industrial', country: 'Maroc', city: 'Fès',
+                    status: 'actif', kyc: 'en attente',
+                    stats: { purchases: 8, deals: 3, volume: 85200, disputes: 1 },
+                    signup: '20/02/2026', lastSeen: 'Hier, 14:10'
+                },
+                {
+                    id: 'BYR-9740', name: 'Karim Mansour', email: 'k.mansour@egy-steel.com', phone: '+20 1 222 333 444',
+                    company: 'Mansour Steel Egypt', country: 'Égypte', city: 'Le Caire',
+                    status: 'actif', kyc: 'vérifié',
+                    stats: { purchases: 124, deals: 52, volume: 1450000, disputes: 2 },
+                    signup: '15/11/2025', lastSeen: '04/03/2026'
+                },
+                {
+                    id: 'BYR-9620', name: 'Amel Tounsi', email: 'a.tounsi@tun-fab.tn', phone: '+216 71 888 999',
+                    company: 'Tunisia Fabrication', country: 'Tunisie', city: 'Sousse',
+                    status: 'suspendu', kyc: 'refusé',
+                    stats: { purchases: 2, deals: 0, volume: 5400, disputes: 1 },
+                    signup: '01/02/2026', lastSeen: '01/03/2026'
+                }
+            ];
+
+            const tbody = document.getElementById('buyers-list-body');
+
+            function renderBuyers(list) {
+                tbody.innerHTML = list.map(b => `
+                    <tr>
+                        <td style="font-family: monospace; font-weight: 700; color: var(--text-sub); font-size: 0.75rem;">${b.id}</td>
+                        <td>
+                            <div class="user-cell">
+                                <div class="user-avatar">${b.name.charAt(0)}</div>
+                                <div>
+                                    <div style="font-weight: 700; font-size: 0.85rem;">${b.name}</div>
+                                    <div style="font-size: 0.7rem; color: var(--text-sub);">${b.email}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td style="font-weight: 700; font-size: 0.8rem;">${b.company}</td>
+                        <td style="font-size: 0.8rem;">
+                            <div style="font-weight: 700;">${b.country}</div>
+                            <div style="color: var(--text-sub); font-size: 0.7rem;">${b.city}</div>
+                        </td>
+                        <td>
+                            <span class="badge ${b.status === 'actif' ? 'badge-success' : 'badge-danger'}">
+                                ${b.status}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge ${b.kyc === 'vérifié' ? 'badge-success' : b.kyc === 'en attente' ? 'badge-warning' : 'badge-danger'}">
+                                ${b.kyc}
+                            </span>
+                        </td>
+                        <td style="font-weight: 800; color: var(--primary-corporate);">${b.stats.volume.toLocaleString()} MAD</td>
+                        <td>
+                            <div style="font-weight: 700; font-size: 0.8rem;">${b.stats.deals} Deals</div>
+                            <div style="font-size: 0.7rem; color: var(--text-sub);">${b.stats.purchases} Achats</div>
+                        </td>
+                        <td style="font-size: 0.75rem; color: var(--text-sub); font-weight: 600;">${b.lastSeen}</td>
+                        <td style="text-align: right;">
+                            <div class="action-btns" style="justify-content: flex-end;">
+                                <button class="btn-icon" title="Profil acheteur"><i class="fas fa-user-tie"></i></button>
+                                <button class="btn-icon" title="Historique achats"><i class="fas fa-history"></i></button>
+                                <button class="btn-icon" title="Transactions"><i class="fas fa-handshake"></i></button>
+                                <button class="btn-icon danger" title="Suspendre"><i class="fas fa-user-slash"></i></button>
+                                <button class="btn-icon danger" title="Supprimer"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            renderBuyers(buyers);
+        });
+    </script>
+</body>
+
+</html>

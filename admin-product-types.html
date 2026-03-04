@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence Admin | Types de Produits</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="js/components.js"></script>
+    <script src="js/admin-data.js"></script>
+
+    <style>
+        :root {
+            --admin-bg: #fcfcfd;
+            --card-border: #eaecf0;
+            --text-main: #101828;
+            --text-sub: #475467;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --primary-corporate: #101828;
+            --success-main: #027a48;
+            --success-bg: #ecfdf3;
+            --warning-main: #b54708;
+            --warning-bg: #fffaeb;
+            --danger-main: #b42318;
+            --danger-bg: #fef3f2;
+            --info-main: #026aa2;
+            --info-bg: #f0f9ff;
+            --purple-main: #6941c6;
+            --purple-bg: #f9f5ff;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--admin-bg);
+            color: var(--text-main);
+            letter-spacing: -0.01em;
+        }
+
+        .main-content {
+            padding: 0;
+            background: var(--admin-bg);
+        }
+
+        .top-nav {
+            background: white;
+            border-bottom: 1px solid var(--card-border);
+            padding: 1.25rem 2.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-container {
+            padding: 2rem 2.5rem;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        /* KPI Grid System */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin: 0;
+        }
+
+        .stat-subtext {
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            display: block;
+        }
+
+        /* Admin Table Styling */
+        .table-outer {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            scrollbar-width: thin;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        .admin-table th {
+            background: #f9fafb;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--card-border);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .admin-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--card-border);
+            font-size: 0.85rem;
+            vertical-align: middle;
+        }
+
+        /* Status & Badges */
+        .badge {
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge-active {
+            background: var(--success-bg);
+            color: var(--success-main);
+            border: 1px solid #6ce9a6;
+        }
+
+        .badge-disabled {
+            background: #f2f4f7;
+            color: #344054;
+            border: 1px solid #eaecf0;
+        }
+
+        .tag-pill {
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: #f9fafb;
+            border: 1px solid #eaecf0;
+            color: var(--text-sub);
+            display: inline-block;
+            margin: 1px;
+        }
+
+        .tag-category {
+            background: var(--purple-bg);
+            color: var(--purple-main);
+            border-color: #ddd6fe;
+        }
+
+        .tag-unit {
+            background: var(--info-bg);
+            color: var(--info-main);
+            border-color: #b9e6fe;
+        }
+
+        .description-txt {
+            max-width: 200px;
+            white-space: normal;
+            line-height: 1.4;
+            font-size: 0.75rem;
+            color: var(--text-sub);
+        }
+
+        .condition-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            max-width: 180px;
+        }
+
+        .condition-pill {
+            font-size: 0.6rem;
+            font-weight: 800;
+            padding: 1px 4px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            border: 1px solid #eaecf0;
+            background: #fff;
+        }
+
+        /* Actions Shell */
+        .action-btns {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            background: white;
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+        }
+
+        .btn-icon:hover {
+            border-color: var(--text-main);
+            color: var(--text-main);
+            background: #f9fafb;
+        }
+
+        .btn-icon.info:hover {
+            color: #026aa2;
+            border-color: #b9e6fe;
+            background: var(--info-bg);
+        }
+
+        .btn-icon.danger:hover {
+            color: var(--danger-main);
+            border-color: #fda29b;
+            background: var(--danger-bg);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+        <aside id="sidebar-container"></aside>
+
+        <main class="main-content">
+            <header class="top-nav">
+                <div>
+                    <h1 style="margin:0; font-size: 1.5rem; font-weight: 700;">Types de Produits</h1>
+                    <p style="margin:0; font-size: 0.85rem; color: var(--text-sub);">Définition des gabarits de
+                        produits, métadonnées et règles de mise en ligne</p>
+                </div>
+                <div style="display: flex; gap: 0.75rem;">
+                    <button class="btn btn-secondary" style="border: 1px solid var(--card-border); background: white;">
+                        <i class="fas fa-cog"></i> Configurer Attributs
+                    </button>
+                    <button class="btn btn-primary"><i class="fas fa-plus"></i> Nouveau Type Produit</button>
+                </div>
+            </header>
+
+            <div class="dashboard-container">
+
+                <!-- Product Type Stats -->
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <span class="stat-label">Modèles de Produits</span>
+                        <p class="stat-value">64</p>
+                        <span class="stat-subtext" style="color: var(--info-main);">Gabarits actifs</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Annonces Impactées</span>
+                        <p class="stat-value">3,850</p>
+                        <span class="stat-subtext" style="color: var(--success-main);">Items normalisés</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Couverture Catalogue</span>
+                        <p class="stat-value">92%</p>
+                        <span class="stat-subtext" style="color: var(--info-main);">Standardisation flux</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Types Désactivés</span>
+                        <p class="stat-value">5</p>
+                        <span class="stat-subtext" style="color: var(--warning-main);">Maintenance requise</span>
+                    </div>
+                </div>
+
+                <div class="table-outer">
+                    <div class="table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID / Type de Produit</th>
+                                    <th>Hiérarchie (Cat / Sous-Cat)</th>
+                                    <th>Description</th>
+                                    <th>Unité par Défaut</th>
+                                    <th>États Autorisés</th>
+                                    <th>Items liés</th>
+                                    <th>Statut</th>
+                                    <th>Dates (Création / MAJ)</th>
+                                    <th style="text-align: right;">Actions Régulation</th>
+                                </tr>
+                            </thead>
+                            <tbody id="product-types-body">
+                                <!-- Data injected via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            Components.renderAdminSidebar('admin-product-types.html');
+
+            const types = [
+                {
+                    id: 'PTYP-001', name: 'Bobine d\'Acier HR',
+                    cat: 'Matières Premières', subcat: 'Acier & Métaux',
+                    desc: 'Bobines d\'acier laminé à chaud, standards industriels S235JR / S355JR.',
+                    unit: 'Tonne',
+                    conditions: ['Neuf', 'Surplus'],
+                    count: '450', status: 'active',
+                    dates: { created: '15/01/2026', updated: '04/03/2026' }
+                },
+                {
+                    id: 'PTYP-005', name: 'Moteur Électrique IE3',
+                    cat: 'Équipements Industriels', subcat: 'Moteurs Triphasés',
+                    desc: 'Moteurs asynchrones haute efficacité pour usage intensif.',
+                    unit: 'Pièce',
+                    conditions: ['Neuf', 'Occasion', 'Reconditionné'],
+                    count: '128', status: 'active',
+                    dates: { created: '20/01/2026', updated: '01/03/2026' }
+                },
+                {
+                    id: 'PTYP-012', name: 'Granulés Plastique PP',
+                    cat: 'Matières Premières', subcat: 'Chimie & Polymères',
+                    desc: 'Polypropylène vierge ou recyclé pour injection plastique.',
+                    unit: 'kg',
+                    conditions: ['Neuf', 'Surplus'],
+                    count: '76', status: 'active',
+                    dates: { created: '05/02/2026', updated: '02/03/2026' }
+                },
+                {
+                    id: 'PTYP-018', name: 'Palette Europe EPAL',
+                    cat: 'Logistique & Transport', subcat: 'Expédition',
+                    desc: 'Supports de manutention standardisés aux normes européennes.',
+                    unit: 'Palette',
+                    conditions: ['Neuf', 'Occasion'],
+                    count: '1,200', status: 'active',
+                    dates: { created: '10/02/2026', updated: '28/02/2026' }
+                },
+                {
+                    id: 'PTYP-045', name: 'Composants PLC Spéciaux',
+                    cat: 'Électronique', subcat: 'Composants PLC',
+                    desc: 'Modules d\'entrées/sorties pour automates programmables obsolètes.',
+                    unit: 'Lot',
+                    conditions: ['Surplus', 'Occasion'],
+                    count: '12', status: 'disabled',
+                    dates: { created: '15/02/2026', updated: '15/02/2026' }
+                }
+            ];
+
+            const tbody = document.getElementById('product-types-body');
+
+            function renderTypes(list) {
+                tbody.innerHTML = list.map(t => `
+                    <tr>
+                        <td>
+                            <div style="font-weight: 800; color: var(--primary-corporate); font-family: monospace;">${t.id}</div>
+                            <div style="font-weight: 700; font-size: 0.9rem; margin-top: 2px;">${t.name}</div>
+                        </td>
+                        <td>
+                            <div style="display: flex; flex-direction: column; gap: 4px;">
+                                <span class="tag-pill tag-category"><i class="fas fa-folder"></i> ${t.cat}</span>
+                                <span class="tag-pill"><i class="fas fa-level-down-alt fa-rotate-90"></i> ${t.subcat}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="description-txt">"${t.desc}"</div>
+                        </td>
+                        <td>
+                            <span class="tag-pill tag-unit">${t.unit}</span>
+                        </td>
+                        <td>
+                            <div class="condition-pills">
+                                ${t.conditions.map(c => `<span class="condition-pill">${c}</span>`).join('')}
+                            </div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 800; font-size: 1rem;">${t.count}</div>
+                            <div style="font-size: 0.65rem; color: var(--text-sub);">Annonces</div>
+                        </td>
+                        <td>
+                            <span class="badge ${t.status === 'active' ? 'badge-active' : 'badge-disabled'}">
+                                ${t.status === 'active' ? 'Actif' : 'Désactivé'}
+                            </span>
+                        </td>
+                        <td>
+                            <div style="font-size: 0.65rem;">Créé: ${t.dates.created}</div>
+                            <div style="font-size: 0.65rem; font-weight: 700;">MAJ: ${t.dates.updated}</div>
+                        </td>
+                        <td style="text-align: right;">
+                            <div class="action-btns">
+                                <button class="btn-icon" title="Voir type produit"><i class="fas fa-eye"></i></button>
+                                <button class="btn-icon info" title="Modifier type"><i class="fas fa-edit"></i></button>
+                                <button class="btn-icon ${t.status === 'active' ? 'danger' : 'success'}" title="${t.status === 'active' ? 'Désactiver' : 'Activer'}">
+                                    <i class="fas ${t.status === 'active' ? 'fa-power-off' : 'fa-check'}"></i>
+                                </button>
+                                <button class="btn-icon danger" title="Supprimer"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            renderTypes(types);
+        });
+    </script>
+</body>
+
+</html>

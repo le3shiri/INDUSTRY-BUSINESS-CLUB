@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence Admin | Gestion des Expéditions</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="js/components.js"></script>
+    <script src="js/admin-data.js"></script>
+
+    <style>
+        :root {
+            --admin-bg: #fcfcfd;
+            --card-border: #eaecf0;
+            --text-main: #101828;
+            --text-sub: #475467;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --info-main: #026aa2;
+            --info-bg: #f0f9ff;
+            --success-main: #027a48;
+            --success-bg: #ecfdf3;
+            --warning-main: #b54708;
+            --warning-bg: #fffaeb;
+            --danger-main: #b42318;
+            --danger-bg: #fef3f2;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--admin-bg);
+            color: var(--text-main);
+            letter-spacing: -0.01em;
+        }
+
+        .main-content {
+            padding: 0;
+            background: var(--admin-bg);
+        }
+
+        .top-nav {
+            background: white;
+            border-bottom: 1px solid var(--card-border);
+            padding: 1.25rem 2.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-container {
+            padding: 2rem 2.5rem;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        /* KPI Grid System */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin: 0;
+        }
+
+        .stat-subtext {
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            display: block;
+        }
+
+        /* Admin Table Styling */
+        .table-outer {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            scrollbar-width: thin;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        .admin-table th {
+            background: #f9fafb;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--card-border);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .admin-table td {
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid var(--card-border);
+            font-size: 0.85rem;
+            vertical-align: middle;
+        }
+
+        /* Status & Badges */
+        .badge {
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge-preparing {
+            background: var(--warning-bg);
+            color: var(--warning-main);
+            border: 1px solid #fec84b;
+        }
+
+        .badge-shipped {
+            background: var(--info-bg);
+            color: var(--info-main);
+            border: 1px solid #b9e6fe;
+        }
+
+        .badge-transit {
+            background: #fdf2fa;
+            color: #c11574;
+            border: 1px solid #fcceee;
+        }
+
+        .badge-delivered {
+            background: var(--success-bg);
+            color: var(--success-main);
+            border: 1px solid #6ce9a6;
+        }
+
+        .badge-failed {
+            background: var(--danger-bg);
+            color: var(--danger-main);
+            border: 1px solid #fda29b;
+        }
+
+        .tracking-code {
+            font-family: monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #026aa2;
+            background: #f0f9ff;
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid #b9e6fe;
+        }
+
+        .location-info {
+            max-width: 200px;
+            white-space: normal;
+            line-height: 1.4;
+            font-size: 0.75rem;
+        }
+
+        .address-box {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            border-left: 2px solid var(--card-border);
+            padding-left: 8px;
+            margin-top: 4px;
+        }
+
+        /* Actions Shell */
+        .action-btns {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .btn-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            border: 1px solid var(--card-border);
+            background: white;
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+
+        .btn-icon:hover {
+            border-color: var(--text-main);
+            color: var(--text-main);
+            background: #f9fafb;
+        }
+
+        .btn-icon.success:hover {
+            color: #027a48;
+            border-color: #6ce9a6;
+            background: #ecfdf3;
+        }
+
+        .btn-icon.info:hover {
+            color: #026aa2;
+            border-color: #b9e6fe;
+            background: var(--info-bg);
+        }
+
+        .btn-icon.warning:hover {
+            color: var(--warning-main);
+            border-color: #fec84b;
+            background: var(--warning-bg);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+        <aside id="sidebar-container"></aside>
+
+        <main class="main-content">
+            <header class="top-nav">
+                <div>
+                    <h1 style="margin:0; font-size: 1.5rem; font-weight: 700;">Expéditions</h1>
+                    <p style="margin:0; font-size: 0.85rem; color: var(--text-sub);">Monitoring logistique, suivi des
+                        transporteurs et preuve de réception</p>
+                </div>
+                <div style="display: flex; gap: 0.75rem;">
+                    <button class="btn btn-secondary" style="border: 1px solid var(--card-border); background: white;">
+                        <i class="fas fa-truck-loading"></i> Manifeste Logistique
+                    </button>
+                    <button class="btn btn-primary"><i class="fas fa-plus-circle"></i> Nouvelle Expédition</button>
+                </div>
+            </header>
+
+            <div class="dashboard-container">
+
+                <!-- Logistics Stats -->
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <span class="stat-label">En Transit</span>
+                        <p class="stat-value">18</p>
+                        <span class="stat-subtext" style="color: var(--info-main);">Mouvement dynamique</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">En Préparation</span>
+                        <p class="stat-value">24</p>
+                        <span class="stat-subtext" style="color: var(--warning-main);">Enlèvement J+1</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Livrés (Mois)</span>
+                        <p class="stat-value">142</p>
+                        <span class="stat-subtext" style="color: var(--success-main);">Satisfaction confirmée</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Échecs / Retards</span>
+                        <p class="stat-value" style="color: var(--danger-main);">2</p>
+                        <span class="stat-subtext" style="color: var(--danger-main);">Arbitrage logistique requis</span>
+                    </div>
+                </div>
+
+                <div class="table-outer">
+                    <div class="table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Expédition / Transaction</th>
+                                    <th>Produit / Catégorie / Qte</th>
+                                    <th>Vendeur / Entreprise</th>
+                                    <th>Acheteur / Entreprise</th>
+                                    <th>Mode & Transporteur</th>
+                                    <th>Tracking / Suivi</th>
+                                    <th>Logistique (Départ / Arrivée)</th>
+                                    <th>Statut Expédition</th>
+                                    <th>Dates (Exp. / Est. / Liv.)</th>
+                                    <th>Réception</th>
+                                    <th style="text-align: right;">Actions Globales</th>
+                                </tr>
+                            </thead>
+                            <tbody id="shipments-table-body">
+                                <!-- Data injected via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            Components.renderAdminSidebar('admin-shipments.html');
+
+            const shipments = [
+                {
+                    id: 'EXP-8842', dealId: 'DEAL-842',
+                    product: 'Acier Inox 316L', cat: 'Matières Premières', qty: '12 Tonnes',
+                    vendeur: 'Omar Alami', sellerCo: 'Atlas Mining Group',
+                    acheteur: 'Yasmine Benani', buyerCo: 'Safi Logistics',
+                    mode: 'Transporteur', carrier: 'CTM Messagerie',
+                    tracking: 'CTM-99182441',
+                    addressFrom: 'Zone Industrielle, Jorf Lasfar',
+                    addressTo: 'Port de Safi, Dépôt B4',
+                    status: 'transit',
+                    dates: { ship: '03/03/2026', est: '05/03/2026', delivered: '--' },
+                    confirmed: false
+                },
+                {
+                    id: 'EXP-8840', dealId: 'DEAL-840',
+                    product: 'Moteur WEG 50HP', cat: 'Équipements', qty: '2 Pièces',
+                    vendeur: 'Mehdi Tazi', sellerCo: 'Kenitra Metals',
+                    acheteur: 'Reda Hakimi', buyerCo: 'BuildIt SA',
+                    mode: 'Transporteur', carrier: 'DHL Express',
+                    tracking: 'DHL-8812-MA',
+                    addressFrom: 'Parc Industriel, Kenitra',
+                    addressTo: 'Bouskoura, Zone Franche Lot 12',
+                    status: 'delivered',
+                    dates: { ship: '01/03/2026', est: '02/03/2026', delivered: '02/03/2026' },
+                    confirmed: true
+                },
+                {
+                    id: 'EXP-8835', dealId: 'DEAL-838',
+                    product: 'Bobines Cuivre Grade A', cat: 'Matières Premières', qty: '3 Bobines',
+                    vendeur: 'Leila Mansouri', sellerCo: 'Intech Solutions',
+                    acheteur: 'Julien Durand', buyerCo: 'LogiFrance',
+                    mode: 'Livraison Interne', carrier: 'Flotte Intech',
+                    tracking: 'INT-TRK-771',
+                    addressFrom: 'Technopark, Casablanca',
+                    addressTo: 'Aéroport Med V, Hub Fret',
+                    status: 'shipped',
+                    dates: { ship: '04/03/2026', est: '04/03/2026', delivered: '--' },
+                    confirmed: false
+                },
+                {
+                    id: 'EXP-8830', dealId: 'DEAL-825',
+                    product: 'Silo à Ciment 50T', cat: 'BTP', qty: '1 Unité',
+                    vendeur: 'Hamza El Amrani', sellerCo: 'Global Build Inc',
+                    acheteur: 'Omar Alami', buyerCo: 'Atlas Mining Group',
+                    mode: 'Retrait sur place', carrier: '--',
+                    tracking: '--',
+                    addressFrom: 'Entrepôt Global Build, Tanger',
+                    addressTo: 'Pris en charge par acheteur',
+                    status: 'preparing',
+                    dates: { ship: '--', est: '06/03/2026', delivered: '--' },
+                    confirmed: false
+                }
+            ];
+
+            const tbody = document.getElementById('shipments-table-body');
+
+            function renderShipments(list) {
+                tbody.innerHTML = list.map(s => `
+                    <tr>
+                        <td>
+                            <div style="font-weight: 700; color: var(--text-main); font-family: monospace;">${s.id}</div>
+                            <div style="font-size: 0.7rem; color: var(--text-sub);">Deal: ${s.dealId}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700;">${s.product}</div>
+                            <div style="font-size: 0.7rem; color: #026aa2; font-weight: 700;">${s.cat} | ${s.qty}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700;">${s.vendeur}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-sub);">${s.sellerCo}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700;">${s.acheteur}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-sub);">${s.buyerCo}</div>
+                        </td>
+                        <td>
+                            <div style="font-size: 0.75rem; font-weight: 700; color: #6366f1;">
+                                <i class="fas ${getModeIcon(s.mode)}"></i> ${s.mode}
+                            </div>
+                            <div style="font-size: 0.7rem; color: var(--text-sub);">${s.carrier}</div>
+                        </td>
+                        <td>
+                            ${s.tracking !== '--' ? `<span class="tracking-code"><i class="fas fa-barcode"></i> ${s.tracking}</span>` : '<span style="color:#98a2b3;">Non assigné</span>'}
+                        </td>
+                        <td>
+                            <div class="location-info">
+                                <span style="font-weight: 600; color: #344054;">Origine:</span> ${s.addressFrom}
+                                <div class="address-box">
+                                    <span style="font-weight: 600; color: #027a48;">Dest:</span> ${s.addressTo}
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge ${getStatusBadgeClass(s.status)}">
+                                ${getStatusLabel(s.status)}
+                            </span>
+                        </td>
+                        <td>
+                            <div style="font-size: 0.65rem;">Exp: ${s.dates.ship}</div>
+                            <div style="font-size: 0.65rem; color: #b54708;">Est: ${s.dates.est}</div>
+                            <div style="font-size: 0.65rem; color: #027a48; font-weight: 700;">Liv: ${s.dates.delivered}</div>
+                        </td>
+                        <td style="text-align: center;">
+                            ${s.confirmed ?
+                        `<span style="color: #027a48; font-size: 1.1rem;" title="Réception confirmée"><i class="fas fa-check-double"></i></span>` :
+                        `<span style="color: #f79009; font-size: 1.1rem;" title="En attente de confirmation (POD)"><i class="fas fa-clock"></i></span>`
+                    }
+                        </td>
+                        <td style="text-align: right;">
+                            <div class="action-btns">
+                                <button class="btn-icon" title="Voir expédition"><i class="fas fa-truck"></i></button>
+                                <button class="btn-icon info" title="Voir transaction"><i class="fas fa-handshake"></i></button>
+                                <button class="btn-icon warning" title="Mettre à jour statut"><i class="fas fa-sync-alt"></i></button>
+                                <button class="btn-icon info" title="Ajouter tracking"><i class="fas fa-plus-square"></i></button>
+                                <button class="btn-icon success" title="Confirmer livraison"><i class="fas fa-check-circle"></i></button>
+                                <button class="btn-icon" title="Voir vendeur"><i class="fas fa-user-tag"></i></button>
+                                <button class="btn-icon" title="Voir acheteur"><i class="fas fa-user-tie"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            function getModeIcon(mode) {
+                switch (mode) {
+                    case 'Transporteur': return 'fa-truck';
+                    case 'Livraison Interne': return 'fa-shuttle-van';
+                    case 'Retrait sur place': return 'fa-warehouse';
+                    default: return 'fa-truck';
+                }
+            }
+
+            function getStatusBadgeClass(status) {
+                switch (status) {
+                    case 'preparing': return 'badge-preparing';
+                    case 'shipped': return 'badge-shipped';
+                    case 'transit': return 'badge-transit';
+                    case 'delivered': return 'badge-delivered';
+                    case 'failed': return 'badge-failed';
+                    default: return '';
+                }
+            }
+
+            function getStatusLabel(status) {
+                switch (status) {
+                    case 'preparing': return 'En préparation';
+                    case 'shipped': return 'Expédié';
+                    case 'transit': return 'En transit';
+                    case 'delivered': return 'Livré';
+                    case 'failed': return 'Échec';
+                    default: return status;
+                }
+            }
+
+            renderShipments(shipments);
+        });
+    </script>
+</body>
+
+</html>

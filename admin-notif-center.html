@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence Admin | Centre de Notifications Admin</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="js/components.js"></script>
+    <script src="js/admin-data.js"></script>
+
+    <style>
+        :root {
+            --admin-bg: #fcfcfd;
+            --card-border: #eaecf0;
+            --text-main: #101828;
+            --text-sub: #475467;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --primary-corporate: #101828;
+            --success-main: #027a48;
+            --success-bg: #ecfdf3;
+            --warning-main: #b54708;
+            --warning-bg: #fffaeb;
+            --danger-main: #b42318;
+            --danger-bg: #fef3f2;
+            --info-main: #026aa2;
+            --info-bg: #f0f9ff;
+            --urgent-main: #912018;
+            --urgent-bg: #fff1f0;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--admin-bg);
+            color: var(--text-main);
+            letter-spacing: -0.01em;
+        }
+
+        .main-content {
+            padding: 0;
+            background: var(--admin-bg);
+        }
+
+        .top-nav {
+            background: white;
+            border-bottom: 1px solid var(--card-border);
+            padding: 1.25rem 2.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-container {
+            padding: 2.5rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Navigation Tabs inside page */
+        .notif-tabs {
+            display: flex;
+            gap: 2rem;
+            border-bottom: 1px solid var(--card-border);
+            margin-bottom: 2rem;
+            padding-bottom: 0.5rem;
+        }
+
+        .tab {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            cursor: pointer;
+            padding: 0.5rem 0.25rem;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .tab:hover {
+            color: var(--text-main);
+        }
+
+        .tab.active {
+            color: var(--primary-corporate);
+            border-bottom-color: var(--primary-corporate);
+        }
+
+        .tab-badge {
+            background: #f2f4f7;
+            color: #344054;
+            padding: 2px 6px;
+            border-radius: 999px;
+            font-size: 0.7rem;
+            margin-left: 8px;
+        }
+
+        .tab.active .tab-badge {
+            background: var(--primary-corporate);
+            color: white;
+        }
+
+        /* Notifications Table */
+        .table-outer {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        .admin-table th {
+            background: #f9fafb;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .admin-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--card-border);
+            font-size: 0.85rem;
+            vertical-align: middle;
+        }
+
+        .notif-row {
+            transition: background 0.2s;
+        }
+
+        .notif-row.unread {
+            background: #f9fafb;
+        }
+
+        .notif-row.unread td {
+            font-weight: 500;
+        }
+
+        /* Priority & Status Badges */
+        .badge {
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .priority-urgent {
+            background: var(--urgent-bg);
+            color: var(--urgent-main);
+            border: 1px solid #fda29b;
+        }
+
+        .priority-elevated {
+            background: var(--danger-bg);
+            color: var(--danger-main);
+            border: 1px solid #fda29b;
+        }
+
+        .priority-normal {
+            background: var(--info-bg);
+            color: var(--info-main);
+            border: 1px solid #b9e6fe;
+        }
+
+        .priority-low {
+            background: #f2f4f7;
+            color: #344054;
+            border: 1px solid #eaecf0;
+        }
+
+        .category-tag {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: #fcfcfd;
+            border: 1px solid #eaecf0;
+            color: var(--text-sub);
+        }
+
+        .module-link {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--info-main);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .module-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Actions Shell */
+        .action-btns {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            background: white;
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+        }
+
+        .btn-icon:hover {
+            border-color: var(--text-main);
+            color: var(--text-main);
+            background: #f9fafb;
+        }
+
+        .btn-icon.danger:hover {
+            color: var(--danger-main);
+            border-color: #fda29b;
+            background: var(--danger-bg);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+        <aside id="sidebar-container"></aside>
+
+        <main class="main-content">
+            <header class="top-nav">
+                <div>
+                    <h1 style="margin:0; font-size: 1.5rem; font-weight: 700;">Centre de Notifications Admin</h1>
+                    <p style="margin:0; font-size: 0.85rem; color: var(--text-sub);">Alertes système, flux modération et
+                        notifications push administratives</p>
+                </div>
+                <div style="display: flex; gap: 0.75rem;">
+                    <button class="btn btn-secondary" style="background: white;"><i class="fas fa-check-double"></i>
+                        Tout marquer comme lu</button>
+                    <button class="btn btn-primary"><i class="fas fa-archive"></i> Archiver le mois</button>
+                </div>
+            </header>
+
+            <div class="dashboard-container">
+
+                <div class="notif-tabs">
+                    <div class="tab active">Toutes les notifications <span class="tab-badge">145</span></div>
+                    <div class="tab">Non lues <span class="tab-badge"
+                            style="background: var(--danger-main); color: white;">12</span></div>
+                    <div class="tab">Urgentes <span class="tab-badge">03</span></div>
+                    <div class="tab">Archivées <span class="tab-badge">850</span></div>
+                </div>
+
+                <div class="table-outer">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>ID / Catégorie</th>
+                                <th>Sujet & Message</th>
+                                <th>Entité Concernée</th>
+                                <th>Priorité</th>
+                                <th>Module Lié</th>
+                                <th>Date & Heure</th>
+                                <th style="text-align: right;">Actions Régie</th>
+                            </tr>
+                        </thead>
+                        <tbody id="notif-body">
+                            <!-- Injected via JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            Components.renderAdminSidebar('admin-notif-center.html');
+
+            const notifications = [
+                {
+                    id: 'ADM-NOT-8821', category: 'Sécurité',
+                    title: 'Tentative de Brute Force détectée',
+                    msg: 'Plus de 20 échecs de connexion sur l\'IP 45.12.33.201.',
+                    user: 'Système', company: 'IP Gateway RU',
+                    priority: 'urgent', status: 'unread',
+                    date: '04/03/2026', time: '14:55',
+                    linkText: 'Voir Logs', linkModule: 'Securité'
+                },
+                {
+                    id: 'ADM-NOT-8820', category: 'Annonces',
+                    title: 'Nouvelle annonce en attente',
+                    msg: 'Atlas Mining a publié une offre "Moteurs IE3" nécessitant validation.',
+                    user: 'Atlas Mining', company: 'Atlas Mining Group',
+                    priority: 'elevated', status: 'unread',
+                    date: '04/03/2026', time: '14:40',
+                    linkText: 'Valider', linkModule: 'Annonce'
+                },
+                {
+                    id: 'ADM-NOT-8818', category: 'Paiements',
+                    title: 'Alerte Escrow - Délai expiré',
+                    msg: 'La transaction DEAL-2210 n\'a pas été confirmée après 48h.',
+                    user: 'Omar Alami', company: 'Rabat Tech',
+                    priority: 'normal', status: 'read',
+                    date: '04/03/2026', time: '12:10',
+                    linkText: 'Voir Paiement', linkModule: 'Paiement'
+                },
+                {
+                    id: 'ADM-NOT-8815', category: 'Litiges',
+                    title: 'Nouvelle réclamation client',
+                    msg: 'Intech Solutions a ouvert une médiation pour produit non conforme.',
+                    user: 'Intech Solutions', company: 'Intech SA',
+                    priority: 'elevated', status: 'read',
+                    date: '04/03/2026', time: '09:12',
+                    linkText: 'Médiation', linkModule: 'Litige'
+                },
+                {
+                    id: 'ADM-NOT-8805', category: 'Utilisateurs',
+                    title: 'Nouveau KYB à vérifier',
+                    msg: 'Kenitra Metals a soumis ses documents d\'entreprise (Version 2).',
+                    user: 'Kenitra Metals', company: 'Kenitra Metals SARL',
+                    priority: 'low', status: 'archived',
+                    date: '03/03/2026', time: '18:30',
+                    linkText: 'Vérifier', linkModule: 'Utilisateur'
+                }
+            ];
+
+            const tbody = document.getElementById('notif-body');
+
+            function renderNotifs(list) {
+                tbody.innerHTML = list.map(n => `
+                    <tr class="notif-row ${n.status}">
+                        <td>
+                            <div style="font-family: monospace; font-weight: 700; color: var(--text-sub); font-size: 0.7rem;">${n.id}</div>
+                            <span class="category-tag">${n.category}</span>
+                        </td>
+                        <td>
+                            <div style="font-weight: 800; font-size: 0.9rem; margin-bottom: 4px;">${n.title}</div>
+                            <div style="font-size: 0.8rem; color: var(--text-sub); max-width: 350px; white-space: normal; line-height: 1.4;">
+                                ${n.msg}
+                            </div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700; font-size: 0.85rem;">${n.user}</div>
+                            <div style="font-size: 0.65rem; font-weight: 800; color: var(--text-sub); text-transform: uppercase;">${n.company}</div>
+                        </td>
+                        <td>
+                            <span class="badge ${n.priority === 'urgent' ? 'priority-urgent' : n.priority === 'elevated' ? 'priority-elevated' : n.priority === 'normal' ? 'priority-normal' : 'priority-low'}">
+                                ${n.priority.toUpperCase()}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="#" class="module-link"><i class="fas fa-external-link-alt"></i> ${n.linkText}</a>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700; font-size: 0.85rem;">${n.date}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-sub);">${n.time}</div>
+                        </td>
+                        <td style="text-align: right;">
+                            <div class="action-btns" style="justify-content: flex-end;">
+                                <button class="btn-icon" title="Voir détails"><i class="fas fa-eye"></i></button>
+                                <button class="btn-icon" title="${n.status === 'unread' ? 'Marquer comme lu' : 'Marquer comme non lu'}">
+                                    <i class="fas ${n.status === 'unread' ? 'fa-envelope-open' : 'fa-envelope'}"></i>
+                                </button>
+                                <button class="btn-icon" title="Archiver"><i class="fas fa-archive"></i></button>
+                                <button class="btn-icon danger" title="Supprimer"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            renderNotifs(notifications);
+        });
+    </script>
+</body>
+
+</html>

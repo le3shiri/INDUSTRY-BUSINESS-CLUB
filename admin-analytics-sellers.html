@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence Admin | Performance Vendeurs</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="js/components.js"></script>
+    <script src="js/admin-data.js"></script>
+
+    <style>
+        :root {
+            --admin-bg: #fcfcfd;
+            --card-border: #eaecf0;
+            --text-main: #101828;
+            --text-sub: #475467;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --primary-corporate: #101828;
+            --success-main: #027a48;
+            --success-bg: #ecfdf3;
+            --warning-main: #b54708;
+            --warning-bg: #fffaeb;
+            --danger-main: #b42318;
+            --danger-bg: #fef3f2;
+            --info-main: #026aa2;
+            --info-bg: #f0f9ff;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--admin-bg);
+            color: var(--text-main);
+            letter-spacing: -0.01em;
+        }
+
+        .main-content {
+            padding: 0;
+            background: var(--admin-bg);
+        }
+
+        .top-nav {
+            background: white;
+            border-bottom: 1px solid var(--card-border);
+            padding: 1.25rem 2.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-container {
+            padding: 2.5rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* KPI Section */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin: 0;
+        }
+
+        .stat-subtext {
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            display: block;
+        }
+
+        /* Multi-Filter Bar */
+        .filter-bar {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 2rem;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr) auto;
+            gap: 1rem;
+            align-items: flex-end;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+            overflow-x: auto;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .filter-label {
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+        }
+
+        .filter-control {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            font-family: inherit;
+            font-size: 0.85rem;
+            color: var(--text-main);
+            background: #fff;
+        }
+
+        /* High-Density Data Table */
+        .table-outer {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            overflow-x: auto;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        .admin-table th {
+            background: #f9fafb;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .admin-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--card-border);
+            font-size: 0.85rem;
+            vertical-align: middle;
+        }
+
+        /* Progress & Success Rate */
+        .success-rate-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .progress-bar {
+            width: 60px;
+            height: 6px;
+            background: #f2f4f7;
+            border-radius: 99px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--success-main);
+        }
+
+        .badge {
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge-danger {
+            background: var(--danger-bg);
+            color: var(--danger-main);
+        }
+
+        .badge-success {
+            background: var(--success-bg);
+            color: var(--success-main);
+        }
+
+        /* Actions */
+        .action-btns {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            background: white;
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+        }
+
+        .btn-icon:hover {
+            border-color: var(--text-main);
+            color: var(--text-main);
+            background: #f9fafb;
+        }
+
+        .btn-icon.danger:hover {
+            color: var(--danger-main);
+            border-color: #fda29b;
+            background: var(--danger-bg);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+        <aside id="sidebar-container"></aside>
+
+        <main class="main-content">
+            <header class="top-nav">
+                <div>
+                    <h1 style="margin:0; font-size: 1.5rem; font-weight: 700;">Performance Vendeurs</h1>
+                    <p style="margin:0; font-size: 0.85rem; color: var(--text-sub);">Audit analytique des marchands,
+                        volumes transactionnels et qualité de service</p>
+                </div>
+                <div style="display: flex; gap: 0.75rem;">
+                    <button class="btn btn-secondary" style="background: white;"><i class="fas fa-file-export"></i>
+                        Exporter le classement</button>
+                    <button class="btn btn-primary"><i class="fas fa-sync"></i> Rafraîchir</button>
+                </div>
+            </header>
+
+            <div class="dashboard-container">
+
+                <!-- KPI Overview -->
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <span class="stat-label">Vendeur du Mois</span>
+                        <p class="stat-value">Atlas Mining</p>
+                        <span class="stat-subtext" style="color: var(--success-main); font-weight: 700;">450,200 MAD
+                            (GMV)</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Meilleure Croissance</span>
+                        <p class="stat-value">Egyptian Steel</p>
+                        <span class="stat-subtext" style="color: var(--info-main); font-weight: 700;">+42% de
+                            transactions</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Taux Succès Moyen</span>
+                        <p class="stat-value">94.2%</p>
+                        <span class="stat-subtext">Engagement vendeurs</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Transactions Totales</span>
+                        <p class="stat-value">1,124</p>
+                        <span class="stat-subtext">Sur les 30 derniers jours</span>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label class="filter-label">Période d'audit</label>
+                        <select class="filter-control">
+                            <option>Derniers 7 jours</option>
+                            <option selected>Derniers 30 jours</option>
+                            <option>Année en cours</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Zone Géographique</label>
+                        <select class="filter-control">
+                            <option selected>Tous les pays</option>
+                            <option>Maroc</option>
+                            <option>Égypte</option>
+                            <option>Tunisie</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Verticale Métier</label>
+                        <select class="filter-control">
+                            <option selected>Toutes catégories</option>
+                            <option>Matières Premières</option>
+                            <option>Machines Industrielles</option>
+                            <option>Logistique</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Rechercher</label>
+                        <input type="text" class="filter-control" placeholder="ID ou Nom du vendeur...">
+                    </div>
+                    <button class="btn btn-primary" style="padding: 10px 20px;"><i class="fas fa-filter"></i>
+                        Filtrer</button>
+                </div>
+
+                <!-- Data Table -->
+                <div class="table-outer">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Vendeur ID</th>
+                                <th>Entité / Localisation</th>
+                                <th>Catalogue (Total/Actif)</th>
+                                <th>Volume Ventes (MAD)</th>
+                                <th>Total Gains</th>
+                                <th>Panier Moyen (AOV)</th>
+                                <th>Taux Succès</th>
+                                <th>Litiges</th>
+                                <th>Dernière Activité</th>
+                                <th style="text-align: right;">Régie & Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sellers-performance-body">
+                            <!-- Populated via script -->
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            Components.renderAdminSidebar('admin-analytics-sellers.html');
+
+            const sellers = [
+                {
+                    id: 'VND-8821', name: 'Atlas Mining Group', company: 'Atlas Mining SARL',
+                    location: 'Marrakech, MA', ads: { total: 145, active: 120 },
+                    sales: { volume: 450200, count: 88, totalGains: 405180 },
+                    aov: 5115, successRate: 98, dispute: 1, lastActive: '04/03/2026 15:45'
+                },
+                {
+                    id: 'VND-8750', name: 'Tazi Industrial', company: 'Tazi Ind. Systems',
+                    location: 'Casablanca, MA', ads: { total: 85, active: 62 },
+                    sales: { volume: 320150, count: 42, totalGains: 294538 },
+                    aov: 7622, successRate: 95, dispute: 2, lastActive: '04/03/2026 14:10'
+                },
+                {
+                    id: 'VND-8640', name: 'Egyptian Steel', company: 'Egyptian Steel Corp',
+                    location: 'Cairo, EG', ads: { total: 210, active: 185 },
+                    sales: { volume: 298400, count: 112, totalGains: 289448 },
+                    aov: 2664, successRate: 91, dispute: 5, lastActive: '04/03/2026 09:30'
+                },
+                {
+                    id: 'VND-8500', name: 'Algiers Pipes', company: 'SONATRACH Sub',
+                    location: 'Algiers, DZ', ads: { total: 45, active: 30 },
+                    sales: { volume: 185000, count: 18, totalGains: 175750 },
+                    aov: 10277, successRate: 100, dispute: 0, lastActive: '03/03/2026 18:20'
+                },
+                {
+                    id: 'VND-8422', name: 'Tunis Gears', company: 'Tunisia Manufacturing',
+                    location: 'Sfax, TN', ads: { total: 95, active: 88 },
+                    sales: { volume: 154700, count: 34, totalGains: 146965 },
+                    aov: 4550, successRate: 88, dispute: 4, lastActive: '04/03/2026 12:00'
+                }
+            ];
+
+            const tbody = document.getElementById('sellers-performance-body');
+
+            function renderSellers(list) {
+                tbody.innerHTML = list.map(s => `
+                    <tr>
+                        <td style="font-family: monospace; font-weight: 700; color: var(--text-sub); font-size: 0.75rem;">${s.id}</td>
+                        <td>
+                            <div style="font-weight: 700; font-size: 0.9rem;">${s.name}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-sub);">${s.location}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700;">${s.ads.total}</div>
+                            <div style="font-size: 0.7rem; color: var(--success-main); font-weight: 600;">Actives: ${s.ads.active}</div>
+                        </td>
+                        <td style="font-weight: 800; font-size: 0.95rem;">${s.sales.volume.toLocaleString()}</td>
+                        <td style="color: var(--info-main); font-weight: 700;">${s.sales.totalGains.toLocaleString()}</td>
+                        <td style="font-weight: 700;">${s.aov.toLocaleString()}</td>
+                        <td>
+                            <div class="success-rate-box">
+                                <span style="font-weight: 800; font-size: 0.8rem; min-width: 32px;">${s.successRate}%</span>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: ${s.successRate}%; ${s.successRate < 90 ? 'background: var(--warning-main);' : ''}"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            ${s.dispute > 0 ? `<span class="badge badge-danger">${s.dispute} litiges</span>` : `<span class="badge badge-success">Sain</span>`}
+                        </td>
+                        <td style="font-size: 0.75rem; color: var(--text-sub); font-weight: 600;">
+                            ${s.lastActive}
+                        </td>
+                        <td style="text-align: right;">
+                            <div class="action-btns" style="justify-content: flex-end;">
+                                <button class="btn-icon" title="Profil vendeur"><i class="fas fa-user-tie"></i></button>
+                                <button class="btn-icon" title="Voir annonces"><i class="fas fa-layer-group"></i></button>
+                                <button class="btn-icon" title="Exporter rapport"><i class="fas fa-download"></i></button>
+                                <button class="btn-icon danger" title="Suspendre vendeur"><i class="fas fa-user-slash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            renderSellers(sellers);
+        });
+    </script>
+</body>
+
+</html>

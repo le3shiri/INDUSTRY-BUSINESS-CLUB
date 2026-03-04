@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence Admin | Activité Utilisateurs</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/admin-data.js"></script>
+
+    <style>
+        :root {
+            --admin-bg: #fcfcfd;
+            --card-border: #eaecf0;
+            --text-main: #101828;
+            --text-sub: #475467;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --primary-corporate: #101828;
+            --success-main: #027a48;
+            --success-bg: #ecfdf3;
+            --warning-main: #b54708;
+            --warning-bg: #fffaeb;
+            --danger-main: #b42318;
+            --danger-bg: #fef3f2;
+            --info-main: #026aa2;
+            --info-bg: #f0f9ff;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--admin-bg);
+            color: var(--text-main);
+            letter-spacing: -0.01em;
+        }
+
+        .main-content {
+            padding: 0;
+            background: var(--admin-bg);
+        }
+
+        .top-nav {
+            background: white;
+            border-bottom: 1px solid var(--card-border);
+            padding: 1.25rem 2.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-container {
+            padding: 2.5rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* KPI Grid */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin: 0;
+        }
+
+        .stat-sub {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-sub);
+            margin-top: 4px;
+            display: block;
+        }
+
+        /* Filter Section */
+        .filter-bar {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 2rem;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr) auto;
+            gap: 1rem;
+            align-items: flex-end;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .filter-label {
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+        }
+
+        .filter-control {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            font-family: inherit;
+            font-size: 0.85rem;
+            color: var(--text-main);
+            background: #fff;
+        }
+
+        /* High-Density Data Table */
+        .table-outer {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        .admin-table th {
+            background: #f9fafb;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .admin-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--card-border);
+            font-size: 0.85rem;
+            vertical-align: middle;
+        }
+
+        .badge {
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge-success {
+            background: var(--success-bg);
+            color: var(--success-main);
+        }
+
+        .badge-warning {
+            background: var(--warning-bg);
+            color: var(--warning-main);
+        }
+
+        .badge-danger {
+            background: var(--danger-bg);
+            color: var(--danger-main);
+        }
+
+        .badge-info {
+            background: var(--info-bg);
+            color: var(--info-main);
+        }
+
+        .type-tag {
+            font-weight: 800;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            color: var(--text-sub);
+            background: #f2f4f7;
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid #eaecf0;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            background: white;
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+        }
+
+        .btn-icon:hover {
+            border-color: var(--text-main);
+            color: var(--text-main);
+            background: #f9fafb;
+        }
+
+        .btn-icon.danger:hover {
+            color: var(--danger-main);
+            border-color: #fda29b;
+            background: var(--danger-bg);
+        }
+
+        .user-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #f2f4f7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: var(--text-sub);
+            border: 1px solid var(--card-border);
+        }
+
+        .activity-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+        .dot-green {
+            background: #12b76a;
+            border: 2px solid #ecfdf3;
+            outline: 3px solid transparent;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+        <aside id="sidebar-container"></aside>
+
+        <main class="main-content">
+            <header class="top-nav">
+                <div>
+                    <h1 style="margin:0; font-size: 1.5rem; font-weight: 700;">Activité Utilisateurs</h1>
+                    <p style="margin:0; font-size: 0.85rem; color: var(--text-sub);">Audit des interactions
+                        communautaires, engagement transactionnel et monitoring de rétention</p>
+                </div>
+                <div style="display: flex; gap: 0.75rem;">
+                    <button class="btn btn-secondary" style="background: white;"><i class="fas fa-file-export"></i>
+                        Exporter Activité</button>
+                    <button class="btn btn-primary"><i class="fas fa-sync"></i> Actualiser</button>
+                </div>
+            </header>
+
+            <div class="dashboard-container">
+
+                <!-- KPI Section -->
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <span class="stat-label">Total Utilisateurs Actifs</span>
+                        <p class="stat-value">8,150</p>
+                        <span class="stat-sub" style="color: var(--success-main);"><i class="fas fa-chart-line"></i>
+                            +12% ce mois</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Nouveaux (Dernier 24h)</span>
+                        <p class="stat-value">42</p>
+                        <span class="stat-sub">Acquisition stable</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Connectés Récemment</span>
+                        <p class="stat-value">1,240</p>
+                        <span class="stat-sub" style="color: var(--info-main);"><i class="fas fa-history"></i>
+                            < 30 minutes</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Engagement Global</span>
+                        <p class="stat-value">65.8%</p>
+                        <span class="stat-sub">Activité vs Inscrits</span>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label class="filter-label">Période d'analyse</label>
+                        <select class="filter-control">
+                            <option>Aujourd'hui</option>
+                            <option selected>Derniers 30 jours</option>
+                            <option>Dernière année</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Type Utilisateur</label>
+                        <select class="filter-control">
+                            <option selected>Tous les types</option>
+                            <option>Acheteurs</option>
+                            <option>Vendeurs</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Zone Géographique</label>
+                        <select class="filter-control">
+                            <option selected>Tous les pays</option>
+                            <option>Maroc</option>
+                            <option>Égypte</option>
+                            <option>Tunisie</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" style="padding: 10px 20px;"><i class="fas fa-filter"></i>
+                        Filtrer</button>
+                </div>
+
+                <!-- Data Table -->
+                <div class="table-outer">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Utilisateur / Entreprise</th>
+                                <th>Type</th>
+                                <th>Localisation</th>
+                                <th>Dernière Connexion</th>
+                                <th>Login (Total)</th>
+                                <th>Stats (A/O/T)</th>
+                                <th>Messages</th>
+                                <th>Statut</th>
+                                <th style="text-align: right;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-activity-body">
+                            <!-- Populated via script -->
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            Components.renderAdminSidebar('admin-analytics-activity.html');
+
+            const users = [
+                {
+                    id: 'USR-8821', name: 'Ahmed Mansouri', company: 'Atlas Mining', type: 'Vendeur',
+                    loc: 'Marrakech, MA', lastSeen: 'En ligne', loginCount: 450,
+                    stats: { ads: 145, offersSent: 0, offersReceived: 85, deals: 28 },
+                    messages: 1240, disputes: 1, status: 'actif'
+                },
+                {
+                    id: 'USR-8750', name: 'Sara Benani', company: 'Benani Logistics', type: 'Acheteur',
+                    loc: 'Casablanca, MA', lastSeen: 'Il y a 10 min', loginCount: 280,
+                    stats: { ads: 0, offersSent: 42, offersReceived: 0, deals: 15 },
+                    messages: 850, disputes: 0, status: 'actif'
+                },
+                {
+                    id: 'USR-8640', name: 'Omar Alami', company: 'Alami Tech', type: 'Acheteur',
+                    loc: 'Rabat, MA', lastSeen: 'Il y a 2h', loginCount: 156,
+                    stats: { ads: 0, offersSent: 28, offersReceived: 2, deals: 12 },
+                    messages: 420, disputes: 2, status: 'actif'
+                },
+                {
+                    id: 'USR-8500', name: 'Mehdi Tazi', company: 'Tazi Industrial', type: 'Vendeur',
+                    loc: 'Tanger, MA', lastSeen: 'Hier, 18:20', loginCount: 520,
+                    stats: { ads: 85, offersSent: 0, offersReceived: 42, deals: 42 },
+                    messages: 2100, disputes: 1, status: 'actif'
+                },
+                {
+                    id: 'USR-8410', name: 'Unknown User', company: '-', type: 'Acheteur',
+                    loc: 'Sousse, TN', lastSeen: '02/03/2026', loginCount: 12,
+                    stats: { ads: 0, offersSent: 2, offersReceived: 0, deals: 0 },
+                    messages: 5, disputes: 0, status: 'suspendu'
+                }
+            ];
+
+            const tbody = document.getElementById('user-activity-body');
+
+            function renderUsers(list) {
+                tbody.innerHTML = list.map(u => `
+                    <tr>
+                        <td style="font-family: monospace; font-weight: 700; color: var(--text-sub); font-size: 0.75rem;">${u.id}</td>
+                        <td>
+                            <div class="user-cell">
+                                <div class="user-avatar">${u.name.charAt(0)}</div>
+                                <div>
+                                    <div style="font-weight: 700; font-size: 0.85rem;">${u.name}</div>
+                                    <div style="font-size: 0.7rem; color: var(--text-sub);">${u.company}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="type-tag">${u.type}</span></td>
+                        <td style="font-size: 0.8rem; font-weight: 600;">${u.loc}</td>
+                        <td style="font-size: 0.8rem; font-weight: 700; color: ${u.lastSeen === 'En ligne' ? 'var(--success-main)' : 'var(--text-sub)'}">
+                            ${u.lastSeen === 'En ligne' ? '<span class="activity-dot dot-green"></span>' : ''}${u.lastSeen}
+                        </td>
+                        <td style="font-weight: 700;">${u.loginCount}</td>
+                        <td>
+                            <div style="font-size: 0.75rem; font-weight: 700;">
+                                <span title="Annonces" style="color: var(--info-main)">${u.stats.ads}A</span> / 
+                                <span title="Offres Envoyées" style="color: var(--warning-main)">${u.stats.offersSent}OE</span> / 
+                                <span title="Transactions" style="color: var(--success-main)">${u.stats.deals}T</span>
+                            </div>
+                        </td>
+                        <td style="font-weight: 700; color: var(--text-sub);">${u.messages}</td>
+                        <td>
+                            <span class="badge ${u.status === 'actif' ? 'badge-success' : u.status === 'inactif' ? 'badge-warning' : 'badge-danger'}">
+                                ${u.status === 'actif' ? 'Actif' : u.status === 'inactif' ? 'Inactif' : 'Suspendu'}
+                            </span>
+                        </td>
+                        <td style="text-align: right;">
+                            <div class="action-btns" style="justify-content: flex-end;">
+                                <button class="btn-icon" title="Profil"><i class="fas fa-user-circle"></i></button>
+                                <button class="btn-icon" title="Audit Activité"><i class="fas fa-shoe-prints"></i></button>
+                                <button class="btn-icon danger" title="Suspendre"><i class="fas fa-user-slash"></i></button>
+                                <button class="btn-icon" title="Exporter rapport"><i class="fas fa-download"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            renderUsers(users);
+        });
+    </script>
+</body>
+
+</html>

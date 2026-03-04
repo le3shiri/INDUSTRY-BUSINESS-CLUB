@@ -107,7 +107,7 @@
         /* 2. Content Sections */
         .content-row {
             display: grid;
-            grid-template-columns: 1.8fr 1.2fr;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
             gap: 1.5rem;
             margin-bottom: 2.5rem;
         }
@@ -582,7 +582,9 @@
                     ]
                 },
                 options: {
-                    responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+                    responsive: true, maintainAspectRatio: false,
+                    animation: false, // Prevents potential layout/refresh loops
+                    plugins: { legend: { display: false } },
                     scales: { y: { grid: { color: '#f2f4f7' } }, x: { grid: { display: false } } }
                 }
             });

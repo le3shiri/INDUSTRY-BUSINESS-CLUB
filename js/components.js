@@ -114,8 +114,18 @@ const Components = {
                     <a href="admin-sellers.html" class="nav-item ${activePage.includes('admin-sellers') ? 'active' : ''}">Liste des vendeurs</a>
                     <a href="admin-seller-requests.html" class="nav-item ${activePage.includes('admin-seller-requests') ? 'active' : ''}">Demandes d'inscription</a>
                     <a href="admin-company-verification.html" class="nav-item ${activePage.includes('admin-company-verification') ? 'active' : ''}">Vérification entreprise</a>
-                    <a href="admin-posts.html" class="nav-item">Stocks publiés</a>
+                    <a href="admin-posts.html" class="nav-item ${activePage.includes('admin-posts') ? 'active' : ''}">Stocks publiés</a>
                     <a href="admin-revenue.html" class="nav-item ${activePage.includes('admin-revenue') ? 'active' : ''}">Historique ventes</a>
+                </div>
+
+                <!-- DROPDOWN: ACHETEURS -->
+                <div class="nav-item nav-item-dropdown-trigger open" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('active')">
+                    <div style="display: flex; align-items: center; gap: 0.85rem;"><i class="fas fa-shopping-cart"></i> <span>Gestion Acheteurs</span></div>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </div>
+                <div class="nav-dropdown active">
+                    <a href="admin-buyers.html" class="nav-item ${activePage.includes('admin-buyers') ? 'active' : ''}">Liste des acheteurs</a>
+                    <a href="admin-buyer-history.html" class="nav-item ${activePage.includes('admin-buyer-history') ? 'active' : ''}">Historique achats</a>
                 </div>
 
                 <!-- DROPDOWN: PRODUITS -->
@@ -128,7 +138,7 @@ const Components = {
                     <a href="admin-add-stock.html" class="nav-item ${activePage.includes('admin-add-stock') ? 'active' : ''}">Ajouter stock (Admin)</a>
                     <a href="admin-validate-posts.html" class="nav-item ${activePage.includes('admin-validate-posts') ? 'active' : ''}">Validation annonces</a>
                     <a href="admin-refused-posts.html" class="nav-item ${activePage.includes('admin-refused-posts') ? 'active' : ''}">Annonces refusées</a>
-                    <a href="admin-moderation.html" class="nav-item">Annonces signalées</a>
+                    <a href="admin-reported-posts.html" class="nav-item ${activePage.includes('admin-reported-posts') ? 'active' : ''}">Annonces signalées</a>
                 </div>
 
                 <!-- DROPDOWN: TRANSACTIONS -->
@@ -137,11 +147,21 @@ const Components = {
                     <i class="fas fa-chevron-down chevron"></i>
                 </div>
                 <div class="nav-dropdown active">
-                    <a href="admin-deals.html" class="nav-item ${activePage.includes('admin-deals') ? 'active' : ''}">Deals en cours</a>
-                    <a href="admin-deals.html" class="nav-item">Deals validés</a>
-                    <a href="admin-deals.html" class="nav-item">Deals annulés</a>
-                    <a href="admin-revenue.html" class="nav-item">Historique transactions</a>
-                    <a href="admin-moderation.html" class="nav-item">Litiges</a>
+                    <a href="admin-active-deals.html" class="nav-item ${activePage.includes('admin-active-deals') ? 'active' : ''}">Deals en cours</a>
+                    <a href="admin-validated-deals.html" class="nav-item ${activePage.includes('admin-validated-deals') ? 'active' : ''}">Deals validés</a>
+                    <a href="admin-cancelled-deals.html" class="nav-item ${activePage.includes('admin-cancelled-deals') ? 'active' : ''}">Deals annulés</a>
+                    <a href="admin-transactions.html" class="nav-item ${activePage.includes('admin-transactions') ? 'active' : ''}">Historique transactions</a>
+                </div>
+
+                <!-- DROPDOWN: OFFRES -->
+                <div class="nav-item nav-item-dropdown-trigger open" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('active')">
+                    <div style="display: flex; align-items: center; gap: 0.85rem;"><i class="fas fa-comments-dollar"></i> <span>Gestion Offres</span></div>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </div>
+                <div class="nav-dropdown active">
+                    <a href="admin-offers-sent.html" class="nav-item ${activePage.includes('admin-offers-sent') ? 'active' : ''}">Offres envoyées</a>
+                    <a href="admin-offers-accepted.html" class="nav-item ${activePage.includes('admin-offers-accepted') ? 'active' : ''}">Offres acceptées</a>
+                    <a href="admin-offers-refused.html" class="nav-item ${activePage.includes('admin-offers-refused') ? 'active' : ''}">Offres refusées</a>
                 </div>
 
                 <!-- DROPDOWN: PAIEMENTS -->
@@ -150,10 +170,10 @@ const Components = {
                     <i class="fas fa-chevron-down chevron"></i>
                 </div>
                 <div class="nav-dropdown active">
-                    <a href="admin-revenue.html" class="nav-item ${activePage.includes('admin-revenue') ? 'active' : ''}">Paiements reçus</a>
-                    <a href="admin-revenue.html" class="nav-item">Paiements en attente</a>
-                    <a href="admin-revenue.html" class="nav-item">Reversement vendeurs</a>
-                    <a href="admin-revenue.html" class="nav-item">Commissions</a>
+                    <a href="admin-received-payments.html" class="nav-item ${activePage.includes('admin-received-payments') ? 'active' : ''}">Paiements reçus</a>
+                    <a href="admin-pending-payments.html" class="nav-item ${activePage.includes('admin-pending-payments') ? 'active' : ''}">Paiements en attente</a>
+                    <a href="admin-seller-payouts.html" class="nav-item ${activePage.includes('admin-seller-payouts') ? 'active' : ''}">Reversement vendeurs</a>
+                    <a href="admin-commissions.html" class="nav-item ${activePage.includes('admin-commissions') ? 'active' : ''}">Commissions</a>
                 </div>
 
                 <!-- DROPDOWN: LOGISTIQUE -->
@@ -162,8 +182,8 @@ const Components = {
                     <i class="fas fa-chevron-down chevron"></i>
                 </div>
                 <div class="nav-dropdown active">
-                    <a href="admin-deals.html" class="nav-item">Expéditions</a>
-                    <a href="admin-deals.html" class="nav-item">Suivi livraison</a>
+                    <a href="admin-shipments.html" class="nav-item ${activePage.includes('admin-shipments') ? 'active' : ''}">Expéditions</a>
+                    <a href="admin-delivery-tracking.html" class="nav-item ${activePage.includes('admin-delivery-tracking') ? 'active' : ''}">Suivi livraison</a>
                 </div>
 
                 <!-- DROPDOWN: FACTURATION -->
@@ -172,9 +192,22 @@ const Components = {
                     <i class="fas fa-chevron-down chevron"></i>
                 </div>
                 <div class="nav-dropdown active">
-                    <a href="admin-revenue.html" class="nav-item">Factures clients</a>
-                    <a href="admin-revenue.html" class="nav-item">Factures vendeurs</a>
-                    <a href="admin-revenue.html" class="nav-item">Historique</a>
+                    <a href="admin-customer-invoices.html" class="nav-item ${activePage.includes('admin-customer-invoices') ? 'active' : ''}">Factures clients</a>
+                    <a href="admin-seller-invoices.html" class="nav-item ${activePage.includes('admin-seller-invoices') ? 'active' : ''}">Factures vendeurs</a>
+                    <a href="admin-invoice-generation.html" class="nav-item ${activePage.includes('admin-invoice-generation') ? 'active' : ''}">Génération facture</a>
+                    <a href="admin-billing-history.html" class="nav-item ${activePage.includes('admin-billing-history') ? 'active' : ''}">Historique</a>
+                </div>
+
+                <!-- DROPDOWN: LITIGES & SUPPORT -->
+                <div class="nav-item nav-item-dropdown-trigger open" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('active')">
+                    <div style="display: flex; align-items: center; gap: 0.85rem;"><i class="fas fa-exclamation-triangle"></i> <span>Litiges & support</span></div>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </div>
+                <div class="nav-dropdown active">
+                    <a href="admin-claims.html" class="nav-item ${activePage.includes('admin-claims') ? 'active' : ''}">Réclamations</a>
+                    <a href="admin-mediation.html" class="nav-item ${activePage.includes('admin-mediation') ? 'active' : ''}">Médiation</a>
+                    <a href="admin-support-tickets.html" class="nav-item ${activePage.includes('admin-support-tickets') ? 'active' : ''}">Tickets support</a>
+                    <a href="admin-messages.html" class="nav-item ${activePage.includes('admin-messages') ? 'active' : ''}">Messages utilisateurs</a>
                 </div>
 
                 <!-- DROPDOWN: CATALOGUE -->
@@ -183,9 +216,10 @@ const Components = {
                     <i class="fas fa-chevron-down chevron"></i>
                 </div>
                 <div class="nav-dropdown active">
-                    <a href="admin-settings.html" class="nav-item">Catégories</a>
-                    <a href="admin-settings.html" class="nav-item">Sous catégories</a>
-                    <a href="admin-settings.html" class="nav-item">Unités de mesure</a>
+                    <a href="admin-categories.html" class="nav-item ${activePage.includes('admin-categories') ? 'active' : ''}">Catégories</a>
+                    <a href="admin-subcategories.html" class="nav-item ${activePage.includes('admin-subcategories') ? 'active' : ''}">Sous catégories</a>
+                    <a href="admin-product-types.html" class="nav-item ${activePage.includes('admin-product-types') ? 'active' : ''}">Types produits</a>
+                    <a href="admin-units.html" class="nav-item ${activePage.includes('admin-units') ? 'active' : ''}">Unités de mesure</a>
                 </div>
 
                 <!-- DROPDOWN: PARAMETRES -->
@@ -195,10 +229,67 @@ const Components = {
                 </div>
                 <div class="nav-dropdown active">
                     <a href="admin-settings.html" class="nav-item ${activePage.includes('admin-settings') ? 'active' : ''}">Configuration plateforme</a>
-                    <a href="admin-settings.html" class="nav-item">Commissions</a>
-                    <a href="admin-settings.html" class="nav-item">Modes de paiement</a>
-                    <a href="admin-settings.html" class="nav-item">Notifications</a>
-                    <a href="admin-settings.html" class="nav-item">CGU / Politique</a>
+                    <a href="admin-roles.html" class="nav-item ${activePage.includes('admin-roles') ? 'active' : ''}">Permissions & Rôles</a>
+                    <a href="admin-commission-settings.html" class="nav-item ${activePage.includes('admin-commission-settings') ? 'active' : ''}">Commissions</a>
+                    <a href="admin-payment-methods.html" class="nav-item ${activePage.includes('admin-payment-methods') ? 'active' : ''}">Modes de paiement</a>
+                    <a href="admin-notifications.html" class="nav-item ${activePage.includes('admin-notifications') ? 'active' : ''}">Notifications</a>
+                    <a href="admin-legal.html" class="nav-item ${activePage.includes('admin-legal') ? 'active' : ''}">CGU / Politique</a>
+                </div>
+
+                <!-- DROPDOWN: SECURITE -->
+                <div class="nav-item nav-item-dropdown-trigger open" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('active')">
+                    <div style="display: flex; align-items: center; gap: 0.85rem;"><i class="fas fa-shield-halved"></i> <span>Sécurité</span></div>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </div>
+                <div class="nav-dropdown active">
+                    <a href="admin-security-logs.html" class="nav-item ${activePage.includes('admin-security-logs') ? 'active' : ''}">Logs système</a>
+                    <a href="admin-security-suspicious.html" class="nav-item ${activePage.includes('admin-security-suspicious') ? 'active' : ''}">Activité suspecte</a>
+                    <a href="admin-security-fraud.html" class="nav-item ${activePage.includes('admin-security-fraud') ? 'active' : ''}">Tentatives fraude</a>
+                </div>
+
+                <!-- DROPDOWN: NOTIFICATIONS ADMIN -->
+                <div class="nav-item nav-item-dropdown-trigger open" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('active')">
+                    <div style="display: flex; align-items: center; gap: 0.85rem;"><i class="fas fa-bell"></i> <span>Notifications admin</span></div>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </div>
+                <div class="nav-dropdown active">
+                    <a href="admin-notif-center.html" class="nav-item ${activePage.includes('admin-notif-center') ? 'active' : ''}">Centre notifications</a>
+                    <a href="admin-platform-alerts.html" class="nav-item ${activePage.includes('admin-platform-alerts') ? 'active' : ''}">Alertes plateforme</a>
+                </div>
+
+                <!-- DROPDOWN: RAPPORTS -->
+                <div class="nav-item nav-item-dropdown-trigger open" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('active')">
+                    <div style="display: flex; align-items: center; gap: 0.85rem;"><i class="fas fa-chart-bar"></i> <span>Rapports</span></div>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </div>
+                <div class="nav-dropdown active">
+                    <a href="admin-report-sales.html" class="nav-item ${activePage.includes('admin-report-sales') ? 'active' : ''}">Rapport ventes</a>
+                    <a href="admin-report-commissions.html" class="nav-item ${activePage.includes('admin-report-commissions') ? 'active' : ''}">Rapport commissions</a>
+                    <a href="admin-report-users.html" class="nav-item ${activePage.includes('admin-report-users') ? 'active' : ''}">Rapport utilisateurs</a>
+                    <a href="admin-export-data.html" class="nav-item ${activePage.includes('admin-export-data') ? 'active' : ''}">Export données</a>
+                </div>
+
+                <!-- DROPDOWN: ANALYTICS -->
+                <div class="nav-item nav-item-dropdown-trigger open" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('active')">
+                    <div style="display: flex; align-items: center; gap: 0.85rem;"><i class="fas fa-chart-line"></i> <span>Analytics</span></div>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </div>
+                <div class="nav-dropdown active">
+                    <a href="admin-analytics-sales.html" class="nav-item ${activePage.includes('admin-analytics-sales') ? 'active' : ''}">Ventes plateforme</a>
+                    <a href="admin-analytics-sellers.html" class="nav-item ${activePage.includes('admin-analytics-sellers') ? 'active' : ''}">Performance vendeurs</a>
+                    <a href="admin-analytics-products.html" class="nav-item ${activePage.includes('admin-analytics-products') ? 'active' : ''}">Produits populaires</a>
+                    <a href="admin-analytics-activity.html" class="nav-item ${activePage.includes('admin-analytics-activity') ? 'active' : ''}">Activité utilisateurs</a>
+                </div>
+
+                <!-- DROPDOWN: FICHIERS -->
+                <div class="nav-item nav-item-dropdown-trigger open" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('active')">
+                    <div style="display: flex; align-items: center; gap: 0.85rem;"><i class="fas fa-file-shield"></i> <span>Gestion Fichiers</span></div>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </div>
+                <div class="nav-dropdown active">
+                    <a href="admin-docs-kyc.html" class="nav-item ${activePage.includes('admin-docs-kyc') ? 'active' : ''}">Documents KYC</a>
+                    <a href="admin-docs-company.html" class="nav-item ${activePage.includes('admin-docs-company') ? 'active' : ''}">Documents entreprises</a>
+                    <a href="admin-docs-products.html" class="nav-item ${activePage.includes('admin-docs-products') ? 'active' : ''}">Documents produits</a>
                 </div>
 
             </nav>
