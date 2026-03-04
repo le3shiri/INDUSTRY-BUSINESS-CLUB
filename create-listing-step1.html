@@ -61,26 +61,56 @@
 
                     <div class="form-group mb-6">
                         <label class="form-label">Category *</label>
-                        <div class="role-group" style="grid-template-columns: repeat(4, 1fr);">
+                        <div class="role-group" style="grid-template-columns: repeat(3, 1fr);">
                             <!-- Using role-card style but smaller -->
-                            <div class="role-card" onclick="selectCategory(this, 'Metals')" style="padding: 1rem;">
-                                <i class="fas fa-layer-group role-icon"
-                                    style="font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
-                                <span style="font-size: 0.9rem; font-weight: 600;">Metals</span>
+                            <div class="role-card" onclick="selectCategory(this, 'Matières premières')"
+                                style="padding: 1rem;">
+                                <i class="fas fa-cubes role-icon" style="font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
+                                <span style="font-size: 0.85rem; font-weight: 600;">Matières premières</span>
                             </div>
-                            <div class="role-card" onclick="selectCategory(this, 'Machinery')" style="padding: 1rem;">
-                                <i class="fas fa-cogs role-icon" style="font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
-                                <span style="font-size: 0.9rem; font-weight: 600;">Machinery</span>
-                            </div>
-                            <div class="role-card" onclick="selectCategory(this, 'Plastics')" style="padding: 1rem;">
-                                <i class="fas fa-recycle role-icon"
+                            <div class="role-card" onclick="selectCategory(this, 'Matériaux BTP')"
+                                style="padding: 1rem;">
+                                <i class="fas fa-hard-hat role-icon"
                                     style="font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
-                                <span style="font-size: 0.9rem; font-weight: 600;">Plastics</span>
+                                <span style="font-size: 0.85rem; font-weight: 600;">Matériaux BTP</span>
                             </div>
-                            <div class="role-card" onclick="selectCategory(this, 'Electronics')" style="padding: 1rem;">
-                                <i class="fas fa-microchip role-icon"
+                            <div class="role-card" onclick="selectCategory(this, 'Équipements Industriels')"
+                                style="padding: 1rem;">
+                                <i class="fas fa-industry role-icon"
                                     style="font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
-                                <span style="font-size: 0.9rem; font-weight: 600;">Electronics</span>
+                                <span style="font-size: 0.85rem; font-weight: 600;">Équipements Industriels</span>
+                            </div>
+                            <div class="role-card" onclick="selectCategory(this, 'Surstocks Produits Finis')"
+                                style="padding: 1rem;">
+                                <i class="fas fa-boxes role-icon" style="font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
+                                <span style="font-size: 0.85rem; font-weight: 600;">Surstocks Produits</span>
+                            </div>
+                            <div class="role-card" onclick="selectCategory(this, 'Agroalimentaire B2B')"
+                                style="padding: 1rem;">
+                                <i class="fas fa-utensils role-icon"
+                                    style="font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
+                                <span style="font-size: 0.85rem; font-weight: 600;">Agroalimentaire</span>
+                            </div>
+                            <div class="role-card" onclick="selectCategory(this, 'Informatique & Bureautique')"
+                                style="padding: 1rem;">
+                                <i class="fas fa-laptop role-icon"
+                                    style="font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
+                                <span style="font-size: 0.85rem; font-weight: 600;">IT & Bureautique</span>
+                            </div>
+                            <div class="role-card" onclick="selectCategory(this, 'Hôtellerie & Restauration')"
+                                style="padding: 1rem;">
+                                <i class="fas fa-hotel role-icon" style="font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
+                                <span style="font-size: 0.85rem; font-weight: 600;">CHR / Hôtellerie</span>
+                            </div>
+                            <div class="role-card" onclick="selectCategory(this, 'Logistique & Stockage')"
+                                style="padding: 1rem;">
+                                <i class="fas fa-truck role-icon" style="font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
+                                <span style="font-size: 0.85rem; font-weight: 600;">Logistique</span>
+                            </div>
+                            <div class="role-card" onclick="selectCategory(this, 'Énergie & Technique')"
+                                style="padding: 1rem;">
+                                <i class="fas fa-bolt role-icon" style="font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
+                                <span style="font-size: 0.85rem; font-weight: 600;">Énergie & Technique</span>
                             </div>
                         </div>
                         <input type="hidden" id="category" required>

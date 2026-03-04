@@ -77,19 +77,49 @@
                         <input type="hidden" id="condition" required>
                     </div>
 
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
                         <div class="form-group">
                             <label class="form-label">Dimensions (LxWxH)</label>
-                            <input type="text" class="form-input" placeholder="e.g. 2m x 1m x 0.5m">
+                            <input type="text" id="dimensions" class="form-input" placeholder="e.g. 2m x 1m x 0.5m">
                         </div>
                         <div class="form-group">
                             <label class="form-label">Weight (Approx)</label>
-                            <input type="text" class="form-input" placeholder="e.g. 500kg">
+                            <input type="text" id="weight" class="form-input" placeholder="e.g. 500kg">
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-6">
+                        <label class="form-label">Reason for Sale *</label>
+                        <select id="sale-reason" class="form-input" required>
+                            <option value="">Select a reason...</option>
+                            <option value="Overstock">Overstock / Surplus</option>
+                            <option value="End of Line">End of Line / Discontinued</option>
+                            <option value="Liquidation">Business Liquidation</option>
+                            <option value="Renewal">Equipment Renewal</option>
+                            <option value="Ex-Demo">Ex-Display / Demo Unit</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group mb-6">
+                        <label class="form-label">Previous Usage / History</label>
+                        <textarea id="usage-history" class="form-input" rows="3"
+                            placeholder="Brief history of the item (if used)..."></textarea>
+                    </div>
+
+                    <div class="form-group mb-6">
+                        <label class="form-label">On-site Inspection Possible? *</label>
+                        <div style="display: flex; gap: 2rem; margin-top: 0.5rem;">
+                            <label class="checkbox-themed">
+                                <input type="radio" name="inspection" value="Yes" checked> Yes, by appointment
+                            </label>
+                            <label class="checkbox-themed">
+                                <input type="radio" name="inspection" value="No"> No, sale exclusively online
+                            </label>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">Safety / Analysis Certificate (PDF)</label>
+                        <label class="form-label">Safety / Analysis / ISO Certificate (PDF)</label>
                         <div class="upload-area-themed" style="padding: 1.5rem;"
                             onclick="document.getElementById('cert-upload').click()">
                             <input type="file" id="cert-upload" hidden onchange="showFileName(this)">
@@ -134,14 +164,24 @@
 
         document.getElementById('next-step-3').addEventListener('click', () => {
             const cond = document.getElementById('condition').value;
-            if (cond) {
+            const reason = document.getElementById('sale-reason').value;
+            const inspection = document.querySelector('input[name="inspection"]:checked').value;
+
+            if (cond && reason) {
                 // Save
                 const listing = JSON.parse(localStorage.getItem('temp_listing') || '{}');
-                listing.step3 = { condition: cond };
+                listing.step3 = {
+                    condition: cond,
+                    reason: reason,
+                    inspection: inspection,
+                    dimensions: document.getElementById('dimensions').value,
+                    weight: document.getElementById('weight').value,
+                    usage: document.getElementById('usage-history').value
+                };
                 localStorage.setItem('temp_listing', JSON.stringify(listing));
                 window.location.href = 'create-listing-step4.html';
             } else {
-                alert("Please select item condition.");
+                alert("Please fill all required fields (Condition and Reason for Sale).");
             }
         });
     </script>

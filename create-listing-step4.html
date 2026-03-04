@@ -82,16 +82,71 @@
 
                     <div class="form-group mb-6">
                         <label class="form-label">Price (MAD) *</label>
-                        <div style="position: relative;">
-                            <input type="number" id="price" class="form-input" placeholder="0.00">
-                            <span
-                                style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); font-weight: 700; color: var(--text-secondary);">MAD</span>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                            <div style="position: relative;">
+                                <input type="number" id="price" class="form-input" placeholder="0.00">
+                                <span
+                                    style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); font-weight: 700; color: var(--text-secondary);">MAD</span>
+                            </div>
+                            <div style="display: flex; flex-direction: column; justify-content: center;">
+                                <label class="checkbox-themed">
+                                    <input type="checkbox" id="price-request"> Price on Request
+                                </label>
+                                <label class="checkbox-themed" style="margin-top: 0.5rem;">
+                                    <input type="checkbox" id="price-negotiable" checked> Price is Negotiable
+                                </label>
+                            </div>
                         </div>
-                        <div style="margin-top: 0.5rem;">
-                            <label class="checkbox-themed">
-                                <input type="checkbox" id="price-request"> Price on Request
-                            </label>
+                    </div>
+
+                    <h3
+                        style="font-size: 1.25rem; font-weight: 700; margin: 2rem 0 1rem; border-top: 1px solid var(--border-color); padding-top: 2rem;">
+                        Logistics & Commercials</h3>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                        <div class="form-group">
+                            <label class="form-label">Stock Location (City) *</label>
+                            <input type="text" id="location" class="form-input"
+                                placeholder="e.g. Casablanca, Tangier...">
                         </div>
+                        <div class="form-group">
+                            <label class="form-label">Incoterm Proposed *</label>
+                            <select id="incoterm" class="form-input">
+                                <option value="EXW">EXW - Ex Works</option>
+                                <option value="FOB">FOB - Free On Board</option>
+                                <option value="CIF">CIF - Cost, Insurance & Freight</option>
+                                <option value="DDP">DDP - Delivered Duty Paid</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-6">
+                        <label class="form-label">Commercial Terms</label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                            <div>
+                                <label class="checkbox-themed">
+                                    <input type="checkbox" id="warranty"> Warranty included
+                                </label>
+                            </div>
+                            <div>
+                                <label class="checkbox-themed">
+                                    <input type="checkbox" id="returns-accepted"> Returns accepted (7 days)
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-6"
+                        style="background: rgba(var(--brand-blue-rgb), 0.05); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--brand-blue);">
+                        <label class="checkbox-themed" style="font-weight: 700; color: var(--brand-blue);">
+                            <input type="checkbox" id="escrow-accept" required checked> I accept IBC Secure Payment
+                            (Escrow)
+                        </label>
+                        <p
+                            style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.5rem; margin-left: 2rem;">
+                            Payments are secured by IBC. Funds are released to the seller only after the buyer confirms
+                            reception.
+                        </p>
                     </div>
 
                     <!-- AI Price Button -->
@@ -170,8 +225,10 @@
             const unit = document.getElementById('qty-unit').value;
             const price = document.getElementById('price').value;
             const onReq = document.getElementById('price-request').checked;
+            const locationCity = document.getElementById('location').value;
+            const escrow = document.getElementById('escrow-accept').checked;
 
-            if (qty && minQty && (price || onReq)) {
+            if (qty && minQty && (price || onReq) && locationCity && escrow) {
                 if (parseFloat(minQty) > parseFloat(qty)) {
                     alert("Minimum quantity cannot be greater than Total quantity.");
                     return;
@@ -199,7 +256,7 @@
                 modal.style.transform = 'translate(-50%, -50%)';
 
             } else {
-                alert("Please enter price and all quantity fields.");
+                alert("Please fill all required fields, including location and IBC Secure Payment acceptance.");
             }
         });
 

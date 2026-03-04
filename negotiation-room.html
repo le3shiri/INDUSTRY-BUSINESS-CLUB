@@ -99,6 +99,10 @@
         <div class="modal-section">
             <label class="form-label">Message (Optional)</label>
             <textarea id="offer-msg" class="form-input" rows="3" placeholder="Add a note..."></textarea>
+            <p style="font-size: 0.75rem; color: #ef4444; margin-top: 0.5rem;">
+                <i class="fas fa-exclamation-triangle"></i> Sharing phone numbers, emails, or external links is strictly
+                prohibited until the deal is finalized.
+            </p>
         </div>
         <div class="modal-actions">
             <button class="btn btn-secondary" onclick="closeOfferModal()">Cancel</button>
@@ -191,6 +195,14 @@
             const price = parseInt(document.getElementById('offer-price').value);
             const msg = document.getElementById('offer-msg').value;
 
+            // Simple Anti-Circumvention Filter (Regex)
+            const contactPattern = /(\b[0-9]{10,}\b)|(\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b)|(www\.|http:|https:)/gi;
+
+            if (contactPattern.test(msg)) {
+                alert("For security reasons, sharing contact information (phone, email, links) is not allowed within the negotiation room. Your message has been blocked.");
+                return;
+            }
+
             if (price) {
                 const stored = localStorage.getItem(`room_${ID}`);
                 const messages = stored ? JSON.parse(stored) : [...defaultMsgs];
@@ -213,10 +225,10 @@
         }
 
         function acceptOffer() {
-            if (confirm("Are you sure you want to accept this deal?")) {
-                alert("Deal Accepted! Redirecting to contracts...");
-                // Logic to update status would go here
-                window.location.href = 'negotiations.html';
+            if (confirm("Are you sure you want to accept this deal? This will officially approve the transaction.")) {
+                alert("Deal Approved! IBC is now generating the Proforma Invoice. You will be redirected to the secure checkout.");
+                // Redirect to checkout with the item context
+                window.location.href = 'checkout.html?id=' + ID;
             }
         }
 
