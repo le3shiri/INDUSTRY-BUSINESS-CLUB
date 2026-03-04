@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence Admin | Historique Achats</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="../js/components.js"></script>
+    <script src="../js/admin-data.js"></script>
+
+    <style>
+        :root {
+            --admin-bg: #fcfcfd;
+            --card-border: #eaecf0;
+            --text-main: #101828;
+            --text-sub: #475467;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --primary-corporate: #101828;
+            --success-main: #027a48;
+            --success-bg: #ecfdf3;
+            --warning-main: #b54708;
+            --warning-bg: #fffaeb;
+            --danger-main: #b42318;
+            --danger-bg: #fef3f2;
+            --info-main: #026aa2;
+            --info-bg: #f0f9ff;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--admin-bg);
+            color: var(--text-main);
+            letter-spacing: -0.01em;
+        }
+
+        .main-content {
+            padding: 0;
+            background: var(--admin-bg);
+        }
+
+        .top-nav {
+            background: white;
+            border-bottom: 1px solid var(--card-border);
+            padding: 1.25rem 2.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-container {
+            padding: 2.5rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Filter Section */
+        .filter-bar {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 2rem;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr) auto;
+            gap: 1rem;
+            align-items: flex-end;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .filter-label {
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+        }
+
+        .filter-control {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            font-family: inherit;
+            font-size: 0.85rem;
+            color: var(--text-main);
+            background: #fff;
+        }
+
+        /* High-Density Data Table */
+        .table-outer {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            overflow-x: auto;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        .admin-table th {
+            background: #f9fafb;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .admin-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--card-border);
+            font-size: 0.82rem;
+            vertical-align: middle;
+        }
+
+        .badge {
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge-success {
+            background: var(--success-bg);
+            color: var(--success-main);
+        }
+
+        .badge-warning {
+            background: var(--warning-bg);
+            color: var(--warning-main);
+        }
+
+        .badge-danger {
+            background: var(--danger-bg);
+            color: var(--danger-main);
+        }
+
+        .badge-info {
+            background: var(--info-bg);
+            color: var(--info-main);
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            background: white;
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+        }
+
+        .btn-icon:hover {
+            border-color: var(--text-main);
+            color: var(--text-main);
+            background: #f9fafb;
+        }
+
+        .price-text {
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .id-badge {
+            font-family: monospace;
+            font-size: 0.7rem;
+            background: #f2f4f7;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+        <aside id="sidebar-container"></aside>
+
+        <main class="main-content">
+            <header class="top-nav">
+                <div>
+                    <h1 style="margin:0; font-size: 1.5rem; font-weight: 700;">Historique Achats</h1>
+                    <p style="margin:0; font-size: 0.85rem; color: var(--text-sub);">Registre centralisé des flux
+                        transactionnels et du cycle de vie des commandes</p>
+                </div>
+                <div style="display: flex; gap: 0.75rem;">
+                    <button class="btn btn-secondary" style="background: white;"><i class="fas fa-file-export"></i>
+                        Exporter Historique</button>
+                    <button class="btn btn-primary"><i class="fas fa-sync"></i> Actualiser</button>
+                </div>
+            </header>
+
+            <div class="dashboard-container">
+
+                <!-- Filters -->
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label class="filter-label">Période</label>
+                        <select class="filter-control">
+                            <option selected>Derniers 30 jours</option>
+                            <option>Année en cours</option>
+                            <option>Tout l'historique</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Recherche</label>
+                        <input type="text" class="filter-control" placeholder="ID, Acheteur, Vendeur...">
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Catégorie</label>
+                        <select class="filter-control">
+                            <option selected>Toutes catégories</option>
+                            <option>Matières Premières</option>
+                            <option>Machines Industrielles</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Statut</label>
+                        <select class="filter-control">
+                            <option selected>Tous les statuts</option>
+                            <option>Paiement confirmé</option>
+                            <option>Expédié</option>
+                            <option>Livré</option>
+                            <option>Annulé</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Litiges</label>
+                        <select class="filter-control">
+                            <option selected>Tous</option>
+                            <option>Avec litige</option>
+                            <option>Sans litige</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" style="padding: 10px 20px;"><i class="fas fa-filter"></i></button>
+                </div>
+
+                <!-- High-Density Table -->
+                <div class="table-outer">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>IDs (TRX/Deal)</th>
+                                <th>Acteurs (Acheteur/Vendeur)</th>
+                                <th>Désignation Produit</th>
+                                <th>Détails Flux</th>
+                                <th>Finances (HT)</th>
+                                <th>Mode de Paiement</th>
+                                <th>État Commande</th>
+                                <th>Timeline (Dates)</th>
+                                <th>Audit (Fact/Litige)</th>
+                                <th style="text-align: right;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="purchase-history-body">
+                            <!-- Populated via script -->
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            Components.renderAdminSidebar('admin-buyer-history.html');
+
+            const purchases = [
+                {
+                    trxId: 'TRX-94821', dealId: 'DEAL-445',
+                    buyer: 'Sara Benani', buyerCompany: 'Benani Logistics',
+                    seller: 'Ahmed Mansouri', sellerCompany: 'Atlas Mining',
+                    product: 'Charbon Industriel Grade A', category: 'Matières P.',
+                    qty: 50, unit: 'tonnes', price: 1200, total: 60000,
+                    paymentMode: 'Virement Escrow',
+                    status: 'livré',
+                    dates: { trx: '01/03/2026', pay: '01/03/2026', delivery: '04/03/2026' },
+                    invoice: 'INV-2026-0045', dispute: false
+                },
+                {
+                    trxId: 'TRX-94750', dealId: 'DEAL-440',
+                    buyer: 'Youssef El Fassi', buyerCompany: 'Fassi Industrial',
+                    seller: 'Mehdi Tazi', sellerCompany: 'Tazi Industrial',
+                    product: 'Compresseur ATLAS GX-7', category: 'Machines',
+                    qty: 2, unit: 'unités', price: 15600, total: 31200,
+                    paymentMode: 'Carte Bancaire',
+                    status: 'expédié',
+                    dates: { trx: '02/03/2026', pay: '02/03/2026', delivery: 'En attente' },
+                    invoice: 'INV-2026-0052', dispute: false
+                },
+                {
+                    trxId: 'TRX-94640', dealId: 'DEAL-435',
+                    buyer: 'Karim Mansour', buyerCompany: 'Mansour Steel',
+                    seller: 'Samir El Masri', sellerCompany: 'Egyptian Steel',
+                    product: 'Acier Allié (Poutrelles)', category: 'Matières P.',
+                    qty: 200, unit: 'poutres', price: 4500, total: 900000,
+                    paymentMode: 'Lettre de Crédit',
+                    status: 'paiement confirmé',
+                    dates: { trx: '03/03/2026', pay: '03/03/2026', delivery: 'Prevu 08/03' },
+                    invoice: 'INV-2026-0105', dispute: true
+                },
+                {
+                    trxId: 'TRX-94500', dealId: 'DEAL-430',
+                    buyer: 'Amel Tounsi', buyerCompany: 'Tunisia Fab',
+                    seller: 'Yassin Benani', sellerCompany: 'Benani Systems',
+                    product: 'Pompe Centrifuge H8', category: 'Machines',
+                    qty: 5, unit: 'unités', price: 8200, total: 41000,
+                    paymentMode: 'Virement',
+                    status: 'annulé',
+                    dates: { trx: '28/02/2026', pay: '-', delivery: '-' },
+                    invoice: '-', dispute: false
+                }
+            ];
+
+            const tbody = document.getElementById('purchase-history-body');
+
+            function renderPurchases(list) {
+                tbody.innerHTML = list.map(p => `
+                    <tr>
+                        <td>
+                            <div class="id-badge">TRX: ${p.trxId}</div>
+                            <div class="id-badge" style="margin-top:4px; opacity:0.7">DL: ${p.dealId}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700; font-size: 0.85rem;">A: ${p.buyerCompany}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-sub);">V: ${p.sellerCompany}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700;">${p.product}</div>
+                            <div style="font-size: 0.7rem; color: var(--text-sub); text-transform: uppercase; font-weight: 800;">${p.category}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 800;">${p.qty} ${p.unit}</div>
+                            <div style="font-size: 0.7rem; color: var(--text-sub);">@ ${p.price.toLocaleString()} MAD</div>
+                        </td>
+                        <td>
+                            <div class="price-text">${p.total.toLocaleString()} MAD</div>
+                        </td>
+                        <td style="font-size: 0.75rem; font-weight: 700;">${p.paymentMode}</td>
+                        <td>
+                            <span class="badge ${getStatusBadge(p.status)}">
+                                ${p.status}
+                            </span>
+                        </td>
+                        <td>
+                            <div style="font-size: 0.7rem;">Init: <b>${p.dates.trx}</b></div>
+                            <div style="font-size: 0.7rem; color: var(--text-sub);">Livré: ${p.dates.delivery}</div>
+                        </td>
+                        <td>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                ${p.invoice !== '-' ? `<span class="badge badge-info" title="${p.invoice}"><i class="fas fa-file-invoice"></i> FACT</span>` : `<span style="opacity:0.3">-</span>`}
+                                ${p.dispute ? `<span class="badge badge-danger" title="Litige actif"><i class="fas fa-exclamation-triangle"></i> LITIGE</span>` : ''}
+                            </div>
+                        </td>
+                        <td style="text-align: right;">
+                            <div class="action-btns" style="justify-content: flex-end;">
+                                <button class="btn-icon" title="Détails Transaction"><i class="fas fa-eye"></i></button>
+                                <button class="btn-icon" title="Voir Facture"><i class="fas fa-file-pdf"></i></button>
+                                <button class="btn-icon" title="Suivi Livraison"><i class="fas fa-truck"></i></button>
+                                <button class="btn-icon" title="Audit Acteurs"><i class="fas fa-users-cog"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            function getStatusBadge(status) {
+                switch (status) {
+                    case 'livré': return 'badge-success';
+                    case 'expédié': return 'badge-info';
+                    case 'paiement confirmé': return 'badge-success';
+                    case 'paiement en attente': return 'badge-warning';
+                    case 'annulé': return 'badge-danger';
+                    case 'remboursé': return 'badge-info';
+                    default: return '';
+                }
+            }
+
+            renderPurchases(purchases);
+        });
+    </script>
+</body>
+
+</html>

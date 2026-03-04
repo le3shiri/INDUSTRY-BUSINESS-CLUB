@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence | Paramètres du Compte</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src="js/components.js"></script>
+    <script src="js/app.js"></script>
+
+    <style>
+        :root {
+            --brand-primary: #00B140;
+            --brand-dark: #101828;
+            --brand-secondary: #667085;
+            --bg-soft: #f9fafb;
+            --card-border: #eaecf0;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-soft);
+            margin: 0;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2.5rem 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .settings-container {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 2.5rem;
+            margin-top: 1rem;
+        }
+
+        /* Sidebar Card */
+        .settings-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .profile-summary-card {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(16, 24, 40, 0.03);
+        }
+
+        .avatar-container {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .profile-avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 30px;
+            background: #f2f4f7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--brand-dark);
+            border: 2px solid white;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+            object-fit: cover;
+        }
+
+        .edit-avatar-btn {
+            position: absolute;
+            bottom: -5px;
+            right: -5px;
+            width: 32px;
+            height: 32px;
+            background: var(--brand-primary);
+            color: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid white;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .profile-status {
+            margin-top: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 99px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .st-active {
+            background: #f0fdf4;
+            color: var(--brand-primary);
+            border: 1px solid #d1fadf;
+        }
+
+        .st-verified {
+            background: #ecfdf3;
+            color: #027a48;
+        }
+
+        .st-kyc-ok {
+            background: #eff8ff;
+            color: #175cd3;
+            border: 1px solid #b2ddff;
+        }
+
+        .st-kyc-pending {
+            background: #fffaeb;
+            color: #b54708;
+            border: 1px solid #fecdca;
+        }
+
+        .settings-tabs {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 1rem;
+            box-shadow: 0 4px 20px rgba(16, 24, 40, 0.03);
+        }
+
+        .tab-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            color: var(--brand-secondary);
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .tab-item:hover {
+            background: #f9fafb;
+            color: var(--brand-dark);
+        }
+
+        .tab-item.active {
+            background: #f0fdf4;
+            color: var(--brand-primary);
+        }
+
+        .tab-item.danger {
+            color: #d32f2f;
+            margin-top: 10px;
+            border-top: 1px solid #f2f4f7;
+            padding-top: 20px;
+        }
+
+        .tab-item.danger:hover {
+            background: #fff4f2;
+        }
+
+        /* Content Forms */
+        .settings-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .settings-section {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 4px 20px rgba(16, 24, 40, 0.03);
+        }
+
+        .section-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f2f4f7;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-header h2 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--brand-dark);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--brand-dark);
+        }
+
+        .form-input {
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: 1px solid #d0d5dd;
+            font-family: inherit;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .form-input:focus {
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 4px rgba(0, 177, 64, 0.05);
+        }
+
+        .form-input[disabled] {
+            background: #f9fafb;
+            color: var(--brand-secondary);
+            cursor: not-allowed;
+        }
+
+        .verification-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--brand-primary);
+            margin-top: 4px;
+        }
+
+        .kyc-status-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 12px;
+            border: 1px solid #f2f4f7;
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside id="sidebar-container"></aside>
+
+    <main class="main-content">
+        <header style="margin-bottom: 2rem;">
+            <h1 style="font-size: 1.75rem; font-weight: 800; color: var(--brand-dark); margin: 0;">Paramètres du Compte
+            </h1>
+            <p style="color: var(--brand-secondary); font-size: 1rem; margin-top: 4px;">Modifiez les informations de
+                votre profil et de votre entreprise.</p>
+        </header>
+
+        <div class="settings-container">
+            <!-- Sidebar -->
+            <div class="settings-sidebar">
+                <div class="profile-summary-card">
+                    <div class="avatar-container">
+                        <div class="profile-avatar">KA</div>
+                        <div class="edit-avatar-btn"><i class="fas fa-camera"></i></div>
+                    </div>
+                    <h3 style="margin: 0; font-size: 1.1rem; font-weight: 800; color: var(--brand-dark);">Karim Alami
+                    </h3>
+                    <p style="margin: 4px 0 0; font-size: 0.85rem; color: var(--brand-secondary);">Atlas Mining SA</p>
+
+                    <div class="profile-status">
+                        <div class="status-badge st-active"><i class="fas fa-check-circle"></i> Compte Actif</div>
+                        <div class="status-badge st-verified"><i class="fas fa-certificate"></i> Compte Vérifié</div>
+                        <div class="status-badge st-kyc-ok"><i class="fas fa-shield-check"></i> Statut KYC : Vérifié
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-tabs">
+                    <a href="#" class="tab-item active"><i class="fas fa-user-circle"></i> Informations de profil</a>
+                    <a href="#" class="tab-item"><i class="fas fa-building"></i> Informations entreprise</a>
+                    <a href="#" class="tab-item"><i class="fas fa-shield-alt"></i> Sécurité & Accès</a>
+                    <a href="login.html" class="tab-item danger"><i class="fas fa-sign-out-alt"></i> Se déconnecter</a>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="settings-content">
+                <!-- Profile Section -->
+                <div class="settings-section">
+                    <div class="section-header">
+                        <h2>Informations de profil</h2>
+                        <button class="btn btn-white"
+                            style="width: auto; padding: 8px 16px; font-size: 0.85rem;">Modifier</button>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Prénom</label>
+                            <input type="text" class="form-input" value="Karim" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Nom</label>
+                            <input type="text" class="form-input" value="Alami" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email Professionnel</label>
+                            <input type="email" class="form-input" value="k.alami@atlas-mining.com" disabled>
+                            <span class="verification-badge"><i class="fas fa-check-circle"></i> Email vérifié</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Numéro de téléphone</label>
+                            <input type="tel" class="form-input" value="+212 661-45XX78" disabled>
+                            <span class="verification-badge"><i class="fas fa-check-circle"></i> Téléphone
+                                vérifié</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Pays</label>
+                            <input type="text" class="form-input" value="Maroc" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Ville</label>
+                            <input type="text" class="form-input" value="Casablanca" disabled>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Company Section -->
+                <div class="settings-section">
+                    <div class="section-header">
+                        <h2>Informations entreprise</h2>
+                        <button class="btn btn-primary" style="width: auto; padding: 10px 20px;">Mettre à jour le
+                            profil</button>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label class="form-label">Nom de l'entreprise</label>
+                            <input type="text" class="form-input" value="Atlas Mining SA">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Secteur d'activité</label>
+                            <select class="form-input">
+                                <option>Extraction & Métallurgie</option>
+                                <option>BTP / Construction</option>
+                                <option>Logistique</option>
+                                <option>Agroalimentaire</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Site web (Optionnel)</label>
+                            <input type="url" class="form-input" placeholder="https://www.atlas-mining.com">
+                        </div>
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label class="form-label">Adresse de l'entreprise</label>
+                            <input type="text" class="form-input" value="Zone Industrielle, Agadir 80000, Maroc">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security Section -->
+                <div class="settings-section">
+                    <div class="section-header">
+                        <h2>Sécurité</h2>
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <div class="kyc-status-row">
+                            <div>
+                                <h4 style="margin: 0; font-size: 0.95rem; font-weight: 800;">Mot de passe</h4>
+                                <p style="margin: 4px 0 0; font-size: 0.8rem; color: var(--brand-secondary);">Sécurisez
+                                    votre accès avec un mot de passe robuste.</p>
+                            </div>
+                            <button class="btn btn-white" style="width: auto; padding: 8px 16px;">Changer le mot de
+                                passe</button>
+                        </div>
+
+                        <div class="kyc-status-row">
+                            <div>
+                                <h4 style="margin: 0; font-size: 0.95rem; font-weight: 800;">Statut KYC & Documents</h4>
+                                <p style="margin: 4px 0 0; font-size: 0.8rem; color: var(--brand-secondary);">Vos
+                                    documents de conformité sont vérifiés.</p>
+                            </div>
+                            <a href="kyc-documents-upload.html" class="btn btn-white"
+                                style="width: auto; padding: 8px 16px; text-decoration: none; color: inherit; font-size: 0.85rem;">Télécharger
+                                documents</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Simple mock for saving profile
+        document.querySelector('.btn-primary').onclick = function () {
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mise à jour...';
+            setTimeout(() => {
+                this.innerHTML = 'Profil mis à jour !';
+                this.style.background = '#027a48';
+                setTimeout(() => {
+                    this.innerHTML = 'Mettre à jour le profil';
+                    this.style.background = '';
+                }, 2000);
+            }, 1000);
+        };
+    </script>
+</body>
+
+</html>

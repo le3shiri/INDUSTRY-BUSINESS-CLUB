@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence Admin | Historique des Transactions</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="../js/components.js"></script>
+    <script src="../js/admin-data.js"></script>
+
+    <style>
+        :root {
+            --admin-bg: #fcfcfd;
+            --card-border: #eaecf0;
+            --text-main: #101828;
+            --text-sub: #475467;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --primary-corporate: #101828;
+            --success-main: #027a48;
+            --success-bg: #ecfdf3;
+            --warning-main: #b54708;
+            --warning-bg: #fffaeb;
+            --info-main: #026aa2;
+            --info-bg: #f0f9ff;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--admin-bg);
+            color: var(--text-main);
+            letter-spacing: -0.01em;
+        }
+
+        .main-content {
+            padding: 0;
+            background: var(--admin-bg);
+        }
+
+        .top-nav {
+            background: white;
+            border-bottom: 1px solid var(--card-border);
+            padding: 1.25rem 2.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-container {
+            padding: 2rem 2.5rem;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        /* KPI Grid System */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin: 0;
+        }
+
+        .stat-subtext {
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            display: block;
+        }
+
+        /* Filters Section */
+        .filter-header {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .filter-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            text-transform: uppercase;
+        }
+
+        .filter-control {
+            padding: 0.6rem;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-family: inherit;
+        }
+
+        /* Admin Table Styling */
+        .table-outer {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            scrollbar-width: thin;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        .admin-table th {
+            background: #f9fafb;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--card-border);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .admin-table td {
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid var(--card-border);
+            font-size: 0.85rem;
+            vertical-align: middle;
+        }
+
+        /* Status & Badges */
+        .badge {
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge-pending-pay {
+            background: var(--warning-bg);
+            color: var(--warning-main);
+            border: 1px solid #fec84b;
+        }
+
+        .badge-confirmed {
+            background: var(--info-bg);
+            color: var(--info-main);
+            border: 1px solid #b9e6fe;
+        }
+
+        .badge-pending-payout {
+            background: #fdf2fa;
+            color: #c11574;
+            border: 1px solid #fcceee;
+        }
+
+        .badge-payout-done {
+            background: var(--success-bg);
+            color: var(--success-main);
+            border: 1px solid #6ce9a6;
+        }
+
+        .badge-refunded {
+            background: #f2f4f7;
+            color: #344054;
+            border: 1px solid #eaecf0;
+        }
+
+        .badge-cancelled {
+            background: #fef3f2;
+            color: #b42318;
+            border: 1px solid #fda29b;
+        }
+
+        .ref-code {
+            font-family: monospace;
+            font-size: 0.75rem;
+            color: var(--text-sub);
+            background: #f9fafb;
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid #eaecf0;
+        }
+
+        .dispute-flag {
+            color: #ef4444;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.7rem;
+        }
+
+        .invoice-link {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--info-main);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Actions Shell */
+        .action-btns {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .btn-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            border: 1px solid var(--card-border);
+            background: white;
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+
+        .btn-icon:hover {
+            border-color: var(--text-main);
+            color: var(--text-main);
+            background: #f9fafb;
+        }
+
+        .btn-icon.info:hover {
+            color: var(--info-main);
+            border-color: #b9e6fe;
+            background: var(--info-bg);
+        }
+
+        .btn-icon.success:hover {
+            color: var(--success-main);
+            border-color: #6ce9a6;
+            background: var(--success-bg);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+        <aside id="sidebar-container"></aside>
+
+        <main class="main-content">
+            <header class="top-nav">
+                <div>
+                    <h1 style="margin:0; font-size: 1.5rem; font-weight: 700;">Historique des Transactions</h1>
+                    <p style="margin:0; font-size: 0.85rem; color: var(--text-sub);">Audit complet des flux financiers,
+                        reversements et traçabilité bancaire</p>
+                </div>
+                <div style="display: flex; gap: 0.75rem;">
+                    <button class="btn btn-secondary" style="border: 1px solid var(--card-border); background: white;">
+                        <i class="fas fa-file-export"></i> Exporter Rapport
+                    </button>
+                    <button class="btn btn-primary"><i class="fas fa-calendar-check"></i> Audit Financier</button>
+                </div>
+            </header>
+
+            <div class="dashboard-container">
+
+                <!-- Financial KPI Summary -->
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <span class="stat-label">Volume Total (GMV)</span>
+                        <p class="stat-value">14.8M MAD</p>
+                        <span class="stat-subtext" style="color: var(--success-main);">Flux validés</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Commissions Net</span>
+                        <p class="stat-value">741k MAD</p>
+                        <span class="stat-subtext" style="color: var(--info-main);">Moyenne 5%</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Reversements en attente</span>
+                        <p class="stat-value" style="color: var(--warning-main);">124.5k MAD</p>
+                        <span class="stat-subtext" style="color: var(--warning-main);">En cours de transfert</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Remboursements</span>
+                        <p class="stat-value">12.8k MAD</p>
+                        <span class="stat-subtext" style="color: #b42318;">Mois en cours</span>
+                    </div>
+                </div>
+
+                <!-- Advanced Filters -->
+                <div class="filter-header">
+                    <div class="filter-group">
+                        <span class="filter-label">Recherche</span>
+                        <input type="text" class="filter-control" placeholder="ID, Deal, Vendeur...">
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">Statut</span>
+                        <select class="filter-control">
+                            <option value="all">Tous les statuts</option>
+                            <option value="pending_pay">Paiement en attente</option>
+                            <option value="confirmed">Paiement confirmé</option>
+                            <option value="pending_payout">Reversement en attente</option>
+                            <option value="payout_done">Reversement effectué</option>
+                            <option value="refunded">Remboursé</option>
+                            <option value="cancelled">Annulé</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">Vendeur / Entreprise</span>
+                        <input type="text" class="filter-control" placeholder="Filtrer par entité...">
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">Acheteur</span>
+                        <input type="text" class="filter-control" placeholder="Filtrer par acheteur...">
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">Période</span>
+                        <input type="date" class="filter-control">
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">Montant Min</span>
+                        <input type="number" class="filter-control" placeholder="Min">
+                    </div>
+                    <button class="btn btn-secondary" style="height: 38px;">Filtrer</button>
+                    <button class="btn btn-icon" style="height: 38px; width: 38px;"><i class="fas fa-sync"></i></button>
+                </div>
+
+                <div class="table-outer">
+                    <div class="table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Trans. / Deal</th>
+                                    <th>Produit / Catégorie</th>
+                                    <th>Vendeur / Entreprise</th>
+                                    <th>Acheteur / Entreprise</th>
+                                    <th>Qte / Unité</th>
+                                    <th>Prix / Montant Total</th>
+                                    <th>Com. Platforme / Reversement Vendeur</th>
+                                    <th>Paiement / Réf. Bancaire</th>
+                                    <th>Statut Transactionnelle</th>
+                                    <th>Dates (Trans. / Pai. / Rev.)</th>
+                                    <th>Facturation / Litige</th>
+                                    <th style="text-align: right;">Actions Globales</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transactions-table-body">
+                                <!-- Data injected via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            Components.renderAdminSidebar('admin-transactions.html');
+
+            const transactions = [
+                {
+                    id: 'TRX-9482', dealId: 'DEAL-842', product: 'Acier Inox 316L', cat: 'Matières Premières',
+                    vendeur: 'Omar Alami', sellerCo: 'Atlas Mining Group',
+                    acheteur: 'Yasmine Benani', buyerCo: 'Safi Logistics',
+                    quantity: 12, unit: 'Tonne', priceUnit: '18,200 MAD', total: '218,400 MAD',
+                    commission: '10,920 MAD', payout: '207,480 MAD',
+                    payMode: 'Swift Transfer', payRef: 'SW-89412-MA',
+                    status: 'payout_done', invoiceId: 'INV-2026-842', dispute: false,
+                    dates: { trans: '04/03/2026', payment: '04/03/2026', payout: '05/03/2026' }
+                },
+                {
+                    id: 'TRX-9480', dealId: 'DEAL-840', product: 'Moteur WEG 50HP', cat: 'Équipements',
+                    vendeur: 'Mehdi Tazi', sellerCo: 'Kenitra Metals',
+                    acheteur: 'Reda Hakimi', buyerCo: 'BuildIt SA',
+                    quantity: 2, unit: 'Pièce', priceUnit: '28,000 MAD', total: '56,000 MAD',
+                    commission: '2,800 MAD', payout: '53,200 MAD',
+                    payMode: 'Escrow (Virement)', payRef: 'ESC-4410-BK',
+                    status: 'pending_payout', invoiceId: 'INV-2026-840', dispute: false,
+                    dates: { trans: '03/03/2026', payment: '04/03/2026', payout: '--' }
+                },
+                {
+                    id: 'TRX-9475', dealId: 'DEAL-835', product: 'Bobines Cuivre 5mm', cat: 'Matières Premières',
+                    vendeur: 'Leila Mansouri', sellerCo: 'Intech Solutions',
+                    acheteur: 'Julien Durand', buyerCo: 'LogiFrance',
+                    quantity: 1, unit: 'Tonne', priceUnit: '65,000 MAD', total: '65,000 MAD',
+                    commission: '3,250 MAD', payout: '61,750 MAD',
+                    payMode: 'Carte Bancaire Business', payRef: 'CB-9941-VISA',
+                    status: 'confirmed', invoiceId: 'INV-2026-835', dispute: true,
+                    dates: { trans: '01/03/2026', payment: '01/03/2026', payout: '--' }
+                },
+                {
+                    id: 'TRX-9472', dealId: 'DEAL-830', product: 'Lot 500 Palettes', cat: 'Logistique',
+                    vendeur: 'Hamza El Amrani', sellerCo: 'Global Build Inc',
+                    acheteur: 'Omar Alami', buyerCo: 'Atlas Mining Group',
+                    quantity: 500, unit: 'Pièce', priceUnit: '120 MAD', total: '60,000 MAD',
+                    commission: '3,000 MAD', payout: '57,000 MAD',
+                    payMode: 'Virement Spot', payRef: 'SP-1120-X',
+                    status: 'pending_pay', invoiceId: 'INV-2026-830', dispute: false,
+                    dates: { trans: '28/02/2026', payment: '--', payout: '--' }
+                }
+            ];
+
+            const tbody = document.getElementById('transactions-table-body');
+
+            function renderTransactions(list) {
+                tbody.innerHTML = list.map(t => `
+                    <tr>
+                        <td>
+                            <div style="font-weight: 700; color: var(--text-main); font-family: monospace;">${t.id}</div>
+                            <div style="font-size: 0.7rem; color: var(--text-sub);">Deal: ${t.dealId}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700;">${t.product}</div>
+                            <div style="font-size: 0.7rem; color: #026aa2; font-weight: 700;">${t.cat}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700;">${t.vendeur}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-sub);">${t.sellerCo}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700;">${t.acheteur}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-sub);">${t.buyerCo}</div>
+                        </td>
+                        <td style="text-align: center;">
+                            <div style="font-weight: 800;">${t.quantity}</div>
+                            <div style="font-size: 0.7rem; color: var(--text-sub); text-transform: uppercase;">${t.unit}s</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700;">${t.priceUnit}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-sub);">Total: <strong>${t.total}</strong></div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700; color: #026aa2;">Com: ${t.commission}</div>
+                            <div style="font-size: 0.75rem; color: #027a48; font-weight: 700;">Net: ${t.payout}</div>
+                        </td>
+                        <td>
+                            <div style="font-size: 0.75rem; font-weight: 600;"><i class="fas fa-wallet"></i> ${t.payMode}</div>
+                            <div class="ref-code">${t.payRef}</div>
+                        </td>
+                        <td>
+                            <span class="badge ${getStatusBadgeClass(t.status)}">
+                                ${getStatusLabel(t.status)}
+                            </span>
+                        </td>
+                        <td>
+                            <div style="font-size: 0.65rem;">Trans: ${t.dates.trans}</div>
+                            <div style="font-size: 0.65rem;">Pai: ${t.dates.payment}</div>
+                            <div style="font-size: 0.65rem; color: #027a48; font-weight: 700;">Rev: ${t.dates.payout}</div>
+                        </td>
+                        <td>
+                            <div style="margin-bottom: 4px;">
+                                <a href="#" class="invoice-link"><i class="fas fa-file-invoice"></i> ${t.invoiceId}</a>
+                            </div>
+                            ${t.dispute ? `
+                                <div class="dispute-flag">
+                                    <i class="fas fa-exclamation-triangle"></i> LITIGE
+                                </div>
+                            ` : ''}
+                        </td>
+                        <td style="text-align: right;">
+                            <div class="action-btns">
+                                <button class="btn-icon" title="Voir transaction"><i class="fas fa-search-dollar"></i></button>
+                                <button class="btn-icon" title="Voir facture"><i class="fas fa-file-pdf"></i></button>
+                                <button class="btn-icon" title="Voir paiement"><i class="fas fa-receipt"></i></button>
+                                <button class="btn-icon" title="Profil vendeur"><i class="fas fa-user-tag"></i></button>
+                                <button class="btn-icon" title="Profil acheteur"><i class="fas fa-user-tie"></i></button>
+                                <button class="btn-icon info" title="Voir deal"><i class="fas fa-handshake"></i></button>
+                                <button class="btn-icon success" title="Exporter"><i class="fas fa-download"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            function getStatusBadgeClass(status) {
+                switch (status) {
+                    case 'pending_pay': return 'badge-pending-pay';
+                    case 'confirmed': return 'badge-confirmed';
+                    case 'pending_payout': return 'badge-pending-payout';
+                    case 'payout_done': return 'badge-payout-done';
+                    case 'refunded': return 'badge-refunded';
+                    case 'cancelled': return 'badge-cancelled';
+                    default: return '';
+                }
+            }
+
+            function getStatusLabel(status) {
+                switch (status) {
+                    case 'pending_pay': return 'Paiement en attente';
+                    case 'confirmed': return 'Paiement confirmé';
+                    case 'pending_payout': return 'Reversement en attente';
+                    case 'payout_done': return 'Reversement effectué';
+                    case 'refunded': return 'Remboursé';
+                    case 'cancelled': return 'Annulé';
+                    default: return status;
+                }
+            }
+
+            renderTransactions(transactions);
+        });
+    </script>
+</body>
+
+</html>

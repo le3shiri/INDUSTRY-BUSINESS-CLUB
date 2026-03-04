@@ -1,133 +1,472 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fluxence - Negotiations</title>
+    <title>Fluxence | Centre de Négociations</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
-    <link rel="stylesheet" href="css/negotiations.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <script src="js/components.js"></script>
+    <script src="js/app.js"></script>
+
+    <style>
+        :root {
+            --brand-primary: #00B140;
+            --brand-dark: #101828;
+            --brand-secondary: #667085;
+            --bg-soft: #f9fafb;
+            --card-border: #eaecf0;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+
+            /* Status Colors */
+            --st-pending-bg: #f2f4f7;
+            --st-pending-text: #344054;
+            --st-sent-bg: #eff8ff;
+            --st-sent-text: #175cd3;
+            --st-counter-bg: #fffaeb;
+            --st-counter-text: #b54708;
+            --st-accepted-bg: #ecfdf3;
+            --st-accepted-text: #027a48;
+            --st-refused-bg: #fff4f2;
+            --st-refused-text: #b42318;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-soft);
+            margin: 0;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2rem 3rem;
+        }
+
+        /* Filter Section Styling */
+        .negotiation-filters {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .filter-item {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .filter-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--brand-secondary);
+            text-transform: uppercase;
+        }
+
+        .filter-select,
+        .filter-input {
+            padding: 10px 14px;
+            border: 1px solid #d0d5dd;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .filter-select:focus,
+        .filter-input:focus {
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 3px #f0fdf4;
+        }
+
+        /* Listing Table */
+        .negotiation-list {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(16, 24, 40, 0.03);
+        }
+
+        .neg-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .neg-table th {
+            background: #f9fafb;
+            padding: 1.25rem 1.5rem;
+            text-align: left;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--brand-secondary);
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .neg-table td {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--card-border);
+            font-size: 0.9rem;
+            color: var(--brand-dark);
+        }
+
+        .neg-table tr:hover {
+            background: #f9fafb;
+        }
+
+        .neg-id {
+            font-family: monospace;
+            font-weight: 800;
+            color: var(--brand-primary);
+        }
+
+        .product-name {
+            font-weight: 800;
+            display: block;
+        }
+
+        .company-name {
+            font-size: 0.8rem;
+            color: var(--brand-secondary);
+            font-weight: 600;
+        }
+
+        /* Statut Badges */
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-badge::before {
+            content: "";
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            display: block;
+        }
+
+        .st-sent {
+            background: var(--st-sent-bg);
+            color: var(--st-sent-text);
+        }
+
+        .st-sent::before {
+            background: var(--st-sent-text);
+        }
+
+        .st-counter {
+            background: var(--st-counter-bg);
+            color: var(--st-counter-text);
+        }
+
+        .st-counter::before {
+            background: var(--st-counter-text);
+        }
+
+        .st-accepted {
+            background: var(--st-accepted-bg);
+            color: var(--st-accepted-text);
+        }
+
+        .st-accepted::before {
+            background: var(--st-accepted-text);
+        }
+
+        .st-refused {
+            background: var(--st-refused-bg);
+            color: var(--st-refused-text);
+        }
+
+        .st-refused::before {
+            background: var(--st-refused-text);
+        }
+
+        .st-expired {
+            background: #f2f4f7;
+            color: #475467;
+        }
+
+        .st-expired::before {
+            background: #475467;
+        }
+
+        .price-tag {
+            font-weight: 800;
+            color: var(--brand-dark);
+        }
+
+        .last-offer-tag {
+            font-size: 0.8rem;
+            color: var(--brand-primary);
+            font-weight: 700;
+        }
+
+        .action-cell {
+            display: flex;
+            gap: 8px;
+        }
+
+        .small-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--card-border);
+            background: white;
+            color: var(--brand-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .small-btn:hover {
+            border-color: var(--brand-primary);
+            color: var(--brand-primary);
+            background: #f0fdf4;
+        }
+
+        .small-btn.primary {
+            background: var(--brand-primary);
+            color: white;
+            border-color: var(--brand-primary);
+        }
+
+        .small-btn.primary:hover {
+            background: #008f33;
+        }
+
+        .system-msg {
+            font-size: 0.75rem;
+            color: var(--brand-secondary);
+            font-style: italic;
+            margin-top: 4px;
+            display: block;
+        }
+    </style>
 </head>
 
 <body>
 
-    <div class="layout-dashboard">
-        <aside id="sidebar-container"></aside>
+    <aside id="sidebar-container"></aside>
 
-        <main class="main-content">
-            <header style="margin-bottom: 2rem;">
-                <h1
-                    style="font-size: 2.5rem; font-weight: 800; color: var(--text-primary); margin-bottom: 1.5rem; letter-spacing: -0.02em;">
-                    Negotiations</h1>
+    <main class="main-content">
+        <header style="margin-bottom: 2.5rem;">
+            <h1 style="font-size: 2rem; font-weight: 800; color: var(--brand-dark); margin: 0 0 0.5rem;">Centre de
+                Négociations</h1>
+            <p style="color: var(--brand-secondary); font-weight: 500;">Gérez vos offres commerciales et finalisez vos
+                accords B2B.</p>
+        </header>
 
-                <div class="negotiation-tabs">
-                    <div class="tab-pill active" onclick="switchTab('buying')" id="pill-buying">Buying (2)</div>
-                    <div class="tab-pill" onclick="switchTab('selling')" id="pill-selling">Selling (1)</div>
-                </div>
-            </header>
-
-            <!-- Buying List -->
-            <div id="buying-list" class="fade-in-up">
-                <!-- Items injected by JS -->
+        <!-- Filters -->
+        <section class="negotiation-filters">
+            <div class="filter-item">
+                <label class="filter-label">Produit</label>
+                <input type="text" class="filter-input" placeholder="Nom du produit...">
             </div>
-
-            <!-- Selling List -->
-            <div id="selling-list" class="fade-in-up" style="display: none;">
-                <!-- Items injected by JS -->
+            <div class="filter-item">
+                <label class="filter-label">Entreprise</label>
+                <input type="text" class="filter-input" placeholder="Nom de l'entreprise...">
             </div>
-
-
-            <!-- Empty State -->
-            <div id="negotiations-empty-state" class="empty-state" style="display: none;">
-                <i class="fas fa-handshake-slash"></i>
-                <h3>No active negotiations</h3>
-                <p>You don't have any ongoing deals at the moment. Browse the marketplace to start a new negotiation.
-                </p>
-                <button class="btn btn-primary" style="width: auto;" onclick="window.location.href='search.html'">Browse
-                    Marketplace</button>
+            <div class="filter-item">
+                <label class="filter-label">Statut</label>
+                <select class="filter-select">
+                    <option>Tous</option>
+                    <option>En négociation</option>
+                    <option>Acceptée</option>
+                    <option>Refusée</option>
+                    <option>Expirée</option>
+                </select>
             </div>
-        </main>
-    </div>
+            <div class="filter-item">
+                <label class="filter-label">Date</label>
+                <input type="date" class="filter-input">
+            </div>
+            <button class="btn btn-primary" style="height: 42px; width: auto; padding: 0 24px;">Filtrer</button>
+        </section>
 
-    <script src="js/app.js"></script>
+        <!-- Table -->
+        <div class="negotiation-list">
+            <table class="neg-table">
+                <thead>
+                    <tr>
+                        <th>ID / Date</th>
+                        <th>Produit & Partenaire</th>
+                        <th>Quantité / Offres</th>
+                        <th>Statut & Évolution</th>
+                        <th>Mise à jour</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Neg 1 -->
+                    <tr>
+                        <td>
+                            <div class="neg-id">#NEG-2026-4921</div>
+                            <span style="font-size: 0.75rem; color: var(--brand-secondary);">Créée le 02/03/2026</span>
+                        </td>
+                        <td>
+                            <span class="product-name">Cuivre Millberry - Pureté 99.9%</span>
+                            <div style="display: flex; gap: 8px; margin-top: 4px;">
+                                <span class="company-name"><i class="fas fa-tag"></i> Vendeur: Atlas Mining SA</span>
+                                <span style="color: #eaecf0;">|</span>
+                                <span class="company-name"><i class="fas fa-user-tie"></i> Acheteur: Acme
+                                    Industrial</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="price-tag">10.0 Tonnes</div>
+                            <div class="last-offer-tag">42,000 MAD / Unité</div>
+                            <span style="font-size: 0.7rem; color: var(--brand-secondary);">Prix initial: 45,000
+                                MAD</span>
+                        </td>
+                        <td>
+                            <span class="status-badge st-sent">Offre envoyée</span>
+                            <span class="system-msg">En attente de réponse du vendeur</span>
+                        </td>
+                        <td>
+                            <span style="font-weight: 600;">Il y a 5 min</span>
+                        </td>
+                        <td class="action-cell">
+                            <a href="negotiation-room.html" class="small-btn primary" title="Ouvrir Negotiation Room"><i
+                                    class="fas fa-comments"></i></a>
+                            <button class="small-btn" title="Voir détails"><i class="fas fa-eye"></i></button>
+                        </td>
+                    </tr>
+
+                    <!-- Neg 2 -->
+                    <tr>
+                        <td>
+                            <div class="neg-id">#NEG-2026-3812</div>
+                            <span style="font-size: 0.75rem; color: var(--brand-secondary);">Créée le 28/02/2026</span>
+                        </td>
+                        <td>
+                            <span class="product-name">Ciment CPJ45 - 50kg (Lot 2400 sacs)</span>
+                            <div style="display: flex; gap: 8px; margin-top: 4px;">
+                                <span class="company-name"><i class="fas fa-tag"></i> Vendeur: Lafarge Holcim</span>
+                                <span style="color: #eaecf0;">|</span>
+                                <span class="company-name"><i class="fas fa-user-tie"></i> Acheteur: BTP Maroc
+                                    Corp</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="price-tag">120 Tonnes</div>
+                            <div class="last-offer-tag">850 MAD / Unité</div>
+                        </td>
+                        <td>
+                            <span class="status-badge st-counter">Contre-offre reçue</span>
+                            <span class="system-msg">Contre-offre envoyée par le vendeur</span>
+                        </td>
+                        <td>
+                            <span style="font-weight: 600;">Aujourd'hui, 09:12</span>
+                        </td>
+                        <td class="action-cell">
+                            <a href="negotiation-room.html" class="small-btn primary" title="Ouvrir Negotiation Room"><i
+                                    class="fas fa-comments"></i></a>
+                            <button class="small-btn" title="Voir détails"><i class="fas fa-eye"></i></button>
+                        </td>
+                    </tr>
+
+                    <!-- Neg 3 -->
+                    <tr>
+                        <td>
+                            <div class="neg-id">#NEG-2026-3115</div>
+                            <span style="font-size: 0.75rem; color: var(--brand-secondary);">Créée le 25/02/2026</span>
+                        </td>
+                        <td>
+                            <span class="product-name">Palettes Bois Europe Standard</span>
+                            <div style="display: flex; gap: 8px; margin-top: 4px;">
+                                <span class="company-name"><i class="fas fa-tag"></i> Vendeur: Safi Logistique SA</span>
+                                <span style="color: #eaecf0;">|</span>
+                                <span class="company-name"><i class="fas fa-user-tie"></i> Acheteur: Casablanca
+                                    Port</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="price-tag">500 Unités</div>
+                            <div class="last-offer-tag">25 MAD / Unité</div>
+                        </td>
+                        <td>
+                            <span class="status-badge st-accepted">Offer Acceptée</span>
+                            <span class="system-msg">Deal créé - En attente de paiement</span>
+                        </td>
+                        <td>
+                            <span style="font-weight: 600;">Hier, 14:20</span>
+                        </td>
+                        <td class="action-cell">
+                            <a href="checkout.html" class="small-btn primary" title="Payer maintenant"><i
+                                    class="fas fa-credit-card"></i></a>
+                            <button class="small-btn"><i class="fas fa-eye"></i></button>
+                        </td>
+                    </tr>
+
+                    <!-- Neg 4 -->
+                    <tr>
+                        <td>
+                            <div class="neg-id">#NEG-2026-2980</div>
+                            <span style="font-size: 0.75rem; color: var(--brand-secondary);">Créée le 20/02/2026</span>
+                        </td>
+                        <td>
+                            <span class="product-name">Groupes Électrogènes 250kVA</span>
+                            <div style="display: flex; gap: 8px; margin-top: 4px;">
+                                <span class="company-name"><i class="fas fa-tag"></i> Vendeur: Siemens Energy</span>
+                                <span style="color: #eaecf0;">|</span>
+                                <span class="company-name"><i class="fas fa-user-tie"></i> Acheteur: Office National
+                                    Elec</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="price-tag">2 Unités</div>
+                            <div class="last-offer-tag">450,000 MAD</div>
+                        </td>
+                        <td>
+                            <span class="status-badge st-refused">Offre refusée</span>
+                            <span class="system-msg">Négociation fermée</span>
+                        </td>
+                        <td>
+                            <span style="font-weight: 600;">22/02/2026</span>
+                        </td>
+                        <td class="action-cell">
+                            <button class="small-btn"><i class="fas fa-eye"></i></button>
+                            <button class="small-btn" title="Archiver"><i class="fas fa-archive"></i></button>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </main>
+
     <script>
-        // Mock Data
-        const negotiations = [
-            {
-                id: 1,
-                role: 'buyer',
-                title: '50 Tons of Portland Cement',
-                status: 'pending',
-                lastOffer: 115000,
-                listPrice: 120000,
-                icon: 'fa-cube'
-            },
-            {
-                id: 2,
-                role: 'buyer',
-                title: 'Copper Wiring Scraps (Lot)',
-                status: 'accepted',
-                lastOffer: 45000,
-                listPrice: 45000,
-                icon: 'fa-bolt'
-            },
-            {
-                id: 3,
-                role: 'seller',
-                title: 'Aluminum Blocks',
-                status: 'pending',
-                lastOffer: 12500,
-                listPrice: 13000,
-                icon: 'fa-layer-group'
-            }
-        ];
-
-        function renderList() {
-            const buyList = document.getElementById('buying-list');
-            const sellList = document.getElementById('selling-list');
-
-            buyList.innerHTML = '';
-            sellList.innerHTML = '';
-
-            negotiations.forEach(neg => {
-                const card = `
-                <a href="negotiation-room.html?role=${neg.role}&id=${neg.id}" class="negotiation-card">
-                    <div class="neg-thumb" style="border-right: 1px solid var(--border-color);"><i class="fas ${neg.icon} fa-2x" style="color: var(--primary-color);"></i></div>
-                    <div class="neg-info">
-                        <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin: 0 0 0.5rem 0;">${neg.title}</h3>
-                        <div style="font-size: 0.95rem; color: var(--text-secondary); display: flex; gap: 1.5rem; font-weight: 500;">
-                            <span>${neg.role === 'buyer' ? 'My Offer' : 'Received Offer'}: <strong style="color: var(--primary-color);">${neg.lastOffer.toLocaleString()} MAD</strong></span>
-                            <span>Listing: ${neg.listPrice.toLocaleString()} MAD</span>
-                        </div>
-                    </div>
-                    <span class="neg-status status-${neg.status}" style="font-weight: 700;">${neg.status}</span>
-                    <i class="fas fa-chevron-right" style="color: var(--primary-color); margin-left: 1rem; font-size: 1.2rem;"></i>
-                </a>
-                      `;
-
-                if (neg.role === 'buyer') buyList.innerHTML += card;
-                else sellList.innerHTML += card;
+        // Interaction mock
+        document.querySelectorAll('.filter-select, .filter-input').forEach(input => {
+            input.addEventListener('change', () => {
+                console.log('Filtres mis à jour');
             });
-        }
-
-        function switchTab(type) {
-            document.querySelectorAll('.tab-pill').forEach(p => p.classList.remove('active'));
-            document.getElementById('pill-' + type).classList.add('active');
-
-            if (type === 'buying') {
-                document.getElementById('buying-list').style.display = 'block';
-                document.getElementById('selling-list').style.display = 'none';
-            } else {
-                document.getElementById('buying-list').style.display = 'none';
-                document.getElementById('selling-list').style.display = 'block';
-            }
-        }
-
-        // Init
-        renderList();
+        });
     </script>
 </body>
 

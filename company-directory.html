@@ -1,108 +1,460 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fluxence - Company Directory</title>
+    <title>Fluxence | Annuaire des Entreprises</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <script src="js/components.js"></script>
+    <script src="js/app.js"></script>
+
+    <style>
+        :root {
+            --brand-primary: #00B140;
+            --brand-dark: #101828;
+            --brand-secondary: #667085;
+            --bg-soft: #f9fafb;
+            --card-border: #eaecf0;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-soft);
+            margin: 0;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2rem 3rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Filter Section */
+        .directory-filters {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2.5rem;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 2rem;
+            align-items: center;
+            box-shadow: 0 4px 24px rgba(16, 24, 40, 0.04);
+        }
+
+        .search-group {
+            flex: 1;
+            position: relative;
+        }
+
+        .search-group i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--brand-secondary);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 16px 12px 48px;
+            border-radius: 12px;
+            border: 1px solid #d0d5dd;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--brand-primary);
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .filter-select {
+            padding: 10px 16px;
+            border-radius: 10px;
+            border: 1px solid #d0d5dd;
+            font-family: inherit;
+            font-size: 0.9rem;
+            outline: none;
+            background: white;
+            min-width: 160px;
+        }
+
+        /* Company Table Style */
+        .companies-container {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 24px rgba(16, 24, 40, 0.04);
+        }
+
+        .directory-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .directory-table th {
+            text-align: left;
+            padding: 1rem 1.5rem;
+            background: #f9fafb;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--brand-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .directory-table td {
+            padding: 1.5rem;
+            border-bottom: 1px solid #f2f4f7;
+            vertical-align: middle;
+        }
+
+        .company-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .company-logo {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            background: #f2f4f7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: var(--brand-dark);
+            object-fit: cover;
+            border: 1px solid var(--card-border);
+        }
+
+        .company-name-box {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .company-name {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--brand-dark);
+        }
+
+        .verified-badge {
+            background: #f0fdf4;
+            color: var(--brand-primary);
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 99px;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-left: 8px;
+        }
+
+        .sector-tag {
+            font-size: 0.8rem;
+            color: var(--brand-secondary);
+            display: block;
+        }
+
+        .location-info {
+            font-size: 0.85rem;
+            color: var(--brand-dark);
+            font-weight: 600;
+        }
+
+        .stats-box {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .stats-label {
+            font-size: 0.7rem;
+            color: var(--brand-secondary);
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .stats-value {
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: var(--brand-dark);
+        }
+
+        .date-joined {
+            font-size: 0.8rem;
+            color: var(--brand-secondary);
+        }
+
+        /* Actions */
+        .btn-action {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: white;
+            color: var(--brand-dark);
+        }
+
+        .btn-action:hover {
+            border-color: var(--brand-primary);
+            color: var(--brand-primary);
+            background: #f0fdf4;
+        }
+
+        .btn-view {
+            background: var(--brand-dark);
+            color: white;
+            border: none;
+        }
+
+        .btn-view:hover {
+            background: #1a2536;
+            color: white;
+        }
+
+        /* Direct Contact Block */
+        .no-direct-contact {
+            background: #fff4f2;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            color: #d32f2f;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 700;
+            margin-top: 8px;
+        }
+    </style>
 </head>
 
 <body>
 
-    <div class="layout-dashboard">
-        <aside id="sidebar-container"></aside>
+    <aside id="sidebar-container"></aside>
 
-        <main class="main-content">
-            <header style="margin-bottom: 2.5rem;">
-                <h1 style="font-size: 2.25rem; font-weight: 800; color: var(--text-primary);">Company Directory</h1>
-                <p class="text-secondary">Browse verified industrial partners and suppliers in the network.</p>
-            </header>
-
-            <div class="shadow-box mb-8" style="padding: 1.5rem;">
-                <div style="display: flex; gap: 1rem;">
-                    <div style="flex: 1; position: relative;">
-                        <i class="fas fa-search"
-                            style="position: absolute; left: 1.2rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary);"></i>
-                        <input type="text" class="form-input" placeholder="Search companies by name or industry..."
-                            style="padding-left: 3rem;">
-                    </div>
-                    <select class="form-input" style="width: 200px;">
-                        <option>All Industries</option>
-                        <option>Construction</option>
-                        <option>Metallurgy</option>
-                        <option>Logistics</option>
-                        <option>Manufacturing</option>
-                    </select>
-                </div>
+    <main class="main-content">
+        <header style="margin-bottom: 2.5rem; display: flex; justify-content: space-between; align-items: flex-end;">
+            <div>
+                <h1 style="font-size: 1.75rem; font-weight: 800; color: var(--brand-dark); margin: 0;">Annuaire des
+                    Entreprises</h1>
+                <p style="color: var(--brand-secondary); font-size: 1rem; margin-top: 4px;">Connectez-vous avec des
+                    partenaires industriels vérifiés.</p>
             </div>
-
-            <div class="materials-grid">
-                <!-- Company 1 -->
-                <article class="shadow-box"
-                    style="padding: 2rem; display: flex; flex-direction: column; align-items: center; text-align: center;">
-                    <div
-                        style="width: 80px; height: 80px; background: #e2e8f0; border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 700; color: var(--primary-color); margin-bottom: 1.5rem;">
-                        AS</div>
-                    <h3 style="margin: 0; font-size: 1.25rem; font-weight: 700;">Atlas Steel SA</h3>
-                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0.5rem 0 1.5rem 0;"><i
-                            class="fas fa-th-large"></i> Metallurgy & Steel</p>
-                    <div
-                        style="display: flex; gap: 1.5rem; margin-bottom: 2rem; width: 100%; justify-content: center; border-top: 1px solid var(--border-color); padding-top: 1rem;">
-                        <div><strong style="display: block;">120+</strong><small
-                                style="color: var(--text-secondary);">Deals</small></div>
-                        <div><strong style="display: block;">4.9</strong><small
-                                style="color: var(--text-secondary);">Rating</small></div>
-                    </div>
-                    <button class="btn btn-secondary" style="width: 100%;"
-                        onclick="window.location.href='public-profile.html'">View Profile</button>
-                </article>
-
-                <!-- Company 2 -->
-                <article class="shadow-box"
-                    style="padding: 2rem; display: flex; flex-direction: column; align-items: center; text-align: center;">
-                    <div
-                        style="width: 80px; height: 80px; background: #fef3c7; border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 700; color: #d97706; margin-bottom: 1.5rem;">
-                        ML</div>
-                    <h3 style="margin: 0; font-size: 1.25rem; font-weight: 700;">Maghreb Logistics</h3>
-                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0.5rem 0 1.5rem 0;"><i
-                            class="fas fa-truck"></i> Transport & Logistics</p>
-                    <div
-                        style="display: flex; gap: 1.5rem; margin-bottom: 2rem; width: 100%; justify-content: center; border-top: 1px solid var(--border-color); padding-top: 1rem;">
-                        <div><strong style="display: block;">850+</strong><small
-                                style="color: var(--text-secondary);">Shipments</small></div>
-                        <div><strong style="display: block;">4.8</strong><small
-                                style="color: var(--text-secondary);">Rating</small></div>
-                    </div>
-                    <button class="btn btn-secondary" style="width: 100%;"
-                        onclick="window.location.href='public-profile.html'">View Profile</button>
-                </article>
-
-                <!-- Company 3 -->
-                <article class="shadow-box"
-                    style="padding: 2rem; display: flex; flex-direction: column; align-items: center; text-align: center;">
-                    <div
-                        style="width: 80px; height: 80px; background: #dcfce7; border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 700; color: #16a34a; margin-bottom: 1.5rem;">
-                        CC</div>
-                    <h3 style="margin: 0; font-size: 1.25rem; font-weight: 700;">Casablanca Cement</h3>
-                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0.5rem 0 1.5rem 0;"><i
-                            class="fas fa-hard-hat"></i> Construction Materials</p>
-                    <div
-                        style="display: flex; gap: 1.5rem; margin-bottom: 2rem; width: 100%; justify-content: center; border-top: 1px solid var(--border-color); padding-top: 1rem;">
-                        <div><strong style="display: block;">500+</strong><small
-                                style="color: var(--text-secondary);">Orders</small></div>
-                        <div><strong style="display: block;">5.0</strong><small
-                                style="color: var(--text-secondary);">Rating</small></div>
-                    </div>
-                    <button class="btn btn-secondary" style="width: 100%;"
-                        onclick="window.location.href='public-profile.html'">View Profile</button>
-                </article>
+            <div
+                style="background: #f8f9fc; border: 1px solid #e2e8f0; padding: 10px 16px; border-radius: 12px; display: flex; align-items: center; gap: 10px; font-size: 0.85rem; color: #475467; font-weight: 600;">
+                <i class="fas fa-shield-halved" style="color: var(--brand-primary);"></i>
+                Les communications doivent rester sur la plateforme pour votre sécurité.
             </div>
-        </main>
-    </div>
+        </header>
+
+        <!-- Filters Section -->
+        <div class="directory-filters">
+            <div class="search-group">
+                <i class="fas fa-search"></i>
+                <input type="text" class="search-input"
+                    placeholder="Rechercher une entreprise par nom ou spécialité...">
+            </div>
+            <div class="filter-actions">
+                <select class="filter-select">
+                    <option>Secteur activité</option>
+                    <option>BTP / Construction</option>
+                    <option>Textile</option>
+                    <option>Logistique</option>
+                    <option>Agroalimentaire</option>
+                    <option>Énergie</option>
+                </select>
+                <select class="filter-select">
+                    <option>Pays / Ville</option>
+                    <option>Casablanca</option>
+                    <option>Tanger</option>
+                    <option>Marrakech</option>
+                    <option>Agadir</option>
+                </select>
+                <button class="btn btn-primary"
+                    style="width: auto; padding: 10px 20px; height: 44px; border-radius: 10px;">Filtrer</button>
+            </div>
+        </div>
+
+        <div class="companies-container">
+            <table class="directory-table">
+                <thead>
+                    <tr>
+                        <th style="width: 350px;">Entreprise</th>
+                        <th>Localisation</th>
+                        <th>Listing Actifs</th>
+                        <th>Deals Réalisés</th>
+                        <th>Membre depuis</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Company 1 -->
+                    <tr>
+                        <td>
+                            <div class="company-info">
+                                <img src="assets/logos/atlas_mining.png" class="company-logo">
+                                <div class="company-name-box">
+                                    <div style="display: flex; align-items: center;">
+                                        <span class="company-name">Atlas Mining SA</span>
+                                        <span class="verified-badge"><i class="fas fa-check-circle"></i> Vérifiée</span>
+                                    </div>
+                                    <span class="sector-tag">Extraction & Métallurgie</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="location-info">Maroc, Agadir</div>
+                        </td>
+                        <td>
+                            <div class="stats-box">
+                                <span class="stats-value">24 Annonces</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="stats-box">
+                                <span class="stats-value">142 Deals</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="date-joined">Janvier 2025</span>
+                        </td>
+                        <td>
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <div style="display: flex; gap: 8px;">
+                                    <a href="public-profile.html" class="btn-action btn-view">Voir profil</a>
+                                    <a href="search.html" class="btn-action">Listings</a>
+                                </div>
+                                <div class="no-direct-contact">
+                                    <i class="fas fa-user-lock"></i> Contact direct restreint
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Company 2 -->
+                    <tr>
+                        <td>
+                            <div class="company-info">
+                                <img src="assets/logos/lafarge.png" class="company-logo">
+                                <div class="company-name-box">
+                                    <div style="display: flex; align-items: center;">
+                                        <span class="company-name">Lafarge Ciments</span>
+                                        <span class="verified-badge"><i class="fas fa-check-circle"></i> Vérifiée</span>
+                                    </div>
+                                    <span class="sector-tag">Matériaux de construction</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="location-info">Maroc, Casablanca</div>
+                        </td>
+                        <td>
+                            <div class="stats-box">
+                                <span class="stats-value">8 Annonces</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="stats-box">
+                                <span class="stats-value">85 Deals</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="date-joined">Février 2025</span>
+                        </td>
+                        <td>
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <div style="display: flex; gap: 8px;">
+                                    <a href="public-profile.html" class="btn-action btn-view">Voir profil</a>
+                                    <a href="search.html" class="btn-action">Listings</a>
+                                </div>
+                                <div class="no-direct-contact">
+                                    <i class="fas fa-user-lock"></i> Contact direct restreint
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Company 3 -->
+                    <tr>
+                        <td>
+                            <div class="company-info">
+                                <div class="company-logo" style="background: #E0F2FE; color: #026AA2;">ML</div>
+                                <div class="company-name-box">
+                                    <div style="display: flex; align-items: center;">
+                                        <span class="company-name">Maghreb Logistics</span>
+                                    </div>
+                                    <span class="sector-tag">Transport & Logistique</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="location-info">Maroc, Tanger</div>
+                        </td>
+                        <td>
+                            <div class="stats-box">
+                                <span class="stats-value">12 Annonces</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="stats-box">
+                                <span class="stats-value">210 Deals</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="date-joined">Mars 2024</span>
+                        </td>
+                        <td>
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <div style="display: flex; gap: 8px;">
+                                    <a href="public-profile.html" class="btn-action btn-view">Voir profil</a>
+                                    <a href="search.html" class="btn-action">Listings</a>
+                                </div>
+                                <div class="no-direct-contact">
+                                    <i class="fas fa-user-lock"></i> Contact direct restreint
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
 
     <script src="js/app.js"></script>
 </body>

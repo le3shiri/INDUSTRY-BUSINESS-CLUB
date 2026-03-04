@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence Admin | Tickets Support</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="../js/components.js"></script>
+    <script src="../js/admin-data.js"></script>
+
+    <style>
+        :root {
+            --admin-bg: #fcfcfd;
+            --card-border: #eaecf0;
+            --text-main: #101828;
+            --text-sub: #475467;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --primary-corporate: #101828;
+            --success-main: #027a48;
+            --success-bg: #ecfdf3;
+            --warning-main: #b54708;
+            --warning-bg: #fffaeb;
+            --danger-main: #b42318;
+            --danger-bg: #fef3f2;
+            --info-main: #026aa2;
+            --info-bg: #f0f9ff;
+            --priority-urgent: #912018;
+            --priority-high: #b42318;
+            --priority-medium: #b54708;
+            --priority-low: #3e4784;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--admin-bg);
+            color: var(--text-main);
+            letter-spacing: -0.01em;
+        }
+
+        .main-content {
+            padding: 0;
+            background: var(--admin-bg);
+        }
+
+        .top-nav {
+            background: white;
+            border-bottom: 1px solid var(--card-border);
+            padding: 1.25rem 2.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-container {
+            padding: 2rem 2.5rem;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        /* KPI Grid System */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin: 0;
+        }
+
+        .stat-subtext {
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            display: block;
+        }
+
+        /* Admin Table Styling */
+        .table-outer {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            scrollbar-width: thin;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        .admin-table th {
+            background: #f9fafb;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--card-border);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .admin-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--card-border);
+            font-size: 0.85rem;
+            vertical-align: middle;
+        }
+
+        /* Status & Badges */
+        .badge {
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge-open {
+            background: var(--danger-bg);
+            color: var(--danger-main);
+            border: 1px solid #fda29b;
+        }
+
+        .badge-current {
+            background: var(--info-bg);
+            color: var(--info-main);
+            border: 1px solid #b9e6fe;
+        }
+
+        .badge-waiting {
+            background: var(--warning-bg);
+            color: var(--warning-main);
+            border: 1px solid #fec84b;
+        }
+
+        .badge-resolved {
+            background: var(--success-bg);
+            color: var(--success-main);
+            border: 1px solid #6ce9a6;
+        }
+
+        .badge-closed {
+            background: #f2f4f7;
+            color: #344054;
+            border: 1px solid #eaecf0;
+        }
+
+        /* Priority Colors */
+        .priority-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+        .priority-urgent {
+            color: var(--priority-urgent);
+            font-weight: 800;
+        }
+
+        .priority-urgent .priority-dot {
+            background: var(--priority-urgent);
+        }
+
+        .priority-high {
+            color: var(--priority-high);
+            font-weight: 700;
+        }
+
+        .priority-high .priority-dot {
+            background: var(--priority-high);
+        }
+
+        .priority-medium {
+            color: var(--priority-medium);
+            font-weight: 600;
+        }
+
+        .priority-medium .priority-dot {
+            background: var(--priority-medium);
+        }
+
+        .priority-low {
+            color: var(--priority-low);
+            font-weight: 500;
+        }
+
+        .priority-low .priority-dot {
+            background: var(--priority-low);
+        }
+
+        .type-pill {
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            border: 1px solid #eaecf0;
+            background: #f9fafb;
+        }
+
+        .agent-assignee {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .agent-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #eee;
+        }
+
+        .description-txt {
+            max-width: 280px;
+            white-space: normal;
+            font-size: 0.75rem;
+            color: var(--text-sub);
+            line-height: 1.4;
+        }
+
+        /* Actions Shell */
+        .action-btns {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            background: white;
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+        }
+
+        .btn-icon:hover {
+            border-color: var(--text-main);
+            color: var(--text-main);
+            background: #f9fafb;
+        }
+
+        .btn-icon.success:hover {
+            color: #027a48;
+            border-color: #6ce9a6;
+            background: #ecfdf3;
+        }
+
+        .btn-icon.info:hover {
+            color: #026aa2;
+            border-color: #b9e6fe;
+            background: var(--info-bg);
+        }
+
+        .btn-icon.danger:hover {
+            color: var(--danger-main);
+            border-color: #fda29b;
+            background: var(--danger-bg);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+        <aside id="sidebar-container"></aside>
+
+        <main class="main-content">
+            <header class="top-nav">
+                <div>
+                    <h1 style="margin:0; font-size: 1.5rem; font-weight: 700;">Tickets Support</h1>
+                    <p style="margin:0; font-size: 0.85rem; color: var(--text-sub);">Gestion des demandes d'assistance,
+                        support technique et service client B2B</p>
+                </div>
+                <div style="display: flex; gap: 0.75rem;">
+                    <button class="btn btn-secondary" style="border: 1px solid var(--card-border); background: white;">
+                        <i class="fas fa-filter"></i> Filtrer par Agent
+                    </button>
+                    <button class="btn btn-primary"><i class="fas fa-plus"></i> Créer pour Utilisateur</button>
+                </div>
+            </header>
+
+            <div class="dashboard-container">
+
+                <!-- Support Stats -->
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <span class="stat-label">Tickets Non Assignés</span>
+                        <p class="stat-value" style="color: var(--danger-main);">8</p>
+                        <span class="stat-subtext" style="color: var(--danger-main);">Assignation requise</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Temps de Réponse</span>
+                        <p class="stat-value">1.5h</p>
+                        <span class="stat-subtext" style="color: var(--success-main);">Médiane équipe support</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Tickets en cours</span>
+                        <p class="stat-value">24</p>
+                        <span class="stat-subtext" style="color: var(--info-main);">Charge actuelle</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Satisfaction Client</span>
+                        <p class="stat-value">4.8/5</p>
+                        <span class="stat-subtext" style="color: var(--success-main);">Moyenne retours</span>
+                    </div>
+                </div>
+
+                <div class="table-outer">
+                    <div class="table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID / Sujet du Ticket</th>
+                                    <th>Utilisateur / Entreprise / Type</th>
+                                    <th>Catégorie support</th>
+                                    <th>Description & Pièces Jointes</th>
+                                    <th>Priorité SLA</th>
+                                    <th>Statut Ticket</th>
+                                    <th>Agent Assigné</th>
+                                    <th>Dernière MAJ</th>
+                                    <th>Délai (Créé le)</th>
+                                    <th style="text-align: right;">Actions Support</th>
+                                </tr>
+                            </thead>
+                            <tbody id="support-tickets-body">
+                                <!-- Data injected via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            Components.renderAdminSidebar('admin-support-tickets.html');
+
+            const tickets = [
+                {
+                    id: 'TKT-1024', subject: 'Erreur lors du virement Swift',
+                    user: 'Yasmine Benani', userType: 'Acheteur', company: 'Safi Logistics',
+                    email: 'yasmine@safilog.ma', tel: '+212 661 22 33 44',
+                    category: 'Problème de paiement',
+                    description: 'Ma banque indique que l\'IBAN de destination est invalide. J\'ai essayé deux fois.',
+                    attachments: ['doc', 'image'],
+                    priority: 'Urgente',
+                    status: 'open',
+                    agent: 'Amine R.',
+                    dates: { created: '04/03/2026', updated: 'Il y a 10 min' }
+                },
+                {
+                    id: 'TKT-1021', subject: 'Annonce refusée sans motif clair',
+                    user: 'Mehdi Tazi', userType: 'Vendeur', company: 'Kenitra Metals',
+                    email: 'tazi@kmetals.com', tel: '+212 522 77 88 99',
+                    category: 'Problème annonce',
+                    description: 'J\'ai posté mon stock d\'acier HR, mais il a été refusé. Pouvez-vous me dire ce qui manque ?',
+                    attachments: ['image'],
+                    priority: 'Haute',
+                    status: 'current',
+                    agent: 'Leila K.',
+                    dates: { created: '03/03/2026', updated: 'Il y a 2h' }
+                },
+                {
+                    id: 'TKT-1018', subject: 'Problème de connexion compte entreprise',
+                    user: 'Reda Hakimi', userType: 'Acheteur', company: 'BuildIt SA',
+                    email: 'rhakimi@buildit.ma', tel: '+212 537 11 22 33',
+                    category: 'Problème de compte',
+                    description: 'L\'accès par SSO ne fonctionne plus depuis la mise à jour de ce matin.',
+                    attachments: [],
+                    priority: 'Moyenne',
+                    status: 'waiting',
+                    agent: 'Karim B.',
+                    dates: { created: '03/03/2026', updated: 'Il y a 5h' }
+                },
+                {
+                    id: 'TKT-1015', subject: 'Retard de livraison - Commande #DEAL-790',
+                    user: 'Julien Durand', userType: 'Acheteur', company: 'LogiFrance',
+                    email: 'j.durand@logifrance.fr', tel: '+33 1 44 55 66 77',
+                    category: 'Problème de livraison',
+                    description: 'Le transporteur indique un retard de 4 jours. Je souhaite une médiation.',
+                    attachments: ['doc'],
+                    priority: 'Haute',
+                    status: 'resolved',
+                    agent: 'Amine R.',
+                    dates: { created: '01/03/2026', updated: '02/03/2026' }
+                }
+            ];
+
+            const tbody = document.getElementById('support-tickets-body');
+
+            function renderTickets(list) {
+                tbody.innerHTML = list.map(t => `
+                    <tr>
+                        <td>
+                            <div style="font-weight: 800; font-family: monospace; color: var(--info-main);">${t.id}</div>
+                            <div style="font-weight: 700; font-size: 0.8rem; margin-top: 2px;">${t.subject}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700;">${t.user}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-sub);">${t.company}</div>
+                            <span class="type-pill" style="margin-top: 4px; display: inline-block;">${t.userType}</span>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700; color: #3e4784;">${t.category}</div>
+                        </td>
+                        <td>
+                            <div class="description-txt">"${t.description.substring(0, 60)}..."</div>
+                            <div style="display: flex; gap: 8px; margin-top: 6px; color: #026aa2;">
+                                ${t.attachments.includes('image') ? '<i class="fas fa-image" title="Image jointe"></i>' : ''}
+                                ${t.attachments.includes('doc') ? '<i class="fas fa-file-alt" title="Document joint"></i>' : ''}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="priority-${t.priority.toLowerCase()}">
+                                <span class="priority-dot"></span>${t.priority}
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge ${getStatusBadgeClass(t.status)}">
+                                ${getStatusLabel(t.status)}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="agent-assignee">
+                                <div class="agent-avatar"></div>
+                                <span>${t.agent}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div style="font-size: 0.75rem; font-weight: 600; color: #101828;">${t.dates.updated}</div>
+                        </td>
+                        <td>
+                            <div style="font-size: 0.75rem; color: var(--text-sub);">${t.dates.created}</div>
+                        </td>
+                        <td style="text-align: right;">
+                            <div class="action-btns">
+                                <button class="btn-icon" title="Voir détails et messages"><i class="fas fa-eye"></i></button>
+                                <button class="btn-icon success" title="Répondre"><i class="fas fa-reply"></i></button>
+                                <button class="btn-icon info" title="Assigner agent"><i class="fas fa-user-tag"></i></button>
+                                <button class="btn-icon" title="Ajouter note interne"><i class="fas fa-sticky-note"></i></button>
+                                <button class="btn-icon danger" title="Fermer ticket"><i class="fas fa-lock"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            function getStatusBadgeClass(status) {
+                switch (status) {
+                    case 'open': return 'badge-open';
+                    case 'current': return 'badge-current';
+                    case 'waiting': return 'badge-waiting';
+                    case 'resolved': return 'badge-resolved';
+                    case 'closed': return 'badge-closed';
+                    default: return '';
+                }
+            }
+
+            function getStatusLabel(status) {
+                switch (status) {
+                    case 'open': return 'Ouvert';
+                    case 'current': return 'En cours';
+                    case 'waiting': return 'Attente utilisateur';
+                    case 'resolved': return 'Résolu';
+                    case 'closed': return 'Fermé';
+                    default: return status;
+                }
+            }
+
+            renderTickets(tickets);
+        });
+    </script>
+</body>
+
+</html>

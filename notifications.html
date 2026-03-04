@@ -1,201 +1,348 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fluxence - Notifications</title>
+    <title>Fluxence | Notifications</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <script src="js/components.js"></script>
+    <script src="js/app.js"></script>
+
     <style>
-        .notifications-list {
-            margin-top: 2rem;
+        :root {
+            --brand-primary: #00B140;
+            --brand-dark: #101828;
+            --brand-secondary: #667085;
+            --bg-soft: #f9fafb;
+            --card-border: #eaecf0;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-soft);
+            margin: 0;
             display: flex;
-            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2rem 3rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Filter Chips */
+        .filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
             gap: 1rem;
         }
 
-        .notification-item {
-            background: var(--white);
-            padding: 1.5rem;
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-sm);
+        .chips-container {
             display: flex;
-            gap: 1.5rem;
-            align-items: flex-start;
-            border-left: 4px solid transparent;
-            transition: var(--transition);
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .chip {
+            padding: 8px 18px;
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 99px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--brand-secondary);
             cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .chip:hover {
+            border-color: var(--brand-primary);
+            color: var(--brand-primary);
+        }
+
+        .chip.active {
+            background: var(--brand-primary);
+            border-color: var(--brand-primary);
+            color: white;
+        }
+
+        /* Notifications List */
+        .notif-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .notif-card {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 1.25rem;
+            display: flex;
+            gap: 1rem;
+            transition: all 0.2s;
             position: relative;
+            cursor: pointer;
         }
 
-        .notification-item:hover {
-            transform: translateX(5px);
-            box-shadow: var(--shadow-md);
+        .notif-card:hover {
+            transform: translateX(4px);
+            border-color: var(--brand-primary);
+            box-shadow: 0 4px 12px rgba(16, 24, 40, 0.04);
         }
 
-        .notification-item.unread {
-            border-left-color: var(--brand-blue);
-            background: #f0f9ff;
+        .notif-card.unread {
+            background: #f0fdf4;
+            border-left: 4px solid var(--brand-primary);
         }
 
-        .notification-icon-container {
+        .notif-icon {
             width: 48px;
             height: 48px;
-            border-radius: 50%;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 1.2rem;
             flex-shrink: 0;
-            font-size: 1.25rem;
         }
 
-        .icon-deal {
-            background: #ecfdf5;
-            color: #10b981;
+        /* Icon Types */
+        .type-offer {
+            background: #ecfdf3;
+            color: #027a48;
         }
 
-        .icon-security {
-            background: #fef2f2;
-            color: #ef4444;
+        .type-deal {
+            background: #f0f9ff;
+            color: #026aa2;
         }
 
-        .icon-system {
-            background: #eff6ff;
-            color: #3b82f6;
+        .type-pay {
+            background: #fef6ee;
+            color: #b93815;
         }
 
-        .notif-content {
+        .type-ship {
+            background: #fef3f2;
+            color: #b42318;
+        }
+
+        .type-support {
+            background: #f9f5ff;
+            color: #6941c6;
+        }
+
+        .notif-body {
             flex: 1;
+            min-width: 0;
+        }
+
+        .notif-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 4px;
         }
 
         .notif-title {
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 0.25rem;
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: var(--brand-dark);
         }
 
-        .notif-time {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
+        .notif-date {
+            font-size: 0.75rem;
+            color: var(--brand-secondary);
         }
 
+        .notif-msg {
+            font-size: 0.85rem;
+            color: var(--brand-secondary);
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .notif-id {
+            font-family: monospace;
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-top: 8px;
+            font-weight: 600;
+        }
+
+        /* Actions */
         .notif-actions {
-            position: absolute;
-            top: 1.5rem;
-            right: 1.5rem;
             display: flex;
-            gap: 0.5rem;
-            opacity: 0;
-            transition: var(--transition);
+            gap: 10px;
+            align-items: center;
         }
 
-        .notification-item:hover .notif-actions {
-            opacity: 1;
+        .action-link {
+            font-size: 0.8rem;
+            font-weight: 800;
+            color: var(--brand-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .action-link:hover {
+            text-decoration: underline;
+        }
+
+        .mark-read-btn {
+            background: none;
+            border: none;
+            padding: 0;
+            color: var(--brand-secondary);
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .mark-read-btn:hover {
+            color: var(--brand-dark);
         }
     </style>
 </head>
 
 <body>
 
-    <div class="layout-dashboard">
-        <aside id="sidebar-container"></aside>
+    <aside id="sidebar-container"></aside>
 
-        <main class="main-content">
-            <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                <div>
-                    <h1 style="font-size: 2rem; font-weight: 800; color: var(--text-primary);">Notifications</h1>
-                    <p class="text-secondary">Stay updated with your deals and account activity.</p>
-                </div>
-                <button class="btn btn-secondary" style="width: auto;" onclick="markAllRead()">
-                    <i class="fas fa-check-double"></i> Mark all as read
-                </button>
-            </header>
+    <main class="main-content">
+        <header style="margin-bottom: 2.5rem; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h1 style="font-size: 1.75rem; font-weight: 800; color: var(--brand-dark); margin: 0;">Centre de
+                    Notifications</h1>
+                <p style="color: var(--brand-secondary); font-size: 1rem;">Suivez l'activité de vos deals, commandes et
+                    tickets.</p>
+            </div>
+            <button class="btn btn-white" style="width: auto; padding: 10px 20px;" onclick="markAllRead()">
+                Tout marquer comme lu
+            </button>
+        </header>
 
-            <div class="chips-row" style="margin-bottom: 2rem;">
-                <div class="chip active">All</div>
+        <div class="filter-header">
+            <div class="chips-container">
+                <div class="chip active">Toutes</div>
+                <div class="chip">Non lues</div>
                 <div class="chip">Deals</div>
-                <div class="chip">Security</div>
-                <div class="chip">System</div>
+                <div class="chip">Commandes</div>
+                <div class="chip">Support</div>
+            </div>
+        </div>
+
+        <div class="notif-list">
+            <!-- Notification 1: Deal -->
+            <div class="notif-card unread">
+                <div class="notif-icon type-offer"><i class="fas fa-handshake"></i></div>
+                <div class="notif-body">
+                    <div class="notif-title-row">
+                        <span class="notif-title">Nouvelle offre reçue</span>
+                        <span class="notif-date">Il y a 2 min</span>
+                    </div>
+                    <p class="notif-msg">Atlas Mining a envoyé une contre-offre pour "Cuivre Millberry". Prix proposé :
+                        42,000 MAD.</p>
+                    <div class="notif-actions">
+                        <a href="negotiation-room.html" class="action-link">Ouvrir Negotiation Room <i
+                                class="fas fa-arrow-right"></i></a>
+                        <span style="color: #eaecf0;">|</span>
+                        <button class="mark-read-btn">Marquer comme lu</button>
+                    </div>
+                    <div class="notif-id">#NTF-88742-D</div>
+                </div>
             </div>
 
-            <div class="notifications-list">
-                <!-- Unread -->
-                <div class="notification-item unread fade-in-up">
-                    <div class="notification-icon-container icon-deal"><i class="fas fa-handshake"></i></div>
-                    <div class="notif-content">
-                        <div class="notif-title">New Offer Received</div>
-                        <p class="text-secondary" style="font-size: 0.95rem;">Atlas Steel sent a counter-offer of
-                            <strong>115,000 MAD</strong> for 'Portland Cement'.
-                        </p>
-                        <span class="notif-time">2 minutes ago</span>
+            <!-- Notification 2: Order -->
+            <div class="notif-card unread">
+                <div class="notif-icon type-pay"><i class="fas fa-check-double"></i></div>
+                <div class="notif-body">
+                    <div class="notif-title-row">
+                        <span class="notif-title">Paiement confirmé</span>
+                        <span class="notif-date">Il y a 1h</span>
                     </div>
+                    <p class="notif-msg">Le paiement pour la commande #ORD-88742 a été validé par Fluxence Escrow.</p>
                     <div class="notif-actions">
-                        <button class="icon-btn" title="Archive"><i class="fas fa-archive"></i></button>
+                        <a href="order-tracking.html" class="action-link">Suivre la commande <i
+                                class="fas fa-truck"></i></a>
+                        <span style="color: #eaecf0;">|</span>
+                        <button class="mark-read-btn">Marquer comme lu</button>
                     </div>
-                </div>
-
-                <div class="notification-item unread fade-in-up delay-100">
-                    <div class="notification-icon-container icon-security"><i class="fas fa-shield-alt"></i></div>
-                    <div class="notif-content">
-                        <div class="notif-title">New Login Detected</div>
-                        <p class="text-secondary" style="font-size: 0.95rem;">A new login was recorded from Casablanca,
-                            MA (Chrome on Windows).</p>
-                        <span class="notif-time">1 hour ago</span>
-                    </div>
-                    <div class="notif-actions">
-                        <button class="icon-btn" title="Archive"><i class="fas fa-archive"></i></button>
-                    </div>
-                </div>
-
-                <!-- Read -->
-                <div class="notification-item fade-in-up delay-200">
-                    <div class="notification-icon-container icon-system"><i class="fas fa-info-circle"></i></div>
-                    <div class="notif-content">
-                        <div class="notif-title">KYC Verification Under Review</div>
-                        <p class="text-secondary" style="font-size: 0.95rem;">Your documents are being processed. This
-                            usually takes 24-48 hours.</p>
-                        <span class="notif-time">Yesterday</span>
-                    </div>
-                    <div class="notif-actions">
-                        <button class="icon-btn" title="Archive"><i class="fas fa-archive"></i></button>
-                    </div>
-                </div>
-
-                <div class="notification-item fade-in-up delay-300">
-                    <div class="notification-icon-container icon-deal"><i class="fas fa-check-circle"></i></div>
-                    <div class="notif-content">
-                        <div class="notif-title">Deal Completed!</div>
-                        <p class="text-secondary" style="font-size: 0.95rem;">Negotiation ID #8492 with 'BuildCo' has
-                            been successfully closed.</p>
-                        <span class="notif-time">2 days ago</span>
-                    </div>
-                    <div class="notif-actions">
-                        <button class="icon-btn" title="Archive"><i class="fas fa-archive"></i></button>
-                    </div>
+                    <div class="notif-id">#NTF-88740-O</div>
                 </div>
             </div>
-    </div>
 
-    <!-- Empty State -->
-    <div id="notifications-empty-state" class="empty-state" style="display: none; margin-top: 3rem;">
-        <i class="far fa-bell-slash"></i>
-        <h3>All caught up!</h3>
-        <p>You have no new notifications. We'll let you know when something important happens.</p>
-        <button class="btn btn-secondary" style="width: auto;" onclick="markAllRead()">Check for updates</button>
-    </div>
+            <!-- Notification 3: Support -->
+            <div class="notif-card">
+                <div class="notif-icon type-support"><i class="fas fa-ticket-alt"></i></div>
+                <div class="notif-body">
+                    <div class="notif-title-row">
+                        <span class="notif-title">Réponse du support technique</span>
+                        <span class="notif-date">Hier, 14:30</span>
+                    </div>
+                    <p class="notif-msg">Un agent a répondu à votre ticket #TIC-88742 concernant la validation KYC.</p>
+                    <div class="notif-actions">
+                        <a href="support-tickets.html" class="action-link">Voir le ticket <i
+                                class="fas fa-external-link-alt"></i></a>
+                    </div>
+                    <div class="notif-id">#NTF-88655-S</div>
+                </div>
+            </div>
+
+            <!-- Notification 4: Shipment -->
+            <div class="notif-card">
+                <div class="notif-icon type-ship"><i class="fas fa-truck-moving"></i></div>
+                <div class="notif-body">
+                    <div class="notif-title-row">
+                        <span class="notif-title">Expédition effectuée</span>
+                        <span class="notif-date">02 Mars 2026</span>
+                    </div>
+                    <p class="notif-msg">La marchandise pour le deal #DL-3882 a été récupérée par le transporteur.</p>
+                    <div class="notif-actions">
+                        <a href="order-tracking.html" class="action-link">Voir le tracking</a>
+                    </div>
+                    <div class="notif-id">#NTF-88512-O</div>
+                </div>
+            </div>
+        </div>
     </main>
-    </div>
 
-    <script src="js/app.js"></script>
     <script>
         function markAllRead() {
-            document.querySelectorAll('.notification-item.unread').forEach(item => {
-                item.classList.remove('unread');
+            document.querySelectorAll('.notif-card.unread').forEach(card => {
+                card.classList.remove('unread');
             });
         }
+
+        // Add individual marking logic
+        document.querySelectorAll('.mark-read-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                btn.closest('.notif-card').classList.remove('unread');
+                btn.parentElement.style.display = 'none'; // simple hide for demo
+            });
+        });
     </script>
 </body>
 

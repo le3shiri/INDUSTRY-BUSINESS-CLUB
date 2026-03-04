@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence | Profil Entreprise</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --brand-primary: #00B140;
+            /* Sprite Green */
+            --brand-secondary: #667085;
+            --brand-dark: #101828;
+            --card-border: #eaecf0;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --bg-soft: #fcfcfd;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-soft);
+            margin: 0;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Progress (Universal) */
+        .register-sidebar {
+            width: 380px;
+            background: var(--brand-dark);
+            padding: 4rem 3rem;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .logo-box {
+            font-size: 1.5rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 4rem;
+        }
+
+        .stepper-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+            position: relative;
+        }
+
+        .stepper-nav::before {
+            content: '';
+            position: absolute;
+            left: 11px;
+            top: 30px;
+            bottom: 30px;
+            width: 2px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #1d2939;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .step-item.completed .step-icon {
+            background: var(--brand-primary);
+            border-color: var(--brand-primary);
+            color: white;
+        }
+
+        .step-item.active .step-icon {
+            background: var(--brand-primary);
+            border-color: var(--brand-primary);
+            color: white;
+            box-shadow: 0 0 0 4px rgba(0, 177, 64, 0.2);
+        }
+
+        .step-text h4 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .step-text p {
+            margin: 2px 0 0 0;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .step-item.active .step-text h4 {
+            color: white;
+        }
+
+        .step-item.completed .step-text h4 {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Main Profile Space */
+        .profile-main {
+            flex: 1;
+            padding: 4rem;
+            background: white;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .profile-container {
+            width: 100%;
+            max-width: 700px;
+        }
+
+        .header-group {
+            margin-bottom: 3rem;
+        }
+
+        .header-group h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-group p {
+            color: var(--brand-secondary);
+        }
+
+        /* Logo Upload */
+        .logo-upload-box {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            padding: 2rem;
+            background: #f9fafb;
+            border: 1.5px dashed var(--card-border);
+            border-radius: 16px;
+            margin-bottom: 2.5rem;
+        }
+
+        .logo-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 12px;
+            background: white;
+            border: 1px solid var(--card-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: #d0d5dd;
+            overflow: hidden;
+        }
+
+        .logo-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .btn-up {
+            padding: 10px 18px;
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-up:hover {
+            border-color: var(--brand-primary);
+            color: var(--brand-primary);
+        }
+
+        /* Form Layout */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group.full {
+            grid-column: span 2;
+        }
+
+        .form-label {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #344054;
+        }
+
+        .form-control {
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--card-border);
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 4px rgba(0, 177, 64, 0.05);
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* Footer */
+        .profile-footer {
+            margin-top: 3.5rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--card-border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-white {
+            background: white;
+            border: 1px solid var(--card-border);
+            color: #344054;
+        }
+
+        .btn-white:hover {
+            border-color: var(--brand-dark);
+        }
+
+        .btn-primary {
+            background: var(--brand-primary);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 14px rgba(0, 177, 64, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 177, 64, 0.4);
+        }
+
+        @media (max-width: 900px) {
+            body {
+                flex-direction: column;
+            }
+
+            .register-sidebar {
+                width: 100%;
+                height: auto;
+                padding: 2rem;
+            }
+
+            .stepper-nav {
+                flex-direction: row;
+                gap: 15px;
+            }
+
+            .step-text,
+            .stepper-nav::before {
+                display: none;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside class="register-sidebar">
+        <div>
+            <div class="logo-box">
+                <i class="fas fa-rocket" style="color: var(--brand-primary);"></i> Fluxence
+            </div>
+
+            <nav class="stepper-nav">
+                <div class="step-item completed">
+                    <div class="step-icon"><i class="fas fa-check"></i></div>
+                    <div class="step-text">
+                        <h4>Compte</h4>
+                        <p>Informations validées</p>
+                    </div>
+                </div>
+                <div class="step-item completed">
+                    <div class="step-icon"><i class="fas fa-check"></i></div>
+                    <div class="step-text">
+                        <h4>Vérification</h4>
+                        <p>Email confirmé</p>
+                    </div>
+                </div>
+                <div class="step-item active">
+                    <div class="step-icon">3</div>
+                    <div class="step-text">
+                        <h4>Entreprise</h4>
+                        <p>Profil de la structure</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-icon">4</div>
+                    <div class="step-text">
+                        <h4>Documents</h4>
+                        <p>Validation KYC</p>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div style="font-size: 0.8rem; opacity: 0.5;">Écosystème B2B sécurisé</div>
+    </aside>
+
+    <main class="profile-main">
+        <div class="profile-container">
+            <div class="header-group">
+                <h2>Profil de l'Organisation</h2>
+                <p>Complétez les informations légales pour permettre à vos futurs partenaires de vous identifier.</p>
+            </div>
+
+            <div class="logo-upload-box">
+                <div class="logo-preview" id="l-prev"><i class="fas fa-building-columns"></i></div>
+                <div>
+                    <h5 style="margin: 0 0 4px 0; font-size: 1rem;">Logo de l'entreprise</h5>
+                    <p style="margin: 0 0 12px 0; font-size: 0.8rem; color: var(--brand-secondary);">Recommandé :
+                        400x400px, PNG ou JPG.</p>
+                    <input type="file" id="l-input" hidden accept="image/*" onchange="prevL(this)">
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn-up" onclick="document.getElementById('l-input').click()"><i
+                                class="fas fa-camera"></i> Télécharger</button>
+                        <button class="btn-up" style="color: var(--error-main);" onclick="resetL()"><i
+                                class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <form id="p-form">
+                <div class="form-grid">
+                    <div class="form-group full">
+                        <label class="form-label">Dénomination sociale complète</label>
+                        <input type="text" class="form-control" name="company_name"
+                            placeholder="Ex: Atlas Industrials SARL" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Forme juridique</label>
+                        <select class="form-control" name="legal_form" required>
+                            <option value="">Choisir...</option>
+                            <option value="SARL">SARL</option>
+                            <option value="SA">SA</option>
+                            <option value="AE">Auto-entrepreneur</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Secteur d'activité</label>
+                        <input type="text" class="form-control" name="sector" placeholder="Ex: Aéronautique" required>
+                    </div>
+
+                    <div class="form-group full">
+                        <label class="form-label">Description (Vision & Services)</label>
+                        <textarea class="form-control" name="desc"
+                            placeholder="Décrivez votre activité en quelques lignes..."></textarea>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="form-label">Pays</label>
+                        <select class="form-control" name="country" required>
+                            <option value="MA">Maroc</option>
+                            <option value="FR">France</option>
+                            <option value="ES">Espagne</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Ville du siège</label>
+                        <input type="text" class="form-control" name="city" placeholder="Ex: Tanger" required>
+                    </div>
+
+                    <div class="form-group full">
+                        <label class="form-label">Adresse physique complète</label>
+                        <input type="text" class="form-control" name="addr" placeholder="N°, Rue, Zone Industrielle..."
+                            required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Numéro RC</label>
+                        <input type="text" class="form-control" name="rc" placeholder="Registre de Commerce" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">ICE / Identifiant Fiscal</label>
+                        <input type="text" class="form-control" name="ice" placeholder="N° ICE" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Numéro TVA (optionnel)</label>
+                        <input type="text" class="form-control" name="tva" placeholder="N° de TVA">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Site web (optionnel)</label>
+                        <input type="url" class="form-control" name="website" placeholder="https://www.entreprise.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Téléphone professionnel</label>
+                        <input type="tel" class="form-control" name="c_phone" placeholder="+212 5 XX XX XX XX" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Email entreprise</label>
+                        <input type="email" class="form-control" name="c_email" placeholder="contact@entreprise.ma"
+                            required>
+                    </div>
+                </div>
+            </form>
+
+            <div class="profile-footer">
+                <button class="btn btn-white" onclick="alert('Brouillon sauvegardé')"><i class="fas fa-save"></i>
+                    Sauvegarder</button>
+                <button class="btn btn-primary" onclick="submitP()">Suivant : Documents KYC <i
+                        class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function prevL(i) {
+            if (i.files && i.files[0]) {
+                const r = new FileReader();
+                r.onload = (e) => {
+                    document.getElementById('l-prev').innerHTML = `<img src="${e.target.result}">`;
+                }
+                r.readAsDataURL(i.files[0]);
+            }
+        }
+        function resetL() {
+            document.getElementById('l-prev').innerHTML = `<i class="fas fa-building-columns"></i>`;
+            document.getElementById('l-input').value = "";
+        }
+        function submitP() {
+            if (document.getElementById('p-form').checkValidity()) {
+                window.location.href = 'kyc-documents-upload.html';
+            } else {
+                document.getElementById('p-form').reportValidity();
+            }
+        }
+    </script>
+</body>
+
+</html>

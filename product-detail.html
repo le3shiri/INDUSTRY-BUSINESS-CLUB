@@ -1,290 +1,723 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fluxence - Product Detail</title>
+    <title>Fluxence | Détail du Produit</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <script src="js/components.js"></script>
+    <script src="js/app.js"></script>
+
     <style>
-        .product-grid {
+        :root {
+            --brand-primary: #00B140;
+            --brand-dark: #101828;
+            --brand-secondary: #667085;
+            --bg-soft: #f9fafb;
+            --card-border: #eaecf0;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-soft);
+            margin: 0;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2rem 3rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .product-container {
             display: grid;
-            grid-template-columns: 1.5fr 1fr;
-            gap: 2rem;
-            margin-top: 1rem;
+            grid-template-columns: 1fr 400px;
+            gap: 2.5rem;
+            align-items: start;
         }
 
-        .product-gallery {
-            background: var(--white);
-            border-radius: var(--radius-lg);
+        /* Left Column: Media & Specs */
+        .product-media-card {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(16, 24, 40, 0.03);
+        }
+
+        .main-gallery {
+            position: relative;
+            border-radius: 16px;
             overflow: hidden;
-            box-shadow: var(--shadow-md);
+            background: #f2f4f7;
+            aspect-ratio: 16/9;
+            margin-bottom: 1.5rem;
         }
 
-        .main-image {
+        .main-gallery img {
             width: 100%;
-            height: 400px;
-            background: var(--white);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary-color);
-            border-bottom: 1px solid var(--border-color);
+            height: 100%;
+            object-fit: cover;
         }
 
-        .thumbnail-row {
+        .thumb-row {
             display: flex;
-            gap: 1rem;
-            padding: 1rem;
-            border-top: 1px solid var(--border-color);
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 10px;
         }
 
-        .thumbnail {
-            width: 80px;
+        .thumb-item {
+            width: 100px;
             height: 80px;
-            border-radius: var(--radius-md);
-            border: 2px solid transparent;
+            border-radius: 12px;
+            overflow: hidden;
             cursor: pointer;
-            background: #f1f5f9;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+            flex-shrink: 0;
+            background: #f2f4f7;
+        }
+
+        .thumb-item.active {
+            border-color: var(--brand-primary);
+        }
+
+        .thumb-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-details-content {
+            margin-top: 2.5rem;
+        }
+
+        .content-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--brand-dark);
+            margin-bottom: 1.5rem;
             display: flex;
             align-items: center;
-            justify-content: center;
-            color: #cbd5e1;
+            gap: 10px;
         }
 
-        .thumbnail.active {
-            border-color: var(--primary-color);
+        /* Specs Grid */
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
         }
 
-        .product-info-card {
-            background: var(--white);
-            padding: 2rem;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-md);
-        }
-
-        .seller-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            background: var(--primary-light);
-            color: var(--primary-color);
-            border-radius: 99px;
-            font-weight: 700;
-            font-size: 0.85rem;
-            margin-bottom: 1rem;
-        }
-
-        .spec-item {
+        .spec-card {
+            background: #f9fafb;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 12px 18px;
             display: flex;
             justify-content: space-between;
-            padding: 0.75rem 0;
-            border-bottom: 1px solid var(--border-color);
+            align-items: center;
         }
 
         .spec-label {
-            color: var(--text-secondary);
-            font-weight: 500;
+            font-size: 0.8rem;
+            color: var(--brand-secondary);
+            font-weight: 600;
         }
 
         .spec-value {
-            font-weight: 700;
-            color: var(--text-primary);
+            font-size: 0.9rem;
+            color: var(--brand-dark);
+            font-weight: 800;
         }
 
-        @media (max-width: 1024px) {
-            .product-grid {
-                grid-template-columns: 1fr;
+        /* Document list */
+        .doc-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .doc-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            border: 1px solid var(--card-border);
+            padding: 14px 20px;
+            border-radius: 14px;
+            transition: all 0.2s;
+        }
+
+        .doc-item:hover {
+            border-color: var(--brand-primary);
+            background: #f0fdf4;
+        }
+
+        .doc-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .doc-info i {
+            color: #f04438;
+            font-size: 1.25rem;
+        }
+
+        .doc-name {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--brand-dark);
+        }
+
+        .btn-download {
+            color: var(--brand-primary);
+            font-size: 1.1rem;
+        }
+
+        /* Right Column: Buying & Seller Info */
+        .buying-card {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(16, 24, 40, 0.03);
+            position: sticky;
+            top: 2rem;
+        }
+
+        .price-badge {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--brand-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .price-unit {
+            font-size: 1rem;
+            color: var(--brand-secondary);
+            font-weight: 500;
+        }
+
+        .meta-list {
+            margin: 1.5rem 0 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            color: var(--brand-secondary);
+        }
+
+        .meta-item i {
+            width: 20px;
+            text-align: center;
+            color: var(--brand-primary);
+        }
+
+        .meta-item b {
+            color: var(--brand-dark);
+        }
+
+        .seller-info-box {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #f2f4f7;
+        }
+
+        .seller-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .seller-logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            background: #f2f4f7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+        }
+
+        .verified-check {
+            color: var(--brand-primary);
+            font-size: 0.9rem;
+        }
+
+        .restriction-alert {
+            background: #fff4f2;
+            border: 1px solid #fecdca;
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-top: 1.5rem;
+            font-size: 0.75rem;
+            color: #b42318;
+            line-height: 1.4;
+            display: flex;
+            gap: 10px;
+        }
+
+        .restriction-alert i {
+            margin-top: 2px;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(16, 24, 40, 0.6);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-card {
+            background: white;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 600px;
+            overflow: hidden;
+            box-shadow: 0 20px 48px rgba(16, 24, 40, 0.2);
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
 
-        /* Breadcrumbs */
-        .breadcrumbs {
+        .modal-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--card-border);
             display: flex;
-            gap: 0.5rem;
+            justify-content: space-between;
             align-items: center;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            margin-bottom: 1rem;
         }
 
-        .breadcrumbs a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: var(--transition);
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--brand-dark);
         }
 
-        .breadcrumbs a:hover {
-            color: var(--primary-color);
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--brand-secondary);
+            cursor: pointer;
         }
 
-        .breadcrumb-sep {
-            color: #cbd5e1;
-            font-size: 0.75rem;
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .modal-product-summary {
+            display: flex;
+            gap: 16px;
+            background: #f9fafb;
+            padding: 1rem;
+            border-radius: 16px;
+            border: 1px solid var(--card-border);
+            margin-bottom: 2rem;
+        }
+
+        .modal-product-summary img {
+            width: 80px;
+            height: 64px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .modal-p-info h4 {
+            margin: 0 0 4px;
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: var(--brand-dark);
+        }
+
+        .modal-p-info p {
+            margin: 0;
+            font-size: 0.8rem;
+            color: var(--brand-secondary);
+        }
+
+        /* Success Toast */
+        .success-toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #101828;
+            color: white;
+            padding: 16px 24px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 12px 32px rgba(16, 24, 40, 0.3);
+            z-index: 3000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .success-toast.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .success-toast i {
+            color: var(--brand-primary);
+            font-size: 1.5rem;
         }
     </style>
 </head>
 
 <body>
 
-    <div class="layout-dashboard">
-        <aside id="sidebar-container"></aside>
+    <aside id="sidebar-container"></aside>
 
-        <main class="main-content">
-            <header style="margin-bottom: 1.5rem;">
-                <div id="breadcrumbs-container"></div>
-                <div
-                    style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap;">
-                    <h1 id="product-title"
-                        style="font-size: 2.75rem; font-weight: 800; color: var(--text-primary); margin: 0; letter-spacing: -0.02em;">
-                        Steel
-                        Reinforcement Bars (Rebar)</h1>
-                    <div style="display: flex; gap: 1rem;">
-                        <button class="btn btn-secondary" style="width: auto;"><i class="far fa-heart"></i>
-                            Save</button>
-                        <button class="btn btn-secondary" style="width: auto;"><i class="fas fa-share-alt"></i></button>
+    <main class="main-content">
+        <!-- Breadcrumbs -->
+        <div
+            style="display: flex; gap: 8px; font-size: 0.85rem; color: var(--brand-secondary); margin-bottom: 1.5rem; font-weight: 600;">
+            <span>Marketplace</span>
+            <i class="fas fa-chevron-right" style="font-size: 0.6rem; margin-top: 5px;"></i>
+            <span>Métaux & Mines</span>
+            <i class="fas fa-chevron-right" style="font-size: 0.6rem; margin-top: 5px;"></i>
+            <span style="color: var(--brand-dark);">Cuivre Millberry</span>
+        </div>
+
+        <div class="product-container">
+            <!-- Left: Gallery and Details -->
+            <div>
+                <div class="product-media-card">
+                    <div class="main-gallery">
+                        <img id="mainImage"
+                            src="https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?auto=format&fit=crop&q=80&w=1200"
+                            alt="Main Product">
                     </div>
-                </div>
-            </header>
-
-            <div class="product-grid">
-                <!-- Left: Gallery & Description -->
-                <div class="fade-in-up">
-                    <div class="product-gallery">
-                        <div class="main-image">
-                            <img src="assets/products/rebar.png" id="main-product-img" alt="Product Image"
-                                style="width: 100%; height: 100%; object-fit: cover;">
+                    <div class="thumb-row">
+                        <div class="thumb-item active" onclick="updateMainImage(this)"><img
+                                src="https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?auto=format&fit=crop&q=80&w=200">
                         </div>
-                        <div class="thumbnail-row">
-                            <div class="thumbnail active" onclick="changeImage('assets/products/rebar.png', this)"><img
-                                    src="assets/products/rebar.png"
-                                    style="width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius-md);">
-                            </div>
-                            <div class="thumbnail" onclick="changeImage('assets/products/forklift.png', this)"><img
-                                    src="assets/products/forklift.png"
-                                    style="width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius-md);">
-                            </div>
-                            <div class="thumbnail" onclick="changeImage('assets/products/copper_cables.png', this)"><img
-                                    src="assets/products/copper_cables.png"
-                                    style="width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius-md);">
-                            </div>
-                            <div class="thumbnail" onclick="changeImage('assets/products/conveyor.png', this)"><img
-                                    src="assets/products/conveyor.png"
-                                    style="width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius-md);">
-                            </div>
+                        <div class="thumb-item" onclick="updateMainImage(this)"><img
+                                src="https://images.unsplash.com/photo-1533038590840-1cde6e668a91?auto=format&fit=crop&q=80&w=200">
                         </div>
-                    </div>
-
-                    <div class="shadow-box" style="margin-top: 2rem; padding: 2rem;">
-                        <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">Description</h2>
-                        <p class="text-secondary" style="font-size: 1.1rem; line-height: 1.8;">
-                            High-quality steel reinforcement bars (Rebar) available in bulk quantities. Our rebar meets
-                            international construction standards and is suitable for various structural applications,
-                            including residential, commercial, and industrial projects.
-                            <br><br>
-                            - Grade: ASTM A615 Grade 60<br>
-                            - Sizes: 8mm to 32mm available<br>
-                            - Length: Standard 12m lengths<br>
-                            - Origin: certified Moroccan steel mills
-                        </p>
+                        <div class="thumb-item" onclick="updateMainImage(this)"><img
+                                src="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?auto=format&fit=crop&q=80&w=200">
+                        </div>
                     </div>
                 </div>
 
-                <!-- Right: Purchase Card -->
-                <div class="fade-in-up delay-100">
-                    <div class="product-info-card">
-                        <div class="seller-badge">
-                            <img src="assets/logos/atlas_steel.png" alt="Atlas Steel"
-                                style="width: 20px; height: 20px; border-radius: 50%; object-fit: cover;">
-                            Verified Seller: Atlas Steel
+                <div class="product-details-content">
+                    <div class="content-section">
+                        <h1 style="font-size: 2.25rem; font-weight: 800; color: var(--brand-dark); margin: 0 0 1rem;">
+                            Cuivre Millberry - Pureté 99.9%</h1>
+                        <div style="display: flex; gap: 10px; margin-bottom: 1.5rem;">
+                            <span class="chip active" style="font-size: 0.75rem;">Métaux</span>
+                            <span class="chip" style="font-size: 0.75rem;">Recyclage</span>
                         </div>
-
-                        <div style="margin-bottom: 2rem;">
-                            <div id="product-price"
-                                style="font-size: 2.5rem; font-weight: 800; color: var(--primary-color);">850 MAD <span
-                                    style="font-size: 1rem; color: var(--text-secondary); font-weight: 500;">/
-                                    ton</span></div>
-                            <p class="text-muted" style="font-size: 0.9rem;">Excluding transport costs</p>
-                        </div>
-
-                        <div style="margin-bottom: 2.5rem;">
-                            <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">Specifications</h3>
-                            <div class="spec-item"><span class="spec-label">Category</span><span
-                                    class="spec-value">Metals</span></div>
-                            <div class="spec-item"><span class="spec-label">Condition</span><span
-                                    class="spec-value">New</span></div>
-                            <div class="spec-item"><span class="spec-label">Min. Order</span><span class="spec-value">10
-                                    tons</span></div>
-                            <div class="spec-item"><span class="spec-label">Total Stock</span><span
-                                    class="spec-value">500 tons</span></div>
-                            <div class="spec-item"><span class="spec-label">Location</span><span
-                                    class="spec-value">Casablanca, MA</span></div>
-                        </div>
-
-                        <div style="display: flex; flex-direction: column; gap: 1rem;">
-                            <button class="btn btn-primary" onclick="alert('Negotiation started!')">
-                                <i class="fas fa-handshake" style="margin-right: 0.5rem;"></i> Start Negotiation
-                            </button>
-                            <button class="btn btn-secondary">
-                                <i class="fas fa-envelope" style="margin-right: 0.5rem;"></i> Message Seller
-                            </button>
-                        </div>
-
-                        <p class="text-center text-muted" style="margin-top: 1.5rem; font-size: 0.8rem;">
-                            <i class="fas fa-shield-alt"></i> Protected by IBC Escrow Guarantee
+                        <p style="font-size: 1.05rem; line-height: 1.7; color: #475467; margin-bottom: 2rem;">
+                            Cuivre Millberry de haute pureté (99.9% min). Câbles de cuivre dénudés, brillants, sans
+                            traces d'oxydation, de vernis ou d'impuretés.
+                            Idéal pour les fonderies et l'industrie électrique. Disponible en balles compactées de 1
+                            tonne.
+                            Certifié conforme aux normes internationales ISRI.
                         </p>
                     </div>
 
-                    <!-- Seller Quick View -->
-                    <div class="shadow-box"
-                        style="margin-top: 2rem; padding: 1.5rem; display: flex; align-items: center; gap: 1rem; border: 1px solid var(--border-color); box-shadow: var(--shadow-md);">
-                        <div
-                            style="width: 60px; height: 60px; background: var(--border-light); border-radius: 50%; overflow: hidden;">
-                            <img src="assets/logos/atlas_steel.png" alt="Atlas Steel"
-                                style="width: 100%; height: 100%; object-fit: cover;">
+                    <div class="content-section">
+                        <h2 class="section-title"><i class="fas fa-microchip"></i> Spécifications techniques</h2>
+                        <div class="specs-grid">
+                            <div class="spec-card"><span class="spec-label">Marque</span><span class="spec-value">Atlas
+                                    Metals</span></div>
+                            <div class="spec-card"><span class="spec-label">Modèle</span><span
+                                    class="spec-value">Millberry Premium</span></div>
+                            <div class="spec-card"><span class="spec-label">Année</span><span
+                                    class="spec-value">2026</span></div>
+                            <div class="spec-card"><span class="spec-label">Dimensions balles</span><span
+                                    class="spec-value">100x100x100 cm</span></div>
+                            <div class="spec-card"><span class="spec-label">Poids Unitaire</span><span
+                                    class="spec-value">1 Tonne</span></div>
+                            <div class="spec-card"><span class="spec-label">Pureté</span><span class="spec-value">99.9%
+                                    Cu</span></div>
                         </div>
-                        <div>
-                            <h4 style="margin: 0; font-weight: 700; color: var(--text-primary);">Atlas Steel SA</h4>
-                            <p style="margin: 0; font-size: 0.85rem; color: var(--text-secondary);"><i
-                                    class="fas fa-star" style="color: var(--primary-color);"></i> 4.9 (120 reviews)</p>
+                    </div>
+
+                    <div class="content-section">
+                        <h2 class="section-title"><i class="fas fa-file-pdf"></i> Documents techniques</h2>
+                        <div class="doc-list">
+                            <div class="doc-item">
+                                <div class="doc-info">
+                                    <i class="fas fa-file-pdf"></i>
+                                    <span class="doc-name">Fiche_Technique_Cuivre_Millberry.pdf</span>
+                                </div>
+                                <a href="#" class="btn-download"><i class="fas fa-cloud-download-alt"></i></a>
+                            </div>
+                            <div class="doc-item">
+                                <div class="doc-info">
+                                    <i class="fas fa-certificate"></i>
+                                    <span class="doc-name">Certificat_Qualite_SGS_2026.pdf</span>
+                                </div>
+                                <a href="#" class="btn-download"><i class="fas fa-cloud-download-alt"></i></a>
+                            </div>
                         </div>
-                        <a href="#" class="link"
-                            style="margin-left: auto; font-size: 0.9rem; font-weight: 600; color: var(--primary-color);">View
-                            Profile</a>
                     </div>
                 </div>
             </div>
-        </main>
-    </div>
 
-    <script src="js/app.js"></script>
+            <!-- Right: Buying Actions & Seller -->
+            <aside>
+                <div class="buying-card">
+                    <div class="price-badge">42,000 MAD <span class="price-unit">/ tonne</span></div>
+                    <p style="color: var(--brand-secondary); font-size: 0.85rem; font-weight: 600;">Prix indicatif
+                        négociable</p>
+
+                    <div class="meta-list">
+                        <div class="meta-item"><i class="fas fa-boxes"></i> Quantité dispo : <b>125 Tonnes</b></div>
+                        <div class="meta-item"><i class="fas fa-cube"></i> Unité : <b>Tonne métrique</b></div>
+                        <div class="meta-item"><i class="fas fa-tag"></i> État : <b>Neuf (Recyclé)</b></div>
+                        <div class="meta-item"><i class="fas fa-map-marker-alt"></i> Localisation : <b>Maroc,
+                                Casablanca</b></div>
+                        <div class="meta-item"><i class="fas fa-calendar-alt"></i> Publié le : <b>02 Mars 2026</b></div>
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <button class="btn btn-primary" style="height: 52px; font-size: 1rem;">Envoyer une
+                            offre</button>
+                        <button class="btn btn-white" style="height: 52px; font-size: 1rem;"><i
+                                class="far fa-heart"></i> Ajouter aux favoris</button>
+                    </div>
+
+                    <div class="seller-info-box">
+                        <div class="seller-header">
+                            <div class="seller-logo">AM</div>
+                            <div>
+                                <div style="display: flex; align-items: center; gap: 6px;">
+                                    <h4 style="margin: 0; font-size: 1rem; font-weight: 800; color: var(--brand-dark);">
+                                        Atlas Mining SA</h4>
+                                    <i class="fas fa-check-circle verified-check" title="Vérifié"></i>
+                                </div>
+                                <span
+                                    style="font-size: 0.8rem; color: var(--brand-secondary); font-weight: 600;">Extraction
+                                    & Métallurgie</span>
+                            </div>
+                        </div>
+                        <p style="font-size: 0.85rem; color: var(--brand-secondary); margin: 10px 0;">
+                            <i class="fas fa-handshake" style="color: var(--brand-primary);"></i> <b>142 deals</b>
+                            réalisés avec succès
+                        </p>
+                        <a href="public-profile.html" class="link"
+                            style="font-size: 0.85rem; font-weight: 700; color: var(--brand-primary);">Voir tous les
+                            produits du vendeur <i class="fas fa-arrow-right"></i></a>
+                    </div>
+
+                    <div class="restriction-alert">
+                        <i class="fas fa-shield-halved"></i>
+                        <div>
+                            <b>Contact direct non autorisé.</b> Pour votre protection, les emails et téléphones sont
+                            masqués. Toutes les communications et transactions doivent rester sur Fluxence.
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+
+        <!-- Send Offer Modal -->
+        <div id="offerModal" class="modal-overlay">
+            <div class="modal-card">
+                <div class="modal-header">
+                    <h3>Envoyer une offre commerciale</h3>
+                    <button class="modal-close" onclick="closeOfferModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <!-- Product Summary in Modal -->
+                    <div class="modal-product-summary">
+                        <img src="https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?auto=format&fit=crop&q=80&w=150"
+                            alt="Thumb">
+                        <div class="modal-p-info">
+                            <h4 id="modalProductName">Cuivre Millberry - Pureté 99.9%</h4>
+                            <p>Vendu par : <b>Atlas Mining SA</b></p>
+                            <div
+                                style="display: flex; gap: 15px; margin-top: 8px; font-size: 0.8rem; color: var(--brand-secondary);">
+                                <span><i class="fas fa-box"></i> Dispo : 125 Tonnes</span>
+                                <span><i class="fas fa-map-marker-alt"></i> Casablanca</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form id="offerForm">
+                        <div class="form-grid"
+                            style="margin-bottom: 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                            <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                                <label class="form-label"
+                                    style="font-size: 0.85rem; font-weight: 700; color: var(--brand-dark);">Quantité
+                                    demandée (Tonnes)</label>
+                                <input type="number" id="offerQty" class="form-input" value="10" min="1"
+                                    oninput="calculateTotal()"
+                                    style="padding: 12px 14px; border-radius: 10px; border: 1px solid #d0d5dd;">
+                            </div>
+                            <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                                <label class="form-label"
+                                    style="font-size: 0.85rem; font-weight: 700; color: var(--brand-dark);">Prix proposé
+                                    (MAD / unité)</label>
+                                <input type="number" id="offerPrice" class="form-input" value="42000" min="1"
+                                    oninput="calculateTotal()"
+                                    style="padding: 12px 14px; border-radius: 10px; border: 1px solid #d0d5dd;">
+                            </div>
+                        </div>
+
+                        <div class="total-offer-box"
+                            style="background: #f0fdf4; border: 1px solid #d1fadf; padding: 1.25rem; border-radius: 16px; display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-weight: 700; color: var(--brand-secondary);">Montant total proposé
+                                :</span>
+                            <span id="totalAmountDisplay"
+                                style="font-size: 1.5rem; font-weight: 800; color: var(--brand-dark);">420,000
+                                MAD</span>
+                        </div>
+
+                        <div class="form-group"
+                            style="margin-top: 1.5rem; display: flex; flex-direction: column; gap: 8px;">
+                            <label class="form-label"
+                                style="font-size: 0.85rem; font-weight: 700; color: var(--brand-dark);">Message court
+                                (Optionnel)</label>
+                            <textarea class="form-input" rows="3"
+                                placeholder="Ex: Souhaite organiser le transport par mes propres moyens..."
+                                style="padding: 12px 14px; border-radius: 10px; border: 1px solid #d0d5dd; font-family: inherit;"></textarea>
+                        </div>
+
+                        <!-- Safety Rules -->
+                        <div class="modal-safety-rules"
+                            style="margin-top: 1.5rem; padding: 1rem; background: #fff4f2; border-radius: 12px; border: 1px solid #fecdca;">
+                            <div
+                                style="display: flex; gap: 10px; color: #b42318; font-weight: 700; font-size: 0.8rem; margin-bottom: 8px;">
+                                <i class="fas fa-shield-halved"></i> RÈGLES DE LA PLATEFORME
+                            </div>
+                            <ul
+                                style="margin: 0; padding-left: 18px; font-size: 0.75rem; color: #b42318; line-height: 1.4;">
+                                <li>Les négociations doivent impérativement rester sur Fluxence.</li>
+                                <li>Le partage de coordonnées (Email, Tel, WhatsApp) est strictement interdit.</li>
+                                <li>Toute transaction effectuée hors plateforme annule la garantie Escrow.</li>
+                            </ul>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer"
+                    style="padding: 1.25rem 2rem; background: #f9fafb; border-top: 1px solid var(--card-border); display: flex; justify-content: flex-end; gap: 12px;">
+                    <button class="btn btn-white" style="width: auto;" onclick="closeOfferModal()">Annuler</button>
+                    <button class="btn btn-primary" style="width: auto; padding: 0 40px;"
+                        onclick="submitOffer()">Envoyer l'offre</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Message (Toast) -->
+        <div id="offerSuccessToast" class="success-toast">
+            <i class="fas fa-check-circle"></i>
+            <div>
+                <b>Offre envoyée avec succès !</b><br>
+                En attente de réponse du vendeur Atlas Mining SA.
+            </div>
+        </div>
+    </main>
+
     <script>
-        function changeImage(src, el) {
-            document.getElementById('main-product-img').src = src;
-            document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
-            el.classList.add('active');
+        // Set event listener for the main offer button
+        document.querySelector('.btn-primary').onclick = function () {
+            openOfferModal();
+        };
+
+        function openOfferModal() {
+            document.getElementById('offerModal').classList.add('active');
+            calculateTotal();
         }
 
-        // Simple mock for product details
-        document.addEventListener('DOMContentLoaded', () => {
-            const params = new URLSearchParams(window.location.search);
-            const id = params.get('id');
-            const mainImg = document.getElementById('main-product-img');
+        function closeOfferModal() {
+            document.getElementById('offerModal').classList.remove('active');
+        }
 
-            if (id === '2') {
-                document.getElementById('product-title').innerText = "Heavy Duty Forklift - 5 Ton";
-                document.getElementById('product-price').innerHTML = "22,000 MAD";
-                mainImg.src = "assets/products/forklift.png";
-            } else if (id === '3') {
-                document.getElementById('product-title').innerText = "Copper Cabling Spools";
-                document.getElementById('product-price').innerHTML = "4.20 MAD";
-                mainImg.src = "assets/products/copper_cables.png";
-            }
-        });
+        function calculateTotal() {
+            const qty = document.getElementById('offerQty').value || 0;
+            const price = document.getElementById('offerPrice').value || 0;
+            const total = qty * price;
+            document.getElementById('totalAmountDisplay').innerText = total.toLocaleString() + ' MAD';
+        }
+
+        function submitOffer() {
+            const btn = document.querySelector('#offerModal .btn-primary');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Envoi en cours...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                closeOfferModal();
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+
+                // Show Success Toast
+                const toast = document.getElementById('offerSuccessToast');
+                toast.classList.add('active');
+
+                setTimeout(() => {
+                    toast.classList.remove('active');
+                }, 4000);
+            }, 1500);
+        }
+
+        function updateMainImage(thumb) {
+            const mainImg = document.getElementById('mainImage');
+            mainImg.src = thumb.querySelector('img').src;
+
+            document.querySelectorAll('.thumb-item').forEach(t => t.classList.remove('active'));
+            thumb.classList.add('active');
+        }
     </script>
 </body>
 

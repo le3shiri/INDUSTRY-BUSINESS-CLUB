@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence Admin | Gestion des Catégories</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="../js/components.js"></script>
+    <script src="../js/admin-data.js"></script>
+
+    <style>
+        :root {
+            --admin-bg: #fcfcfd;
+            --card-border: #eaecf0;
+            --text-main: #101828;
+            --text-sub: #475467;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --primary-corporate: #101828;
+            --success-main: #027a48;
+            --success-bg: #ecfdf3;
+            --warning-main: #b54708;
+            --warning-bg: #fffaeb;
+            --danger-main: #b42318;
+            --danger-bg: #fef3f2;
+            --info-main: #026aa2;
+            --info-bg: #f0f9ff;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--admin-bg);
+            color: var(--text-main);
+            letter-spacing: -0.01em;
+        }
+
+        .main-content {
+            padding: 0;
+            background: var(--admin-bg);
+        }
+
+        .top-nav {
+            background: white;
+            border-bottom: 1px solid var(--card-border);
+            padding: 1.25rem 2.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-container {
+            padding: 2rem 2.5rem;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        /* KPI Grid System */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin: 0;
+        }
+
+        .stat-subtext {
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            display: block;
+        }
+
+        /* Admin Table Styling */
+        .table-outer {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            scrollbar-width: thin;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        .admin-table th {
+            background: #f9fafb;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--card-border);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .admin-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--card-border);
+            font-size: 0.85rem;
+            vertical-align: middle;
+        }
+
+        /* Category Specific Styles */
+        .cat-icon-box {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: #f9fafb;
+            border: 1px solid var(--card-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: var(--info-main);
+        }
+
+        .badge {
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge-active {
+            background: var(--success-bg);
+            color: var(--success-main);
+            border: 1px solid #6ce9a6;
+        }
+
+        .badge-disabled {
+            background: #f2f4f7;
+            color: #344054;
+            border: 1px solid #eaecf0;
+        }
+
+        .order-badge {
+            background: #101828;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        .parent-cat {
+            font-size: 0.7rem;
+            color: #6941c6;
+            background: #f9f5ff;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 700;
+        }
+
+        .desc-cell {
+            max-width: 200px;
+            white-space: normal;
+            line-height: 1.4;
+            font-size: 0.75rem;
+            color: var(--text-sub);
+        }
+
+        /* Actions Shell */
+        .action-btns {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            background: white;
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+        }
+
+        .btn-icon:hover {
+            border-color: var(--text-main);
+            color: var(--text-main);
+            background: #f9fafb;
+        }
+
+        .btn-icon.info:hover {
+            color: #026aa2;
+            border-color: #b9e6fe;
+            background: var(--info-bg);
+        }
+
+        .btn-icon.warning:hover {
+            color: var(--warning-main);
+            border-color: #fec84b;
+            background: var(--warning-bg);
+        }
+
+        .btn-icon.danger:hover {
+            color: var(--danger-main);
+            border-color: #fda29b;
+            background: var(--danger-bg);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+        <aside id="sidebar-container"></aside>
+
+        <main class="main-content">
+            <header class="top-nav">
+                <div>
+                    <h1 style="margin:0; font-size: 1.5rem; font-weight: 700;">Gestion des Catégories</h1>
+                    <p style="margin:0; font-size: 0.85rem; color: var(--text-sub);">Architecture du catalogue,
+                        taxonomie des stocks et arborescence B2B</p>
+                </div>
+                <div style="display: flex; gap: 0.75rem;">
+                    <button class="btn btn-secondary" style="border: 1px solid var(--card-border); background: white;">
+                        <i class="fas fa-sort-amount-down"></i> Réorganiser
+                    </button>
+                    <button class="btn btn-primary"><i class="fas fa-plus"></i> Ajouter une Catégorie</button>
+                </div>
+            </header>
+
+            <div class="dashboard-container">
+
+                <!-- Category Stats -->
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <span class="stat-label">Total Catégories</span>
+                        <p class="stat-value">18</p>
+                        <span class="stat-subtext" style="color: var(--info-main);">Axes majeurs du catalogue</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Sous-Catégories</span>
+                        <p class="stat-value">142</p>
+                        <span class="stat-subtext" style="color: var(--info-main);">Niveau de segmentation 2</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Annonces Actives</span>
+                        <p class="stat-value">4.8k</p>
+                        <span class="stat-subtext" style="color: var(--success-main);">Items indexés</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Catégories Inactives</span>
+                        <p class="stat-value" style="color: var(--warning-main);">2</p>
+                        <span class="stat-subtext">Hors catalogue actuel</span>
+                    </div>
+                </div>
+
+                <div class="table-outer">
+                    <div class="table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID / Icône</th>
+                                    <th>Nom de la Catégorie</th>
+                                    <th>Description</th>
+                                    <th>Parent</th>
+                                    <th>Items liés</th>
+                                    <th>Ordre</th>
+                                    <th>Statut</th>
+                                    <th>Dates (Création / MAJ)</th>
+                                    <th style="text-align: right;">Actions Catalogue</th>
+                                </tr>
+                            </thead>
+                            <tbody id="categories-table-body">
+                                <!-- Data injected via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            Components.renderAdminSidebar('admin-categories.html');
+
+            const categories = [
+                {
+                    id: 'CAT-001', name: 'Matières Premières', icon: 'fa-cube',
+                    desc: 'Minerais, métaux, plastiques et composants bruts pour l\'industrie.',
+                    parent: 'Aucun', count: '1,240', order: '1', status: 'active',
+                    dates: { created: '15/01/2026', updated: '04/03/2026' }
+                },
+                {
+                    id: 'CAT-002', name: 'Acier & Métaux', icon: 'fa-layer-group',
+                    desc: 'Bobines, profilés, poutrelles et feuilles métalliques.',
+                    parent: 'Matières Premières', count: '450', order: '1', status: 'active',
+                    dates: { created: '16/01/2026', updated: '01/03/2026' }
+                },
+                {
+                    id: 'CAT-003', name: 'Équipements Industriels', icon: 'fa-tools',
+                    desc: 'Machines-outils, moteurs, pompes et outillage lourd.',
+                    parent: 'Aucun', count: '890', order: '2', status: 'active',
+                    dates: { created: '15/01/2026', updated: '02/03/2026' }
+                },
+                {
+                    id: 'CAT-004', name: 'Électronique & Composants', icon: 'fa-microchip',
+                    desc: 'Cartes, capteurs, automates et connectique industrielle.',
+                    parent: 'Aucun', count: '760', order: '3', status: 'active',
+                    dates: { created: '20/01/2026', updated: '04/03/2026' }
+                },
+                {
+                    id: 'CAT-005', name: 'Logistique & Transport', icon: 'fa-truck-loading',
+                    desc: 'Palettes, rayonnages, conteneurs et emballages.',
+                    parent: 'Aucun', count: '520', order: '4', status: 'active',
+                    dates: { created: '25/01/2026', updated: '04/03/2026' }
+                },
+                {
+                    id: 'CAT-008', name: 'Chimie & Polymères', icon: 'fa-flask',
+                    desc: 'Produits chimiques, résines et additifs industriels.',
+                    parent: 'Aucun', count: '12', order: '8', status: 'disabled',
+                    dates: { created: '10/02/2026', updated: '10/02/2026' }
+                }
+            ];
+
+            const tbody = document.getElementById('categories-table-body');
+
+            function renderCategories(list) {
+                tbody.innerHTML = list.map(c => `
+                    <tr>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div class="cat-icon-box"><i class="fas ${c.icon}"></i></div>
+                                <div style="font-family: monospace; font-size: 0.75rem; font-weight: 700;">${c.id}</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700; font-size: 0.9rem;">${c.name}</div>
+                        </td>
+                        <td>
+                            <div class="desc-cell">${c.desc}</div>
+                        </td>
+                        <td>
+                            ${c.parent !== 'Aucun' ? `<span class="parent-cat"><i class="fas fa-level-up-alt fa-rotate-90"></i> ${c.parent}</span>` : '<span style="color: #98a2b3; font-size: 0.7rem;">--</span>'}
+                        </td>
+                        <td>
+                            <div style="font-weight: 700;">${c.count}</div>
+                            <div style="font-size: 0.65rem; color: var(--text-sub);">Annonces</div>
+                        </td>
+                        <td>
+                            <span class="order-badge">${c.order}</span>
+                        </td>
+                        <td>
+                            <span class="badge ${c.status === 'active' ? 'badge-active' : 'badge-disabled'}">
+                                ${c.status === 'active' ? 'Active' : 'Désactivée'}
+                            </span>
+                        </td>
+                        <td>
+                            <div style="font-size: 0.65rem;">Créé: ${c.dates.created}</div>
+                            <div style="font-size: 0.65rem; font-weight: 700;">MAJ: ${c.dates.updated}</div>
+                        </td>
+                        <td style="text-align: right;">
+                            <div class="action-btns">
+                                <button class="btn-icon" title="Voir détails"><i class="fas fa-eye"></i></button>
+                                <button class="btn-icon info" title="Modifier catégorie"><i class="fas fa-edit"></i></button>
+                                <button class="btn-icon warning" title="Gérer sous-catégories"><i class="fas fa-sitemap"></i></button>
+                                <button class="btn-icon ${c.status === 'active' ? 'danger' : 'success'}" title="${c.status === 'active' ? 'Désactiver' : 'Activer'}">
+                                    <i class="fas ${c.status === 'active' ? 'fa-power-off' : 'fa-check'}"></i>
+                                </button>
+                                <button class="btn-icon danger" title="Supprimer"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            renderCategories(categories);
+        });
+    </script>
+</body>
+
+</html>

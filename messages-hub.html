@@ -1,252 +1,545 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fluxence - Messages Hub</title>
+    <title>Fluxence | Messages Hub</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <script src="js/components.js"></script>
+    <script src="js/app.js"></script>
+
     <style>
-        .messages-container {
-            display: grid;
-            grid-template-columns: 350px 1fr;
-            background: var(--white);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-md);
-            height: calc(100vh - 160px);
-            overflow: hidden;
-            margin-top: 1rem;
+        :root {
+            --brand-primary: #00B140;
+            /* Sprite Green */
+            --brand-dark: #101828;
+            --brand-secondary: #667085;
+            --bg-soft: #f9fafb;
+            --card-border: #eaecf0;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --msg-received: #F2F4F7;
+            --msg-sent: #00B140;
         }
 
-        .chat-list {
-            border-right: 1px solid var(--border-color);
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-soft);
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .main-content {
+            flex: 1;
             display: flex;
             flex-direction: column;
+            padding: 1.5rem 2rem;
+            height: 100vh;
+            box-sizing: border-box;
         }
 
-        .chat-list-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid var(--border-color);
+        /* Container Grid */
+        .hub-container {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            flex: 1;
+            margin-top: 1rem;
+            overflow: hidden;
+            box-shadow: 0 4px 24px rgba(16, 24, 40, 0.04);
         }
 
-        .chat-item {
-            padding: 1.25rem 1.5rem;
+        /* Sidebar: Contacts List */
+        .contacts-sidebar {
+            border-right: 1px solid var(--card-border);
             display: flex;
-            gap: 1rem;
-            align-items: center;
-            border-bottom: 1px solid var(--border-color);
-            cursor: pointer;
-            transition: var(--transition);
+            flex-direction: column;
+            background: white;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .search-box {
             position: relative;
         }
 
-        .chat-item:hover {
-            background: var(--bg-color);
+        .search-box i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--brand-secondary);
+            font-size: 0.9rem;
         }
 
-        .chat-item.active {
-            background: var(--primary-light);
-            border-left: 4px solid var(--primary-color);
+        .search-input {
+            width: 100%;
+            padding: 10px 10px 10px 40px;
+            border-radius: 12px;
+            border: 1px solid #d0d5dd;
+            font-size: 0.9rem;
+            outline: none;
+            box-sizing: border-box;
         }
 
-        .avatar-small {
+        .contacts-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .contact-item {
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            gap: 12px;
+            border-bottom: 1px solid #f2f4f7;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .contact-item:hover {
+            background: #f9fafb;
+        }
+
+        .contact-item.active {
+            background: #f0fdf4;
+            border-left: 4px solid var(--brand-primary);
+        }
+
+        .avatar {
             width: 48px;
             height: 48px;
-            border-radius: 50%;
-            background: #e2e8f0;
+            border-radius: 14px;
+            background: #f2f4f7;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 700;
-            color: var(--text-secondary);
+            font-weight: 800;
+            color: var(--brand-dark);
             flex-shrink: 0;
+            object-fit: cover;
         }
 
-        .chat-info {
+        .contact-details {
             flex: 1;
             min-width: 0;
         }
 
-        .chat-name {
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 0.15rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .chat-last-msg {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .chat-window {
-            display: flex;
-            flex-direction: column;
-            background: #f8fafc;
-        }
-
-        .chat-window-header {
-            padding: 1rem 1.5rem;
-            background: var(--white);
-            border-bottom: 1px solid var(--border-color);
+        .company-name {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: var(--brand-dark);
+            margin-bottom: 2px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .chat-messages {
+        .last-msg-time {
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: var(--brand-secondary);
+        }
+
+        .user-name {
+            font-size: 0.8rem;
+            color: var(--brand-secondary);
+            margin-bottom: 2px;
+        }
+
+        .product-tag {
+            font-size: 0.7rem;
+            background: #f2f4f7;
+            padding: 2px 6px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 4px;
+            max-width: 150px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .last-msg-preview {
+            font-size: 0.85rem;
+            color: var(--brand-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Chat Window */
+        .chat-window {
+            display: flex;
+            flex-direction: column;
+            background: #f9fafb;
+        }
+
+        .chat-header {
+            padding: 1.25rem 2rem;
+            background: white;
+            border-bottom: 1px solid var(--card-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* Messages Area */
+        .messages-area {
             flex: 1;
             padding: 2rem;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 1.5rem;
+        }
+
+        .msg-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .msg-wrapper {
+            max-width: 70%;
+            display: flex;
+            flex-direction: column;
         }
 
         .msg-bubble {
-            max-width: 70%;
-            padding: 1rem 1.25rem;
-            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            border-radius: 16px;
             font-size: 0.95rem;
+            line-height: 1.5;
             position: relative;
         }
 
-        .msg-received {
-            background: var(--white);
-            color: var(--text-primary);
-            align-self: flex-start;
-            border-bottom-left-radius: 0;
-            box-shadow: var(--shadow-sm);
+        .msg-received .msg-bubble {
+            background: white;
+            border: 1px solid var(--card-border);
+            color: var(--brand-dark);
+            border-top-left-radius: 4px;
         }
 
         .msg-sent {
-            background: var(--primary-gradient);
-            color: var(--white);
             align-self: flex-end;
-            border-bottom-right-radius: 0;
-            box-shadow: 0 4px 6px rgba(51, 108, 65, 0.1);
         }
 
-        .chat-input-area {
-            padding: 1.5rem;
-            background: var(--white);
-            border-top: 1px solid var(--border-color);
+        .msg-sent .msg-bubble {
+            background: var(--brand-primary);
+            color: white;
+            border-top-right-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0, 177, 64, 0.2);
+        }
+
+        .msg-meta {
+            font-size: 0.7rem;
+            color: var(--brand-secondary);
+            margin-top: 4px;
+        }
+
+        .msg-sent .msg-meta {
+            text-align: right;
+        }
+
+        /* System Warning */
+        .system-warning {
+            background: #fff4f2;
+            border: 1px solid #ffccbc;
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 1rem 2rem;
             display: flex;
-            gap: 1rem;
+            gap: 12px;
+            align-items: center;
+            color: #d32f2f;
+            font-size: 0.85rem;
+            font-weight: 600;
         }
 
-        @media (max-width: 1024px) {
-            .messages-container {
-                grid-template-columns: 1fr;
-            }
+        /* Communication Rules */
+        .comms-rules {
+            background: #f8f9fc;
+            padding: 0.5rem 1rem;
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--brand-secondary);
+            border-bottom: 1px solid var(--card-border);
+        }
 
-            .chat-list {
-                display: none;
-                /* simple mobile mock: hide list when chat is open */
-            }
+        /* Input Area */
+        .chat-input-container {
+            padding: 1.5rem 2rem;
+            background: white;
+            border-top: 1px solid var(--card-border);
+        }
+
+        .input-bar {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            background: #F2F4F7;
+            padding: 8px 16px;
+            border-radius: 14px;
+        }
+
+        .chat-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            padding: 10px 0;
+            font-family: inherit;
+            font-size: 0.95rem;
+        }
+
+        .action-icon {
+            color: var(--brand-secondary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .action-icon:hover {
+            color: var(--brand-primary);
+        }
+
+        .btn-send {
+            background: var(--brand-primary);
+            color: white;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 177, 64, 0.2);
+        }
+
+        /* Sidebar Actions */
+        .chat-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--card-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--brand-secondary);
+            cursor: pointer;
         }
     </style>
 </head>
 
 <body>
 
-    <div class="layout-dashboard">
-        <aside id="sidebar-container"></aside>
+    <aside id="sidebar-container"></aside>
 
-        <main class="main-content" style="padding: 1rem 2rem;">
-            <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                <h1 style="font-size: 1.75rem; font-weight: 800; color: var(--text-primary);">Messages</h1>
-                <div style="font-size: 0.9rem; color: var(--text-secondary);"><i class="fas fa-circle"
-                        style="color: var(--success-color); font-size: 0.5rem;"></i> 2 Members Online</div>
-            </header>
+    <main class="main-content">
+        <header style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h1 style="font-size: 1.75rem; font-weight: 800; color: var(--brand-dark); margin: 0;">Messages Hub</h1>
+                <p style="color: var(--brand-secondary); font-size: 0.95rem;">Gérez vos communications commerciales en
+                    toute sécurité.</p>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-white" style="width: auto; padding: 10px 20px;"><i class="fas fa-archive"></i>
+                    Archivés</button>
+            </div>
+        </header>
 
-            <div class="messages-container fade-in-up">
-                <!-- Sidebar: Chats -->
-                <div class="chat-list">
-                    <div class="chat-list-header">
-                        <input type="text" class="form-input" placeholder="Search conversations..."
-                            style="padding: 0.6rem 1rem; font-size: 0.9rem;">
-                    </div>
-                    <div style="overflow-y: auto;">
-                        <div class="chat-item active">
-                            <div class="avatar-small" style="background: #bae6fd; color: #0369a1;">AS</div>
-                            <div class="chat-info">
-                                <div class="chat-name">Atlas Steel SA</div>
-                                <div class="chat-last-msg">Can you provide the technical data sheet?</div>
-                            </div>
-                            <span style="font-size: 0.7rem; color: var(--text-secondary);">10:42 AM</span>
-                        </div>
-                        <div class="chat-item">
-                            <div class="avatar-small" style="background: #fef08a; color: #a16207;">BC</div>
-                            <div class="chat-info">
-                                <div class="chat-name">BuildCo Morocco</div>
-                                <div class="chat-last-msg">The order was delivered at 9 AM. Thanks!</div>
-                            </div>
-                            <span style="font-size: 0.7rem; color: var(--text-secondary);">Yesterday</span>
-                        </div>
-                        <div class="chat-item">
-                            <div class="avatar-small" style="background: #fed7aa; color: #9a3412;">LC</div>
-                            <div class="chat-info">
-                                <div class="chat-name">Logistics Central</div>
-                                <div class="chat-last-msg">Quote for transport Casablanca-Tanger.</div>
-                            </div>
-                            <span style="font-size: 0.7rem; color: var(--text-secondary);">2 days ago</span>
-                        </div>
+        <div class="hub-container">
+            <!-- Sidebar list -->
+            <div class="contacts-sidebar">
+                <div class="sidebar-header">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" class="search-input" placeholder="Rechercher une conversation...">
                     </div>
                 </div>
 
-                <!-- Main: Chat Window -->
-                <div class="chat-window">
-                    <div class="chat-window-header">
-                        <div style="display: flex; align-items: center; gap: 1rem;">
-                            <div class="avatar-small"
-                                style="width: 40px; height: 40px; background: #bae6fd; color: #0369a1;">AS</div>
-                            <div>
-                                <div style="font-weight: 700; color: var(--text-primary);">Atlas Steel SA</div>
-                                <div style="font-size: 0.75rem; color: var(--success-color); font-weight: 600;">Online
-                                </div>
+                <div class="contacts-list">
+                    <!-- Contact 1 -->
+                    <div class="contact-item active">
+                        <img src="assets/logos/atlas_mining.png" class="avatar">
+                        <div class="contact-details">
+                            <div class="company-name">
+                                Atlas Mining
+                                <span class="last-msg-time">10:42</span>
                             </div>
-                        </div>
-                        <div style="display: flex; gap: 0.5rem;">
-                            <button class="icon-btn" onclick="window.location.href='public-profile.html'"><i
-                                    class="fas fa-info-circle"></i></button>
-                            <button class="icon-btn"><i class="fas fa-phone-alt"></i></button>
+                            <div class="user-name">Ahmed Alaoui</div>
+                            <div class="product-tag"><i class="fas fa-link"></i> Cuivre Millberry</div>
+                            <div class="last-msg-preview">Pouvez-vous confirmer la quantité dispo ?</div>
                         </div>
                     </div>
 
-                    <div class="chat-messages">
-                        <div class="msg-bubble msg-received">
-                            Hello! I saw your listing for 'Portland Cement'. Is it still available for bulk order?
-                        </div>
-                        <div class="msg-bubble msg-sent">
-                            Yes, we have 500 tons currently in stock. How much do you need?
-                        </div>
-                        <div class="msg-bubble msg-received">
-                            We need around 100 tons for a site in Tanger. Can you provide the technical data sheet?
+                    <!-- Contact 2 -->
+                    <div class="contact-item">
+                        <div class="avatar" style="background: #E0F2FE; color: #026AA2;">LC</div>
+                        <div class="contact-details">
+                            <div class="company-name">
+                                Lafarge Ciments
+                                <span class="last-msg-time">Hier</span>
+                            </div>
+                            <div class="user-name">Sarah Bennani</div>
+                            <div class="product-tag"><i class="fas fa-link"></i> Ciment CPJ45</div>
+                            <div class="last-msg-preview">L'offre a été acceptée, merci.</div>
                         </div>
                     </div>
 
-                    <form class="chat-input-area" onsubmit="event.preventDefault(); alert('Message sent!')">
-                        <button type="button" class="icon-btn"><i class="fas fa-paperclip"></i></button>
-                        <input type="text" class="form-input" placeholder="Type your message..."
-                            style="margin-bottom: 0;">
-                        <button type="submit" class="btn btn-primary" style="width: auto;"><i
-                                class="fas fa-paper-plane"></i></button>
-                    </form>
+                    <!-- Contact 3 -->
+                    <div class="contact-item">
+                        <div class="avatar" style="background: #F9FAFB; color: var(--brand-secondary);">SL</div>
+                        <div class="contact-details">
+                            <div class="company-name">
+                                Safi Logistique
+                                <span class="last-msg-time">Lundi</span>
+                            </div>
+                            <div class="user-name">Karim Idrissi</div>
+                            <div class="last-msg-preview">Votre devis pour le transport est prêt.</div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </main>
-    </div>
 
-    <script src="js/app.js"></script>
+            <!-- Chat Window -->
+            <div class="chat-window">
+                <div class="comms-rules">
+                    <i class="fas fa-shield-alt"></i> Sécurité : Partage de coordonnées directes (Email, Tel, Liens) non
+                    autorisé. Finalisez vos deals sur la plateforme.
+                </div>
+
+                <div class="chat-header">
+                    <div class="header-info">
+                        <img src="assets/logos/atlas_mining.png" class="avatar" style="width: 40px; height: 40px;">
+                        <div>
+                            <div style="font-weight: 800; color: var(--brand-dark); font-size: 1rem;">Atlas Mining <span
+                                    style="font-size: 0.7rem; color: var(--brand-primary); margin-left:8px;">● En
+                                    ligne</span></div>
+                            <div style="font-size: 0.8rem; color: var(--brand-secondary);"> Ahmed Alaoui | Conversation
+                                #CONV-4921</div>
+                        </div>
+                    </div>
+                    <div class="chat-actions">
+                        <a href="search.html" class="action-btn-circle" title="Voir l'annonce"><i
+                                class="fas fa-box-open"></i></a>
+                        <a href="negotiation-room.html" class="action-btn-circle"
+                            style="background: #F0FDF4; border-color: var(--brand-primary); color: var(--brand-primary);"
+                            title="Negotiation Room"><i class="fas fa-handshake"></i></a>
+                        <div class="action-btn-circle" title="Plus d'options"><i class="fas fa-ellipsis-v"></i></div>
+                    </div>
+                </div>
+
+                <div class="messages-area">
+                    <div style="text-align: center; margin: 1rem 0;">
+                        <span
+                            style="background: white; border: 1px solid var(--card-border); padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; color: var(--brand-secondary); font-weight: 700; text-transform: uppercase;">02
+                            Mars 2026</span>
+                    </div>
+
+                    <!-- Received -->
+                    <div class="msg-wrapper msg-received">
+                        <div class="msg-bubble">
+                            Bonjour, nous avons analysé votre annonce pour les 5 Tonnes de Cuivre Millberry. Est-ce
+                            toujours disponible immédiatement ?
+                        </div>
+                        <span class="msg-meta">09:12</span>
+                    </div>
+
+                    <!-- Sent -->
+                    <div class="msg-wrapper msg-sent">
+                        <div class="msg-bubble">
+                            Bonjour Ahmed. Oui, le stock est prêt à être expédié depuis notre site d'Agadir.
+                        </div>
+                        <span class="msg-meta">09:15 · Lu</span>
+                    </div>
+
+                    <!-- Received -->
+                    <div class="msg-wrapper msg-received">
+                        <div class="msg-bubble">
+                            Super. Pouvez-vous nous envoyer un email à ahmed@atlas-mining.com pour finaliser ?
+                        </div>
+                        <span class="msg-meta">09:18</span>
+                    </div>
+
+                    <!-- System Warning (Appears when email is detected) -->
+                    <div class="system-warning">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 1.2rem;"></i>
+                        <div>
+                            <strong>Communication externe non autorisée détectée.</strong><br>
+                            Pour votre sécurité, merci d'utiliser la plateforme Fluxence pour finaliser vos deals. Les
+                            coordonnées partagées sont filtrées.
+                        </div>
+                    </div>
+
+                    <!-- Sent -->
+                    <div class="msg-wrapper msg-sent">
+                        <div class="msg-bubble">
+                            Désolé Ahmed, nous devons rester sur le hub Fluxence pour la sécurité du deal. Passons dans
+                            la Negotiation Room pour fixer le prix final ?
+                        </div>
+                        <span class="msg-meta">10:42 · Lu</span>
+                    </div>
+                </div>
+
+                <div class="chat-input-container">
+                    <div class="input-bar">
+                        <i class="fas fa-paperclip action-icon"></i>
+                        <input type="text" class="chat-input" placeholder="Écrivez votre message ici...">
+                        <button class="btn-send"><i class="fas fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Simple chat simulation
+        document.querySelector('.btn-send').onclick = function () {
+            const input = document.querySelector('.chat-input');
+            if (input.value.trim() === '') return;
+
+            const area = document.querySelector('.messages-area');
+            const wrapper = document.createElement('div');
+            wrapper.className = 'msg-wrapper msg-sent';
+            wrapper.innerHTML = `
+                <div class="msg-bubble">${input.value}</div>
+                <span class="msg-meta">À l'instant · Envoyé</span>
+            `;
+            area.appendChild(wrapper);
+            input.value = '';
+            area.scrollTop = area.scrollHeight;
+        };
+    </script>
 </body>
 
 </html>

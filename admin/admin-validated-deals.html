@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence Admin | Deals Validés</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="../js/components.js"></script>
+    <script src="../js/admin-data.js"></script>
+
+    <style>
+        :root {
+            --admin-bg: #fcfcfd;
+            --card-border: #eaecf0;
+            --text-main: #101828;
+            --text-sub: #475467;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --primary-corporate: #101828;
+            --success-main: #027a48;
+            --info-main: #026aa2;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--admin-bg);
+            color: var(--text-main);
+            letter-spacing: -0.01em;
+        }
+
+        .main-content {
+            padding: 0;
+            background: var(--admin-bg);
+        }
+
+        .top-nav {
+            background: white;
+            border-bottom: 1px solid var(--card-border);
+            padding: 1.25rem 2.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-container {
+            padding: 2rem 2.5rem;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        /* KPI Grid System */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin: 0;
+        }
+
+        .stat-subtext {
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            display: block;
+        }
+
+        /* Admin Table Styling */
+        .table-outer {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            scrollbar-width: thin;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        .admin-table th {
+            background: #f9fafb;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--card-border);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .admin-table td {
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid var(--card-border);
+            font-size: 0.85rem;
+            vertical-align: middle;
+        }
+
+        /* Status & Badges */
+        .badge {
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge-confirmed {
+            background: #f0f9ff;
+            color: #026aa2;
+            border: 1px solid #b9e6fe;
+        }
+
+        .badge-shipped {
+            background: #fdf2fa;
+            color: #c11574;
+            border: 1px solid #fcceee;
+        }
+
+        .badge-received {
+            background: #ecfdf3;
+            color: #027a48;
+            border: 1px solid #6ce9a6;
+        }
+
+        .badge-completed {
+            background: #ecfdf3;
+            color: #027a48;
+            border: 1px solid #039855;
+            font-weight: 900;
+        }
+
+        .invoice-link {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #026aa2;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            border: 1px solid #b9e6fe;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: #f0f9ff;
+        }
+
+        .invoice-link:hover {
+            text-decoration: underline;
+            background: #e0f2fe;
+        }
+
+        /* Actions Shell */
+        .action-btns {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .btn-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            border: 1px solid var(--card-border);
+            background: white;
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+
+        .btn-icon:hover {
+            border-color: var(--text-main);
+            color: var(--text-main);
+            background: #f9fafb;
+        }
+
+        .btn-icon.success:hover {
+            color: var(--success-main);
+            border-color: #6ce9a6;
+            background: #ecfdf3;
+        }
+
+        .btn-icon.info:hover {
+            color: var(--info-main);
+            border-color: #b9e6fe;
+            background: #f0f9ff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+        <aside id="sidebar-container"></aside>
+
+        <main class="main-content">
+            <header class="top-nav">
+                <div>
+                    <h1 style="margin:0; font-size: 1.5rem; font-weight: 700;">Deals validés</h1>
+                    <p style="margin:0; font-size: 0.85rem; color: var(--text-sub);">Dossiers conclus, flux financiers
+                        sécurisés et facturation archivée</p>
+                </div>
+                <div style="display: flex; gap: 0.75rem;">
+                    <button class="btn btn-secondary" style="border: 1px solid var(--card-border); background: white;">
+                        <i class="fas fa-file-pdf"></i> Télécharger l'Audit Financier
+                    </button>
+                    <button class="btn btn-primary"><i class="fas fa-file-export"></i> Exporter CSV</button>
+                </div>
+            </header>
+
+            <div class="dashboard-container">
+
+                <!-- Financial Stats -->
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <span class="stat-label">Valeur Totale Validée</span>
+                        <p class="stat-value">14.8M MAD</p>
+                        <span class="stat-subtext" style="color: var(--success-main);">Depuis le 1er Janvier</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Commissions Plateforme</span>
+                        <p class="stat-value">741.2k MAD</p>
+                        <span class="stat-subtext" style="color: var(--info-main);">Moyenne 5% par deal</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Deals Clôturés</span>
+                        <p class="stat-value">312</p>
+                        <span class="stat-subtext" style="color: var(--success-main);">100% de succès livraison</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Délai Moyen Closure</span>
+                        <p class="stat-value">12.4 Jours</p>
+                        <span class="stat-subtext" style="color: var(--text-sub);">-15% vs année précédente</span>
+                    </div>
+                </div>
+
+                <div class="table-outer">
+                    <div class="table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Deal / Produit</th>
+                                    <th>Vendeur / Entreprise</th>
+                                    <th>Acheteur / Entreprise</th>
+                                    <th>Quantité / Unité</th>
+                                    <th>Prix Unit. / Montant Total</th>
+                                    <th>Com. Platforme / Reversement</th>
+                                    <th>Mode Paiement / Livraison</th>
+                                    <th>Statut de Validation</th>
+                                    <th>Dates (Val. / Pai. / Exp. / Conf.)</th>
+                                    <th>Facturation</th>
+                                    <th style="text-align: right;">Actions Archivage</th>
+                                </tr>
+                            </thead>
+                            <tbody id="validated-deals-body">
+                                <!-- Data injected via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            Components.renderAdminSidebar('admin-validated-deals.html');
+
+            const validatedDeals = [
+                {
+                    id: 'DEAL-798', product: 'Transformateur 100kVA', cat: 'Équipements',
+                    vendeur: 'Omar Alami', sellerCo: 'Atlas Mining Group',
+                    acheteur: 'Yasmine Benani', buyerCo: 'Safi Logistics',
+                    quantity: 1, unit: 'Pièce', priceUnit: '85,000 MAD', total: '85,000 MAD',
+                    commission: '4,250 MAD', payout: '80,750 MAD',
+                    payment: 'Virement Escrow', logistics: 'Transport Spécialisé',
+                    status: 'completed', invoiceId: 'INV-2026-798',
+                    dates: { validation: '28/02/2026', payment: '01/03/2026', shipping: '02/03/2026', confirmation: '04/03/2026' }
+                },
+                {
+                    id: 'DEAL-795', product: 'Bobines Cuivre 2mm', cat: 'Matières Premières',
+                    vendeur: 'Mehdi Tazi', sellerCo: 'Kenitra Metals',
+                    acheteur: 'Reda Hakimi', buyerCo: 'BuildIt SA',
+                    quantity: 4, unit: 'Tonne', priceUnit: '62,000 MAD', total: '248,000 MAD',
+                    commission: '12,400 MAD', payout: '235,600 MAD',
+                    payment: 'Swift Transfer', logistics: 'Container Maritime',
+                    status: 'received', invoiceId: 'INV-2026-795',
+                    dates: { validation: '20/02/2026', payment: '22/02/2026', shipping: '23/02/2026', confirmation: '01/03/2026' }
+                },
+                {
+                    id: 'DEAL-790', product: 'Lot 200 Palettes Europe', cat: 'Logistique',
+                    vendeur: 'Leila Mansouri', sellerCo: 'Safi Logistics Global',
+                    acheteur: 'Julien Durand', buyerCo: 'LogiFrance',
+                    quantity: 200, unit: 'Pièce', priceUnit: '120 MAD', total: '24,000 MAD',
+                    commission: '1,200 MAD', payout: '22,800 MAD',
+                    payment: 'Carte Bancaire Business', logistics: 'Messagerie Express',
+                    status: 'shipped', invoiceId: 'INV-2026-790',
+                    dates: { validation: '18/02/2026', payment: '18/02/2026', shipping: '20/02/2026', confirmation: '--' }
+                },
+                {
+                    id: 'DEAL-785', product: 'Moteur WEG 50HP', cat: 'Équipements',
+                    vendeur: 'Hamza El Amrani', sellerCo: 'Global Build Inc',
+                    acheteur: 'Mehdi Tazi', buyerCo: 'Kenitra Metals',
+                    quantity: 2, unit: 'Pièce', priceUnit: '28,000 MAD', total: '56,000 MAD',
+                    commission: '2,800 MAD', payout: '53,200 MAD',
+                    payment: 'Prélèvement SEPA', logistics: 'Retrait Entrepôt',
+                    status: 'confirmed', invoiceId: 'INV-2026-785',
+                    dates: { validation: '15/02/2026', payment: '16/02/2026', shipping: '--', confirmation: '--' }
+                }
+            ];
+
+            const tbody = document.getElementById('validated-deals-body');
+
+            function renderValidated(list) {
+                tbody.innerHTML = list.map(d => `
+                    <tr>
+                        <td>
+                            <div style="font-weight: 700; color: var(--text-main);">${d.product}</div>
+                            <div style="font-size: 0.7rem; color: var(--text-sub); font-family: monospace;">${d.id}</div>
+                            <div style="font-size: 0.65rem; color: #026aa2; font-weight: 700;">${d.cat}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700;">${d.vendeur}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-sub);">${d.sellerCo}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700;">${d.acheteur}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-sub);">${d.buyerCo}</div>
+                        </td>
+                        <td style="text-align: center;">
+                            <div style="font-weight: 800; font-size: 1rem;">${d.quantity}</div>
+                            <div style="font-size: 0.7rem; color: var(--text-sub); text-transform: uppercase;">${d.unit}s</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700;">${d.priceUnit}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-sub);">Montant: <strong>${d.total}</strong></div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700; color: #026aa2;">Com: ${d.commission}</div>
+                            <div style="font-size: 0.75rem; color: #027a48; font-weight: 700;">Net: ${d.payout}</div>
+                        </td>
+                        <td>
+                            <div style="font-size: 0.75rem; font-weight: 600;"><i class="fas fa-credit-card"></i> ${d.payment}</div>
+                            <div style="font-size: 0.7rem; color: var(--text-sub);"><i class="fas fa-truck"></i> ${d.logistics}</div>
+                        </td>
+                        <td>
+                            <span class="badge ${getStatusBadgeClass(d.status)}">
+                                ${getStatusLabel(d.status)}
+                            </span>
+                        </td>
+                        <td>
+                            <div style="font-size: 0.65rem;">Val: ${d.dates.validation}</div>
+                            <div style="font-size: 0.65rem;">Pai: ${d.dates.payment}</div>
+                            <div style="font-size: 0.65rem;">Exp: ${d.dates.shipping}</div>
+                            <div style="font-size: 0.65rem; font-weight: 700;">Conf: ${d.dates.confirmation}</div>
+                        </td>
+                        <td>
+                            <a href="#" class="invoice-link">
+                                <i class="fas fa-file-invoice"></i> ${d.invoiceId}
+                            </a>
+                        </td>
+                        <td style="text-align: right;">
+                            <div class="action-btns">
+                                <button class="btn-icon" title="Voir le deal complet"><i class="fas fa-search-plus"></i></button>
+                                <button class="btn-icon" title="Voir facture"><i class="fas fa-file-pdf"></i></button>
+                                <button class="btn-icon" title="Voir paiement"><i class="fas fa-receipt"></i></button>
+                                <button class="btn-icon" title="Profil vendeur"><i class="fas fa-user-tag"></i></button>
+                                <button class="btn-icon" title="Profil acheteur"><i class="fas fa-user-tie"></i></button>
+                                <button class="btn-icon success" title="Télécharger facture PDF"><i class="fas fa-download"></i></button>
+                                <button class="btn-icon info" title="Détails logistique"><i class="fas fa-shipping-fast"></i></button>
+                                <button class="btn-icon info" title="Historique complet"><i class="fas fa-history"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            function getStatusBadgeClass(status) {
+                switch (status) {
+                    case 'confirmed': return 'badge-confirmed';
+                    case 'shipped': return 'badge-shipped';
+                    case 'received': return 'badge-received';
+                    case 'completed': return 'badge-completed';
+                    default: return '';
+                }
+            }
+
+            function getStatusLabel(status) {
+                switch (status) {
+                    case 'confirmed': return 'Paiement confirmé';
+                    case 'shipped': return 'Expédié';
+                    case 'received': return 'Réception confirmée';
+                    case 'completed': return 'Terminé';
+                    default: return status;
+                }
+            }
+
+            renderValidated(validatedDeals);
+        });
+    </script>
+</body>
+
+</html>

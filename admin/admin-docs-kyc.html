@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence Admin | Documents KYC</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="../js/components.js"></script>
+    <script src="../js/admin-data.js"></script>
+
+    <style>
+        :root {
+            --admin-bg: #fcfcfd;
+            --card-border: #eaecf0;
+            --text-main: #101828;
+            --text-sub: #475467;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --primary-corporate: #101828;
+            --success-main: #027a48;
+            --success-bg: #ecfdf3;
+            --warning-main: #b54708;
+            --warning-bg: #fffaeb;
+            --danger-main: #b42318;
+            --danger-bg: #fef3f2;
+            --info-main: #026aa2;
+            --info-bg: #f0f9ff;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--admin-bg);
+            color: var(--text-main);
+            letter-spacing: -0.01em;
+        }
+
+        .main-content {
+            padding: 0;
+            background: var(--admin-bg);
+        }
+
+        .top-nav {
+            background: white;
+            border-bottom: 1px solid var(--card-border);
+            padding: 1.25rem 2.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-container {
+            padding: 2.5rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* KPI Quick Stats */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin: 0;
+        }
+
+        /* Filter Section */
+        .filter-bar {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 2rem;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr) auto;
+            gap: 1rem;
+            align-items: flex-end;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .filter-label {
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+        }
+
+        .filter-control {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            font-family: inherit;
+            font-size: 0.85rem;
+            color: var(--text-main);
+            background: #fff;
+        }
+
+        /* High-Density Data Table */
+        .table-outer {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            overflow-x: auto;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        .admin-table th {
+            background: #f9fafb;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .admin-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--card-border);
+            font-size: 0.85rem;
+            vertical-align: middle;
+        }
+
+        .badge {
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge-success {
+            background: var(--success-bg);
+            color: var(--success-main);
+        }
+
+        .badge-warning {
+            background: var(--warning-bg);
+            color: var(--warning-main);
+        }
+
+        .badge-danger {
+            background: var(--danger-bg);
+            color: var(--danger-main);
+        }
+
+        .badge-info {
+            background: var(--info-bg);
+            color: var(--info-main);
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            background: white;
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+        }
+
+        .btn-icon:hover {
+            border-color: var(--text-main);
+            color: var(--text-main);
+            background: #f9fafb;
+        }
+
+        .btn-icon.success:hover {
+            color: var(--success-main);
+            border-color: #6ce9a6;
+            background: var(--success-bg);
+        }
+
+        .btn-icon.danger:hover {
+            color: var(--danger-main);
+            border-color: #fda29b;
+            background: var(--danger-bg);
+        }
+
+        .doc-preview {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .doc-icon {
+            font-size: 1.2rem;
+            color: #f04438;
+        }
+
+        .type-tag {
+            font-weight: 800;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            color: var(--text-sub);
+            background: #f2f4f7;
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid #eaecf0;
+        }
+
+        .comment-cell {
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 0.75rem;
+            color: var(--text-sub);
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+        <aside id="sidebar-container"></aside>
+
+        <main class="main-content">
+            <header class="top-nav">
+                <div>
+                    <h1 style="margin:0; font-size: 1.5rem; font-weight: 700;">Documents KYC</h1>
+                    <p style="margin:0; font-size: 0.85rem; color: var(--text-sub);">Audit de conformité règlementaire
+                        et vérification d'identité (Know Your Customer)</p>
+                </div>
+                <div style="display: flex; gap: 0.75rem;">
+                    <button class="btn btn-secondary" style="background: white;"><i class="fas fa-file-download"></i>
+                        Tout télécharger</button>
+                    <button class="btn btn-primary"><i class="fas fa-check-double"></i> Validation en masse</button>
+                </div>
+            </header>
+
+            <div class="dashboard-container">
+
+                <!-- KPI Section -->
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <span class="stat-label">En attente d'audit</span>
+                        <p class="stat-value">124</p>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Vérifiés (24h)</span>
+                        <p class="stat-value">85</p>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Taux d'approbation</span>
+                        <p class="stat-value">92.4%</p>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Délai moyen audit</span>
+                        <p class="stat-value">4.2h</p>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label class="filter-label">Recherche</label>
+                        <input type="text" class="filter-control" placeholder="ID, Utilisateur, Entreprise...">
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Statut Vérification</label>
+                        <select class="filter-control">
+                            <option selected>Tous les statuts</option>
+                            <option>En attente</option>
+                            <option>Vérifié</option>
+                            <option>Refusé</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Type de Document</label>
+                        <select class="filter-control">
+                            <option selected>Tous les documents</option>
+                            <option>Pièce d’identité</option>
+                            <option>Registre de commerce</option>
+                            <option>Identifiant fiscal / ICE</option>
+                            <option>Statuts de l’entreprise</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Type Utilisateur</label>
+                        <select class="filter-control">
+                            <option selected>Tous</option>
+                            <option>Vendeurs</option>
+                            <option>Acheteurs</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" style="padding: 10px 20px;"><i class="fas fa-filter"></i></button>
+                </div>
+
+                <!-- Table -->
+                <div class="table-outer">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>ID Doc</th>
+                                <th>Utilisateur / Rôle</th>
+                                <th>Entreprise Associée</th>
+                                <th>Nature du document</th>
+                                <th>Fichier / Nom</th>
+                                <th>Statut</th>
+                                <th>Soumission / Audit</th>
+                                <th>Commentaires / Motif</th>
+                                <th style="text-align: right;">Régie & Validation</th>
+                            </tr>
+                        </thead>
+                        <tbody id="docs-kyc-body">
+                            <!-- Populated via script -->
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            Components.renderAdminSidebar('admin-docs-kyc.html');
+
+            const kycDocs = [
+                {
+                    id: 'KYC-5582', user: 'Ahmed Mansouri', role: 'Vendeur', company: 'Atlas Mining',
+                    type: 'Registre de commerce', fileName: 'RC_Atlas_Mining_2026.pdf',
+                    status: 'en attente', comment: '-', submitted: '04/03/2026 09:15', verified: '-'
+                },
+                {
+                    id: 'KYC-5580', user: 'Sara Benani', role: 'Acheteur', company: 'Benani Logistics',
+                    type: 'Pièce d’identité', fileName: 'CIN_Benani_Sara.jpg',
+                    status: 'vérifié', comment: 'Document valide conforme.', submitted: '03/03/2026 14:20', verified: '03/03/2026 16:45'
+                },
+                {
+                    id: 'KYC-5575', user: 'Mehdi Tazi', role: 'Vendeur', company: 'Tazi Industrial',
+                    type: 'Identifiant fiscal / ICE', fileName: 'ICE_Tazi_Ind.pdf',
+                    status: 'refusé', comment: 'Document expiré ou illisible.', submitted: '01/03/2026 10:00', verified: '01/03/2026 12:30'
+                },
+                {
+                    id: 'KYC-5570', user: 'Karim Mansour', role: 'Acheteur', company: 'Mansour Steel',
+                    type: 'Statuts de l’entreprise', fileName: 'Statuts_Mansour_Steel.pdf',
+                    status: 'en attente', comment: '-', submitted: '04/03/2026 11:30', verified: '-'
+                }
+            ];
+
+            const tbody = document.getElementById('docs-kyc-body');
+
+            function renderDocs(list) {
+                tbody.innerHTML = list.map(d => `
+                    <tr>
+                        <td style="font-family: monospace; font-weight: 700; color: var(--text-sub); font-size: 0.75rem;">${d.id}</td>
+                        <td>
+                            <div style="font-weight: 700;">${d.user}</div>
+                            <span class="type-tag">${d.role}</span>
+                        </td>
+                        <td style="font-weight: 700; font-size: 0.8rem;">${d.company}</td>
+                        <td>
+                            <div style="font-weight: 700; font-size: 0.8rem;">${d.type}</div>
+                        </td>
+                        <td>
+                            <a href="#" class="doc-preview">
+                                <i class="fas fa-file-pdf doc-icon"></i>
+                                <span style="font-size: 0.75rem;">${d.fileName}</span>
+                            </a>
+                        </td>
+                        <td>
+                            <span class="badge ${getStatusBadge(d.status)}">
+                                ${d.status}
+                            </span>
+                        </td>
+                        <td>
+                            <div style="font-size: 0.7rem;">Soumis: <b>${d.submitted}</b></div>
+                            <div style="font-size: 0.7rem; color: var(--text-sub);">Audit: ${d.verified}</div>
+                        </td>
+                        <td class="comment-cell" title="${d.comment}">
+                            ${d.comment}
+                        </td>
+                        <td style="text-align: right;">
+                            <div class="action-btns" style="justify-content: flex-end;">
+                                <button class="btn-icon" title="Voir"><i class="fas fa-eye"></i></button>
+                                <button class="btn-icon" title="Télécharger"><i class="fas fa-download"></i></button>
+                                <button class="btn-icon success" title="Approuver"><i class="fas fa-check"></i></button>
+                                <button class="btn-icon danger" title="Refuser"><i class="fas fa-times"></i></button>
+                                <button class="btn-icon" title="Demander nouveau"><i class="fas fa-sync-alt"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            function getStatusBadge(status) {
+                switch (status) {
+                    case 'vérifié': return 'badge-success';
+                    case 'en attente': return 'badge-warning';
+                    case 'refusé': return 'badge-danger';
+                    default: return '';
+                }
+            }
+
+            renderDocs(kycDocs);
+        });
+    </script>
+</body>
+
+</html>

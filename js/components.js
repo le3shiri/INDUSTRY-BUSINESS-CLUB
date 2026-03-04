@@ -4,57 +4,66 @@
  */
 
 const Components = {
-    /**
-     * Sidebar Component
-     * @param {string} activePage - The ID or href of the active navigation item
-     */
+    // Shared path helpers
+    getPathContext: function () {
+        const path = window.location.pathname;
+        const page = path.split('/').pop() || 'index.html';
+        const isAdmin = path.includes('/admin/');
+        return { path, page, isAdmin };
+    },
+
     /**
      * User Sidebar Component
      * @param {string} activePage - The ID or href of the active navigation item
      */
     renderSidebar: function (activePage = 'dashboard.html') {
         const sidebarHTML = `
-            <div class="sidebar-header">
-                <svg class="sidebar-logo" viewBox="0 0 100 100" fill="none">
-                    <circle cx="50" cy="50" r="45" stroke="var(--primary-color)" stroke-width="6" />
-                    <path d="M35 50L45 60L65 40" stroke="var(--text-primary)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-                <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin: 0; letter-spacing: -0.5px;">Fluxence</h2>
-            </div>
-
-            <nav class="nav-links">
-                <a href="dashboard.html" class="nav-item ${activePage === 'dashboard.html' ? 'active' : ''}"><i class="fas fa-home"></i> <span>Dashboard</span></a>
-
-                <div class="sidebar-group-title">Marketplace</div>
-                <a href="search.html" class="nav-item ${activePage === 'search.html' ? 'active' : ''}"><i class="fas fa-search"></i> <span>Search Items</span></a>
-                <a href="create-listing-step1.html" class="nav-item ${activePage === 'create-listing-step1.html' ? 'active' : ''}"><i class="fas fa-plus-circle"></i> <span>New Listing</span></a>
-                
-                <div class="sidebar-group-title">Transactions</div>
-                <a href="negotiations.html" class="nav-item ${activePage === 'negotiations.html' ? 'active' : ''}"><i class="fas fa-handshake"></i> <span>Active Deals</span></a>
-                <a href="messages-hub.html" class="nav-item ${activePage === 'messages-hub.html' ? 'active' : ''}"><i class="fas fa-comment-dots"></i> <span>Messages Hub</span></a>
-                
-                <div class="sidebar-group-title">Network</div>
-                <a href="company-directory.html" class="nav-item ${activePage === 'company-directory.html' ? 'active' : ''}"><i class="fas fa-buildings"></i> <span>Company Dir</span></a>
-                <a href="profile-settings.html" class="nav-item ${activePage === 'profile-settings.html' ? 'active' : ''}"><i class="fas fa-user-cog"></i> <span>Account Settings</span></a>
-            </nav>
-
-            <div style="margin-top: auto; padding: 1rem 1.5rem; border-top: 1px solid var(--border-color);">
-                <a href="help-center.html" class="nav-item" style="color: var(--text-secondary); text-decoration: none; display: flex; align-items: center; gap: 0.75rem; font-size: 0.9rem;">
-                    <i class="fas fa-question-circle"></i> <span>Help Center</span>
-                </a>
-            </div>
-
-            <div class="user-profile-mini" onclick="window.location.href='index.html'">
-                <div style="width: 40px; height: 40px; background: var(--primary-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary-color); font-weight: 700;">
-                    AC
+                <div class="sidebar-header">
+                    <svg class="sidebar-logo" viewBox="0 0 100 100" fill="none">
+                        <circle cx="50" cy="50" r="45" stroke="var(--primary-color)" stroke-width="6" />
+                        <path d="M35 50L45 60L65 40" stroke="var(--text-primary)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin: 0; letter-spacing: -0.5px;">Fluxence</h2>
                 </div>
-                <div>
-                    <p style="margin: 0; font-weight: 600; font-size: 0.9rem;">Acme Corp</p>
-                    <p style="margin: 0; font-size: 0.75rem; color: var(--text-secondary);">Enterprise Plan</p>
+    
+                <nav class="nav-links">
+                    <div class="sidebar-group-title">Dashboard</div>
+                    <a href="dashboard.html" class="nav-item ${activePage === 'dashboard.html' ? 'active' : ''}"><i class="fas fa-home"></i> <span>Dashboard</span></a>
+    
+                    <div class="sidebar-group-title">Marketplace</div>
+                    <a href="search.html" class="nav-item ${activePage === 'search.html' ? 'active' : ''}"><i class="fas fa-search"></i> <span>Search Items</span></a>
+                    <a href="create-listing.html" class="nav-item ${activePage === 'create-listing.html' ? 'active' : ''}"><i class="fas fa-plus-circle"></i> <span>New Listing</span></a>
+                    
+                    <div class="sidebar-group-title">Transactions</div>
+                    <a href="negotiations.html" class="nav-item ${activePage === 'negotiations.html' ? 'active' : ''}"><i class="fas fa-handshake"></i> <span>Active Deals</span></a>
+                    <a href="order-tracking.html" class="nav-item ${activePage === 'order-tracking.html' ? 'active' : ''}"><i class="fas fa-truck-ramp-box"></i> <span>Order Tracking</span></a>
+    
+                    <div class="sidebar-group-title">Communication</div>
+                    <a href="support-tickets.html" class="nav-item ${activePage === 'support-tickets.html' ? 'active' : ''}"><i class="fas fa-ticket-alt"></i> <span>Support Tickets</span></a>
+                    <a href="notifications.html" class="nav-item ${activePage === 'notifications.html' ? 'active' : ''}"><i class="fas fa-bell"></i> <span>Notifications</span></a>
+                    
+                    <div class="sidebar-group-title">Account</div>
+                    <a href="account-settings.html" class="nav-item ${activePage === 'account-settings.html' ? 'active' : ''}"><i class="fas fa-user-cog"></i> <span>Account Settings</span></a>
+                </nav>
+    
+                <div style="margin-top: auto; padding: 1rem 1.5rem; border-top: 1px solid var(--border-color);">
+                    <div class="sidebar-group-title" style="margin-left: 0; margin-bottom: 0.5rem; padding-left: 0;">Support</div>
+                    <a href="help-center.html" class="nav-item" style="color: var(--text-secondary); text-decoration: none; display: flex; align-items: center; gap: 0.75rem; font-size: 0.9rem; padding-left: 0;">
+                        <i class="fas fa-question-circle"></i> <span>Help Center</span>
+                    </a>
                 </div>
-                <i class="fas fa-sign-out-alt" style="margin-left: auto; color: var(--text-secondary);"></i>
-            </div>
-        `;
+    
+                <div class="user-profile-mini" onclick="window.location.href='index.html'">
+                    <div style="width: 40px; height: 40px; background: var(--primary-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary-color); font-weight: 700;">
+                        AC
+                    </div>
+                    <div>
+                        <p style="margin: 0; font-weight: 600; font-size: 0.9rem;">Acme Corp</p>
+                        <p style="margin: 0; font-size: 0.75rem; color: var(--text-secondary);">Enterprise Plan</p>
+                    </div>
+                    <i class="fas fa-sign-out-alt" style="margin-left: auto; color: var(--text-secondary);"></i>
+                </div>
+            `;
         const container = document.getElementById('sidebar-container');
         if (container) {
             container.innerHTML = sidebarHTML;
@@ -307,7 +316,7 @@ const Components = {
             </nav>
 
             <div style="margin-top: auto; padding-bottom: 0.5rem; background: var(--white); border-top: 1px solid var(--border-color);">
-                <a href="dashboard.html" class="nav-item" style="font-size: 0.8rem; opacity: 0.7;">
+                <a href="${activePage.startsWith('admin-') ? '../' : ''}dashboard.html" class="nav-item" style="font-size: 0.8rem; opacity: 0.7;">
                     <i class="fas fa-reply-all" style="font-size: 0.75rem;"></i> <span>Portail Client</span>
                 </a>
                 
@@ -458,47 +467,6 @@ const Components = {
     },
 
     /**
-     * Global Command Palette
-     */
-    initCommandPalette: function () {
-        const overlay = document.createElement('div');
-        overlay.className = 'command-palette-overlay';
-        overlay.id = 'command-palette';
-        overlay.innerHTML = `
-            <div class="command-palette-box">
-                <div class="command-palette-header">
-                    <i class="fas fa-terminal" style="color: var(--primary-color);"></i>
-                    <input type="text" id="command-input" placeholder="Search pages, tools, or companies... (Esc to close)" autocomplete="off">
-                </div>
-                <div class="command-palette-results" id="command-results">
-                    <div class="command-item" onclick="window.location.href='admin-dashboard.html'"><i class="fas fa-user-shield"></i> <span>Super Admin Panel</span> <kbd>G + A</kbd></div>
-                    <div class="command-item" onclick="window.location.href='dashboard.html'"><i class="fas fa-home"></i> <span>Dashboard</span> <kbd>G + D</kbd></div>
-                    <div class="command-item" onclick="window.location.href='search.html'"><i class="fas fa-search"></i> <span>Search Materials</span> <kbd>G + S</kbd></div>
-                    <div class="command-item" onclick="window.location.href='negotiations.html'"><i class="fas fa-handshake"></i> <span>Active Deals</span> <kbd>G + N</kbd></div>
-                    <div class="command-item" onclick="window.location.href='create-listing-step1.html'"><i class="fas fa-plus"></i> <span>Create New Listing</span> <kbd>C + L</kbd></div>
-                    <div class="command-item" onclick="window.location.href='profile-settings.html'"><i class="fas fa-cog"></i> <span>Account Settings</span> <kbd>G + P</kbd></div>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(overlay);
-
-        const input = document.getElementById('command-input');
-
-        window.addEventListener('keydown', (e) => {
-            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-                e.preventDefault();
-                overlay.classList.toggle('active');
-                if (overlay.classList.contains('active')) input.focus();
-            }
-            if (e.key === 'Escape') overlay.classList.remove('active');
-        });
-
-        overlay.addEventListener('click', (e) => {
-            if (e.target === overlay) overlay.classList.remove('active');
-        });
-    },
-
-    /**
      * Negotiation Card Component
      */
     renderNegotiationCard: function (data) {
@@ -543,20 +511,22 @@ const Components = {
 // Auto-initialize components if placeholders exist
 document.addEventListener('DOMContentLoaded', () => {
     // Determine active page
-    const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+    const { page, isAdmin } = Components.getPathContext();
 
     if (document.getElementById('sidebar-container')) {
-        if (currentPath.startsWith('admin-')) {
-            Components.renderAdminSidebar(currentPath);
+        if (isAdmin || page.startsWith('admin-')) {
+            Components.renderAdminSidebar(page);
             // Update badges
-            const stats = AdminData.getStats();
-            const postsBadge = document.getElementById('pending-posts-badge');
-            if (postsBadge && stats.pendingPosts > 0) {
-                postsBadge.textContent = stats.pendingPosts;
-                postsBadge.style.display = 'flex';
+            if (typeof AdminData !== 'undefined') {
+                const stats = AdminData.getStats();
+                const postsBadge = document.getElementById('pending-posts-badge');
+                if (postsBadge && stats.pendingPosts > 0) {
+                    postsBadge.textContent = stats.pendingPosts;
+                    postsBadge.style.display = 'flex';
+                }
             }
         } else {
-            Components.renderSidebar(currentPath);
+            Components.renderSidebar(page);
         }
     }
 
@@ -564,6 +534,5 @@ document.addEventListener('DOMContentLoaded', () => {
         Components.renderFooter();
     }
 
-    // Initialize Command Palette
-    Components.initCommandPalette();
+    // Initialize Components
 });

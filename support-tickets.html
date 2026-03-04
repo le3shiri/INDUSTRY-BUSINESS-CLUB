@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence | Support & Assistance</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src="js/components.js"></script>
+    <script src="js/app.js"></script>
+
+    <style>
+        :root {
+            --brand-primary: #00B140;
+            --brand-dark: #101828;
+            --brand-secondary: #667085;
+            --bg-soft: #f9fafb;
+            --card-border: #eaecf0;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-soft);
+            margin: 0;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2rem 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Layout Grid */
+        .support-grid {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 2rem;
+            align-items: flex-start;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 24px rgba(16, 24, 40, 0.04);
+        }
+
+        /* Ticket List Sidebar */
+        .ticket-list-card {
+            display: flex;
+            flex-direction: column;
+            max-height: calc(100vh - 200px);
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--card-border);
+            background: #fff;
+        }
+
+        .ticket-items {
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .ticket-item {
+            padding: 1.25rem;
+            border-bottom: 1px solid #f2f4f7;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .ticket-item:hover {
+            background: #f9fafb;
+        }
+
+        .ticket-item.active {
+            background: #f0fdf4;
+            border-left: 4px solid var(--brand-primary);
+        }
+
+        .ticket-meta-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .ticket-id-tag {
+            font-family: monospace;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--brand-secondary);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .dot-open {
+            background: var(--brand-primary);
+        }
+
+        .dot-closed {
+            background: #94a3b8;
+        }
+
+        .ticket-subject {
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: var(--brand-dark);
+            margin-bottom: 4px;
+            display: block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .ticket-preview {
+            font-size: 0.8rem;
+            color: var(--brand-secondary);
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Main Chat Window */
+        .ticket-view-card {
+            display: flex;
+            flex-direction: column;
+            min-height: calc(100vh - 200px);
+        }
+
+        .view-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--card-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .view-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Badges */
+        .prio-badge {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .prio-urgente {
+            background: #fee4e2;
+            color: #d92d20;
+        }
+
+        .prio-normale {
+            background: #fef0c7;
+            color: #b54708;
+        }
+
+        .prio-faible {
+            background: #f2f4f7;
+            color: #344054;
+        }
+
+        /* Chat Threads */
+        .ticket-chat {
+            flex: 1;
+            padding: 2rem;
+            background: #f9fafb;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .chat-bubble {
+            max-width: 80%;
+            padding: 1.25rem;
+            border-radius: 16px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .bubble-user {
+            align-self: flex-end;
+            background: var(--brand-dark);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .bubble-support {
+            align-self: flex-start;
+            background: white;
+            border: 1px solid var(--card-border);
+            color: var(--brand-dark);
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+        }
+
+        .bubble-meta {
+            font-size: 0.7rem;
+            margin-top: 8px;
+            color: var(--brand-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .bubble-user .bubble-meta {
+            color: #94a3b8;
+            justify-content: flex-end;
+        }
+
+        /* Attachment Badge */
+        .attachment-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            color: white;
+            text-decoration: none;
+            margin-top: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .bubble-support .attachment-link {
+            background: #f2f4f7;
+            color: var(--brand-dark);
+            border-color: #eaecf0;
+        }
+
+        /* Reply Area */
+        .reply-area {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid var(--card-border);
+            background: white;
+        }
+
+        .reply-box {
+            display: flex;
+            gap: 12px;
+            background: #f2f4f7;
+            padding: 10px 16px;
+            border-radius: 14px;
+            align-items: center;
+        }
+
+        .reply-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            padding: 8px 0;
+            font-family: inherit;
+            font-size: 0.95rem;
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(16, 24, 40, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside id="sidebar-container"></aside>
+
+    <main class="main-content">
+        <header style="margin-bottom: 2.5rem; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h1 style="font-size: 1.75rem; font-weight: 800; color: var(--brand-dark); margin: 0;">Support & Tickets
+                </h1>
+                <p style="color: var(--brand-secondary); font-size: 1rem;">Assistance technique et commerciale 24/7.</p>
+            </div>
+            <button class="btn btn-primary" style="width: auto; padding: 12px 24px;" onclick="toggleTicketModal()">
+                <i class="fas fa-plus"></i> Nouveau ticket
+            </button>
+        </header>
+
+        <div class="support-grid">
+            <!-- Left: Ticket List -->
+            <div class="card ticket-list-card">
+                <div class="sidebar-header">
+                    <div style="position: relative;">
+                        <i class="fas fa-search"
+                            style="position: absolute; left: 12px; top: 11px; color: var(--brand-secondary); font-size: 0.85rem;"></i>
+                        <input type="text" placeholder="Rechercher un ticket..."
+                            style="width: 100%; padding: 8px 10px 8px 36px; border-radius: 10px; border: 1px solid #d0d5dd; font-size: 0.85rem; outline: none; box-sizing: border-box;">
+                    </div>
+                </div>
+                <div class="ticket-items">
+                    <!-- Ticket 1 -->
+                    <div class="ticket-item active">
+                        <div class="ticket-meta-top">
+                            <span class="ticket-id-tag">#TIC-88742</span>
+                            <span class="prio-badge prio-urgente">Urgente</span>
+                        </div>
+                        <span class="ticket-subject">Erreur de paiement - Deal #DL-4921</span>
+                        <div style="display: flex; align-items: center; gap: 6px; margin-top: 5px;">
+                            <span class="status-dot dot-open"></span>
+                            <span class="ticket-preview">Support : Nous avons bien reçu votre...</span>
+                        </div>
+                        <div
+                            style="font-size: 0.7rem; color: var(--brand-secondary); margin-top: 8px; text-align: right;">
+                            Mis à jour il y a 10 min</div>
+                    </div>
+                    <!-- Ticket 2 -->
+                    <div class="ticket-item">
+                        <div class="ticket-meta-top">
+                            <span class="ticket-id-tag">#TIC-88431</span>
+                            <span class="prio-badge prio-normale">Normale</span>
+                        </div>
+                        <span class="ticket-subject">Besoin d'aide pour l'upload KYC</span>
+                        <div style="display: flex; align-items: center; gap: 6px; margin-top: 5px;">
+                            <span class="status-dot dot-closed"></span>
+                            <span class="ticket-preview">Moi : Merci pour les informations.</span>
+                        </div>
+                        <div
+                            style="font-size: 0.7rem; color: var(--brand-secondary); margin-top: 8px; text-align: right;">
+                            28 Fév 2026</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Ticket Detail View -->
+            <div class="card ticket-view-card">
+                <div class="view-header">
+                    <div>
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                            <span class="ticket-id-tag" style="font-size: 0.85rem;">#TIC-88742</span>
+                            <span class="prio-badge prio-urgente">Urgente</span>
+                            <span
+                                style="background: #F0FDF4; color: var(--brand-primary); font-weight: 800; font-size: 0.7rem; padding: 4px 10px; border-radius: 6px; text-transform: uppercase;">Paiement</span>
+                        </div>
+                        <h2 style="margin: 0; font-size: 1.4rem; font-weight: 800; color: var(--brand-dark);">Erreur de
+                            paiement - Deal #DL-4921</h2>
+                        <div style="font-size: 0.85rem; color: var(--brand-secondary); margin-top: 6px;">
+                            <i class="far fa-calendar"></i> Créé le 02 Mars 2026 à 09:15
+                        </div>
+                    </div>
+                    <div class="view-actions">
+                        <button class="btn btn-white" style="width: auto; padding: 8px 16px; font-size: 0.85rem;"
+                            onclick="alert('Ticket fermé')">Fermer ticket</button>
+                    </div>
+                </div>
+
+                <div class="ticket-chat">
+                    <!-- User Message -->
+                    <div class="chat-bubble bubble-user">
+                        Bonjour, j'ai essayé de procéder au virement bancaire pour le deal #DL-4921 mais je reçois un
+                        message d'erreur lors de l'upload de la preuve de paiement. Est-ce que mon compte est bloqué ?
+                        <a href="#" class="attachment-link"><i class="fas fa-image"></i> screenshot_error.png</a>
+                        <div class="bubble-meta">02 Mars, 09:15 · Envoyé</div>
+                    </div>
+
+                    <!-- Support Response -->
+                    <div class="chat-bubble bubble-support">
+                        Bonjour, merci de nous avoir contacté. Votre compte est parfaitement actif. Il semble s'agir
+                        d'une maintenance temporaire sur notre passerelle de documents.
+                        <br><br>
+                        Pouvez-vous réessayer maintenant ? Nous avons déployé un correctif.
+                        <div class="bubble-meta">02 Mars, 09:25 · Support Fluxence</div>
+                    </div>
+
+                    <!-- User Message -->
+                    <div class="chat-bubble bubble-user">
+                        Merci pour le retour rapide. Je viens de réessayer et cela fonctionne parfaitement maintenant.
+                        Preuve de paiement uploadée !
+                        <div class="bubble-meta">Il y a 10 min · Envoyé</div>
+                    </div>
+                </div>
+
+                <div class="reply-area">
+                    <div class="reply-box">
+                        <i class="fas fa-paperclip" style="cursor: pointer; color: var(--brand-secondary);"></i>
+                        <input type="text" class="reply-input" placeholder="Écrivez votre réponse ici...">
+                        <button class="btn btn-primary"
+                            style="width: auto; height: 36px; padding: 0 15px; border-radius: 10px;"><i
+                                class="fas fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal: Create NEW Ticket -->
+    <div class="modal-overlay" id="ticketModal">
+        <div class="card" style="width: 500px; padding: 2rem;">
+            <h2 style="margin-top: 0; margin-bottom: 1.5rem; font-size: 1.25rem; font-weight: 800;">Ouvrir un nouveau
+                ticket</h2>
+
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+                <div>
+                    <label style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 6px;">Sujet du
+                        ticket *</label>
+                    <input type="text"
+                        style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #d0d5dd;"
+                        placeholder="ex: Problème de livraison">
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div>
+                        <label
+                            style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 6px;">Catégorie
+                            *</label>
+                        <select style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #d0d5dd;">
+                            <option>Paiement</option>
+                            <option>Livraison</option>
+                            <option>Litige</option>
+                            <option>Compte</option>
+                            <option>Technique</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label
+                            style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 6px;">Priorité
+                            *</label>
+                        <select style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #d0d5dd;">
+                            <option>Faible</option>
+                            <option>Normale</option>
+                            <option>Urgente</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 6px;">Description
+                        du problème *</label>
+                    <textarea
+                        style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #d0d5dd; height: 100px;"
+                        placeholder="Détaillez votre demande..."></textarea>
+                </div>
+
+                <div>
+                    <label style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 6px;">Pièces
+                        jointes</label>
+                    <div
+                        style="border: 1px dashed #d0d5dd; padding: 15px; border-radius: 10px; text-align: center; color: var(--brand-secondary); font-size: 0.85rem; cursor: pointer;">
+                        <i class="fas fa-cloud-upload-alt"></i> Cliquez pour joindre des fichiers
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 2rem; display: flex; gap: 10px; justify-content: flex-end;">
+                <button class="btn btn-white" style="width: auto; padding: 10px 20px;"
+                    onclick="toggleTicketModal()">Annuler</button>
+                <button class="btn btn-primary" style="width: auto; padding: 10px 24px;"
+                    onclick="toggleTicketModal()">Créer ticket</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleTicketModal() {
+            const modal = document.getElementById('ticketModal');
+            modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex';
+        }
+
+        // Close modal on click outside
+        window.onclick = function (event) {
+            const modal = document.getElementById('ticketModal');
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</body>
+
+</html>

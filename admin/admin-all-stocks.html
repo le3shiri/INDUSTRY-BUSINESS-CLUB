@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence Admin | Tous les Stocks</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="../js/components.js"></script>
+    <script src="../js/admin-data.js"></script>
+
+    <style>
+        :root {
+            --admin-bg: #fcfcfd;
+            --card-border: #eaecf0;
+            --text-main: #101828;
+            --text-sub: #475467;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --primary-corporate: #101828;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--admin-bg);
+            color: var(--text-main);
+            letter-spacing: -0.01em;
+        }
+
+        .main-content {
+            padding: 0;
+            background: var(--admin-bg);
+        }
+
+        .top-nav {
+            background: white;
+            border-bottom: 1px solid var(--card-border);
+            padding: 1.25rem 2.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-container {
+            padding: 2rem 2.5rem;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        /* KPI Grid System */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin: 0;
+        }
+
+        .stat-subtext {
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            display: block;
+        }
+
+        /* Filters Section */
+        .filter-header {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .filter-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            text-transform: uppercase;
+        }
+
+        .filter-control {
+            padding: 0.6rem;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-family: inherit;
+        }
+
+        /* Admin Table Styling */
+        .table-outer {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            scrollbar-width: thin;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        .admin-table th {
+            background: #f9fafb;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--card-border);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .admin-table td {
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid var(--card-border);
+            font-size: 0.85rem;
+            vertical-align: middle;
+        }
+
+        /* Status & Badges */
+        .badge {
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge-active {
+            background: #ecfdf3;
+            color: #027a48;
+            border: 1px solid #6ce9a6;
+        }
+
+        .badge-pending {
+            background: #fffaeb;
+            color: #b54708;
+            border: 1px solid #fec84b;
+        }
+
+        .badge-reserved {
+            background: #fdf2fa;
+            color: #c11574;
+            border: 1px solid #fcceee;
+        }
+
+        .badge-sold {
+            background: #f0f9ff;
+            color: #026aa2;
+            border: 1px solid #b9e6fe;
+        }
+
+        .badge-refused {
+            background: #fef3f2;
+            color: #b42318;
+            border: 1px solid #fda29b;
+        }
+
+        .badge-expired {
+            background: #f2f4f7;
+            color: #475467;
+            border: 1px solid #eaecf0;
+        }
+
+        .badge-suspended {
+            background: #475467;
+            color: white;
+            border: 1px solid #344054;
+        }
+
+        .condition-tag {
+            padding: 2px 6px;
+            background: #f2f4f7;
+            color: #344054;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            font-weight: 700;
+        }
+
+        /* Actions Shell */
+        .action-btns {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            border: 1px solid var(--card-border);
+            background: white;
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+
+        .btn-icon:hover {
+            border-color: var(--text-main);
+            color: var(--text-main);
+            background: #f9fafb;
+        }
+
+        .btn-icon.success:hover {
+            color: #027a48;
+            border-color: #6ce9a6;
+            background: #ecfdf3;
+        }
+
+        .btn-icon.danger:hover {
+            color: #b42318;
+            border-color: #fda29b;
+            background: #fef3f2;
+        }
+
+        .btn-icon.warning:hover {
+            color: #b54708;
+            border-color: #fec84b;
+            background: #fffaeb;
+        }
+
+        .btn-icon.info:hover {
+            color: #026aa2;
+            border-color: #b9e6fe;
+            background: #f0f9ff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+        <aside id="sidebar-container"></aside>
+
+        <main class="main-content">
+            <header class="top-nav">
+                <div>
+                    <h1 style="margin:0; font-size: 1.5rem; font-weight: 700;">Tous les Stocks</h1>
+                    <p style="margin:0; font-size: 0.85rem; color: var(--text-sub);">Vue globale du catalogue et
+                        contrôle granulaire des publications</p>
+                </div>
+                <div style="display: flex; gap: 0.75rem;">
+                    <button class="btn btn-secondary" style="border: 1px solid var(--card-border); background: white;">
+                        <i class="fas fa-file-export"></i> Exporter
+                    </button>
+                    <button class="btn btn-primary"><i class="fas fa-plus"></i> Nouveau Stock</button>
+                </div>
+            </header>
+
+            <div class="dashboard-container">
+
+                <!-- KPI Summary -->
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <span class="stat-label">Total Stocks</span>
+                        <p class="stat-value">3,124</p>
+                        <span class="stat-subtext" style="color: #027a48;">+245 ce mois</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Stocks Actifs</span>
+                        <p class="stat-value">2,840</p>
+                        <span class="stat-subtext" style="color: #026aa2;">91% de visibilité</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Valeur Totale</span>
+                        <p class="stat-value">42.8M MAD</p>
+                        <span class="stat-subtext" style="color: var(--text-sub);">Moy: 13.7k / unité</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Signalements Admin</span>
+                        <p class="stat-value" style="color: #b42318;">4</p>
+                        <span class="stat-subtext" style="color: #b42318;">Vérification urgente</span>
+                    </div>
+                </div>
+
+                <!-- Advanced Filters -->
+                <div class="filter-header">
+                    <div class="filter-group" style="grid-column: span 2;">
+                        <span class="filter-label">Recherche</span>
+                        <input type="text" id="filter-search" class="filter-control"
+                            placeholder="ID stock, Titre, Vendeur...">
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">Catégorie</span>
+                        <select id="filter-cat" class="filter-control">
+                            <option value="all">Toutes</option>
+                            <option value="Matières Premières">Matières Premières</option>
+                            <option value="Équipements">Équipements</option>
+                            <option value="Logistique">Logistique</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">Statut</span>
+                        <select id="filter-status" class="filter-control">
+                            <option value="all">Tous les statuts</option>
+                            <option value="active">Actif / Publié</option>
+                            <option value="pending">En attente</option>
+                            <option value="reserved">Réservé</option>
+                            <option value="sold">Vendu</option>
+                            <option value="refused">Refusé</option>
+                            <option value="expired">Expiré</option>
+                            <option value="suspended">Suspendu</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">Date Pub.</span>
+                        <input type="date" class="filter-control">
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">Prix Min (MAD)</span>
+                        <input type="number" class="filter-control" placeholder="Min">
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">Prix Max (MAD)</span>
+                        <input type="number" class="filter-control" placeholder="Max">
+                    </div>
+                    <button class="btn btn-secondary" style="height: 38px; justify-content: center;">Appliquer</button>
+                    <button class="btn btn-icon" style="height: 38px; width: 38px;"><i class="fas fa-sync"></i></button>
+                </div>
+
+                <!-- Table UI -->
+                <div class="table-outer">
+                    <div class="table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID / Produit</th>
+                                    <th>Catégorie / Sous-caté.</th>
+                                    <th>Vendeur / Entreprise</th>
+                                    <th>Quantité / Unité</th>
+                                    <th>Prix Unit. / Valeur Est.</th>
+                                    <th>État / Localisation</th>
+                                    <th>Statut</th>
+                                    <th>Vues / Offres</th>
+                                    <th>Dates (Pub / MàJ / Exp)</th>
+                                    <th style="text-align: right;">Actions Admin</th>
+                                </tr>
+                            </thead>
+                            <tbody id="all-stocks-body">
+                                <!-- Data injected via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            Components.renderAdminSidebar('admin-all-stocks.html');
+
+            const allStocks = [
+                {
+                    id: 'STK-0041', title: 'Bobines Cuivre 2mm', cat: 'Matières Premières', subCat: 'Métaux',
+                    vendeur: 'Omar Alami', company: 'Atlas Mining Group', quantity: 15, unit: 'Tonne',
+                    price: '62,000 MAD', totalValue: '930,000 MAD', condition: 'Surplus',
+                    country: 'Maroc', city: 'Casablanca', status: 'active',
+                    views: 842, offers: 5, pubDate: '01/03/2026', updateDate: '02/03/2026', expDate: '01/09/2026'
+                },
+                {
+                    id: 'STK-0040', title: 'Capteur Pression Industriel', cat: 'Équipements', subCat: 'Automatisme',
+                    vendeur: 'Reda Hakimi', company: 'BuildIt SA', quantity: 50, unit: 'Pièce',
+                    price: '850 MAD', totalValue: '42,500 MAD', condition: 'Neuf',
+                    country: 'Maroc', city: 'Tanger', status: 'pending',
+                    views: 12, offers: 0, pubDate: '04/03/2026', updateDate: '--', expDate: '04/09/2026'
+                },
+                {
+                    id: 'STK-0038', title: 'Lot 50 Palettes Plastique', cat: 'Logistique', subCat: 'Manutention',
+                    vendeur: 'Mehdi Tazi', company: 'Kenitra Metals', quantity: 50, unit: 'Palette',
+                    price: '4,200 MAD', totalValue: '210,000 MAD', condition: 'Occasion',
+                    country: 'Maroc', city: 'Kenitra', status: 'reserved',
+                    views: 1104, offers: 12, pubDate: '15/02/2026', updateDate: '01/03/2026', expDate: '15/08/2026'
+                },
+                {
+                    id: 'STK-0035', title: 'Excavatrice Cat 320D', cat: 'Engins', subCat: 'Chantier',
+                    vendeur: 'Hamza El Amrani', company: 'Global Build Inc', quantity: 1, unit: 'Lot',
+                    price: '1.2M MAD', totalValue: '1.2M MAD', condition: 'Reconditionné',
+                    country: 'Maroc', city: 'Agadir', status: 'sold',
+                    views: 4501, offers: 24, pubDate: '10/01/2026', updateDate: '28/02/2026', expDate: '10/07/2026'
+                },
+                {
+                    id: 'STK-0032', title: 'Câbles Haute Tension 20kV', cat: 'Équipements', subCat: 'Électricité',
+                    vendeur: 'Leila Mansouri', company: 'Intech Solutions', quantity: 2, unit: 'Lot',
+                    price: '450,000 MAD', totalValue: '900,000 MAD', condition: 'Neuf',
+                    country: 'Maroc', city: 'Rabat', status: 'suspended',
+                    views: 65, offers: 1, pubDate: '20/02/2026', updateDate: '25/02/2026', expDate: '20/08/2026'
+                }
+            ];
+
+            const tbody = document.getElementById('all-stocks-body');
+
+            function renderStocks(list) {
+                tbody.innerHTML = list.map(s => `
+                    <tr>
+                        <td>
+                            <div style="font-weight: 700; color: var(--text-main);">${s.title}</div>
+                            <div style="font-size: 0.7rem; color: var(--text-sub); font-family: monospace;">${s.id}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700;">${s.cat}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-sub);">${s.subCat}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700;">${s.vendeur}</div>
+                            <div style="font-size: 0.75rem; color: #026aa2; font-weight: 600;">${s.company}</div>
+                        </td>
+                        <td style="text-align: center;">
+                            <div style="font-weight: 800; font-size: 1rem;">${s.quantity}</div>
+                            <div style="font-size: 0.7rem; color: var(--text-sub); text-transform: uppercase;">${s.unit}s</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700;">${s.price}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-sub);">Val: <strong>${s.totalValue}</strong></div>
+                        </td>
+                        <td>
+                            <div style="margin-bottom: 4px;"><span class="condition-tag">${s.condition}</span></div>
+                            <div style="font-size: 0.75rem; color: var(--text-sub);">${s.country}, ${s.city}</div>
+                        </td>
+                        <td>
+                            <span class="badge badge-${s.status}">
+                                ${s.status === 'active' ? 'Actif' : (s.status === 'reserved' ? 'Réservé' : (s.status === 'sold' ? 'Vendu' : (s.status === 'refused' ? 'Refusé' : (s.status === 'suspended' ? 'Suspendu' : s.status))))}
+                            </span>
+                        </td>
+                        <td style="text-align: center;">
+                            <div style="font-weight: 700;"><i class="fas fa-eye"></i> ${s.views}</div>
+                            <div style="font-size: 0.7rem; color: #026aa2; font-weight: 600;">${s.offers} offres</div>
+                        </td>
+                        <td>
+                            <div style="font-size: 0.65rem;">Pub: ${s.pubDate}</div>
+                            <div style="font-size: 0.65rem;">Mod: ${s.updateDate}</div>
+                            <div style="font-size: 0.65rem; color: #b42318;">Exp: ${s.expDate}</div>
+                        </td>
+                        <td style="text-align: right;">
+                            <div class="action-btns">
+                                <button class="btn-icon" title="Voir l'annonce"><i class="fas fa-external-link-alt"></i></button>
+                                <button class="btn-icon" title="Voir vendeur"><i class="fas fa-user-tag"></i></button>
+                                <button class="btn-icon" title="Modifier"><i class="fas fa-edit"></i></button>
+                                <button class="btn-icon success" title="Valider"><i class="fas fa-check-circle"></i></button>
+                                <button class="btn-icon danger" title="Refuser"><i class="fas fa-times-circle"></i></button>
+                                <button class="btn-icon warning" title="Suspendre"><i class="fas fa-pause-circle"></i></button>
+                                <button class="btn-icon danger" title="Supprimer"><i class="fas fa-trash-alt"></i></button>
+                                <button class="btn-icon info" title="Voir offres liées"><i class="fas fa-list-ul"></i></button>
+                                <button class="btn-icon info" title="Voir transactions"><i class="fas fa-handshake"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            renderStocks(allStocks);
+        });
+    </script>
+</body>
+
+</html>

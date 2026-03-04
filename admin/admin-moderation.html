@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Moderation | Fluxence</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="../js/components.js"></script>
+    <script src="../js/admin-data.js"></script>
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar-container"></aside>
+
+        <main class="main-content">
+            <header class="top-nav">
+                <h1 style="font-size: 1.5rem; font-weight: 800; color: var(--text-primary); margin: 0;">Moderation
+                    Center</h1>
+            </header>
+
+            <section style="margin-bottom: 2rem;">
+                <p class="text-secondary">Monitor conversations and flag suspicious activity within the marketplace.</p>
+            </section>
+
+            <div class="data-section">
+                <div class="section-header">
+                    <h2 style="font-size: 1.25rem; font-weight: 700; margin: 0;">Flagged Conversations</h2>
+                    <span id="flag-count" class="status-badge status-rejected">0 Flagged</span>
+                </div>
+                <div class="table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Participants</th>
+                                <th>Reason</th>
+                                <th>Snapshot</th>
+                                <th>Risk</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="flagged-table-body">
+                            <!-- Data injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="data-section">
+                <div class="section-header">
+                    <h2 style="font-size: 1.25rem; font-weight: 700; margin: 0;">Recent Reports</h2>
+                </div>
+                <div class="activity-list" id="reports-list">
+                    <!-- Data injected by JS -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function renderModeration() {
+            const flagged = AdminData.SEED.FLAGGED; // In a real app, this would be AdminData.getData(AdminData.KEYS.FLAGGED)
+            const tbody = document.getElementById('flagged-table-body');
+            document.getElementById('flag-count').textContent = flagged.length + ' High Priority';
+
+            tbody.innerHTML = flagged.map(f => `
+                <tr>
+                    <td><strong>${f.participants}</strong></td>
+                    <td class="text-secondary">${f.reason}</td>
+                    <td class="text-small" style="font-style: italic; color: var(--text-secondary);">"${f.snippet}"</td>
+                    <td><span style="color: ${f.risk === 'HIGH' ? 'var(--error-color)' : '#f59e0b'}; font-weight: 700;">${f.risk}</span></td>
+                    <td>
+                        <button class="btn btn-primary" style="width: auto; padding: 0.4rem 1rem;" 
+                                onclick="window.location.href='admin-deals.html?monitor=${f.dealId}'">
+                            Intervene
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+
+            // Mock Reports
+            const reportsList = document.getElementById('reports-list');
+            reportsList.innerHTML = `
+                <div class="activity-item">
+                    <div class="activity-content">
+                        <p class="activity-text"><strong>Report #88:</strong> Spam report from Omar Alami regarding <strong>Generic Steel Co</strong>.</p>
+                        <p class="activity-time">2 hours ago</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderModeration();
+        });
+    </script>
+</body>
+
+</html>

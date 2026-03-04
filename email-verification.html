@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence | Vérification Email</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --brand-primary: #00B140;
+            /* Sprite Green */
+            --brand-secondary: #667085;
+            --brand-dark: #101828;
+            --error-main: #b42318;
+            --error-bg: #fef3f2;
+            --card-border: #eaecf0;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --bg-soft: #fcfcfd;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-soft);
+            margin: 0;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Progress (Synchronized with Register) */
+        .register-sidebar {
+            width: 380px;
+            background: var(--brand-dark);
+            padding: 4rem 3rem;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .logo-box {
+            font-size: 1.5rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 4rem;
+        }
+
+        .stepper-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+            position: relative;
+        }
+
+        .stepper-nav::before {
+            content: '';
+            position: absolute;
+            left: 11px;
+            top: 30px;
+            bottom: 30px;
+            width: 2px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #1d2939;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .step-item.completed .step-icon {
+            background: var(--brand-primary);
+            border-color: var(--brand-primary);
+            color: white;
+        }
+
+        .step-item.active .step-icon {
+            background: var(--brand-primary);
+            border-color: var(--brand-primary);
+            color: white;
+            box-shadow: 0 0 0 4px rgba(0, 177, 64, 0.2);
+        }
+
+        .step-text h4 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .step-text p {
+            margin: 2px 0 0 0;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .step-item.active .step-text h4 {
+            color: white;
+        }
+
+        .step-item.completed .step-text h4 {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Main Area */
+        .otp-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem;
+            background: white;
+        }
+
+        .otp-content {
+            width: 100%;
+            max-width: 480px;
+            text-align: center;
+        }
+
+        .icon-circle {
+            width: 72px;
+            height: 72px;
+            background: #f9fafb;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            color: var(--brand-primary);
+            font-size: 2rem;
+            border: 1px solid var(--card-border);
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .instruction {
+            color: var(--brand-secondary);
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+        }
+
+        #email-span {
+            font-weight: 700;
+            color: var(--brand-dark);
+        }
+
+        /* OTP Input Style */
+        .otp-grid {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .otp-box {
+            width: 56px;
+            height: 68px;
+            text-align: center;
+            font-size: 1.75rem;
+            font-weight: 800;
+            border: 1.5px solid var(--card-border);
+            border-radius: 12px;
+            background: #fcfcfd;
+            color: var(--brand-primary);
+            transition: all 0.2s;
+        }
+
+        .otp-box:focus {
+            outline: none;
+            border-color: var(--brand-primary);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(0, 177, 64, 0.05);
+        }
+
+        .timer-info {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--brand-secondary);
+            margin-bottom: 3rem;
+        }
+
+        #countdown {
+            color: var(--error-main);
+            font-weight: 800;
+        }
+
+        /* Button */
+        .btn-verify {
+            width: 100%;
+            background: var(--brand-primary);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 14px 0 rgba(0, 177, 64, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-verify:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 177, 64, 0.4);
+        }
+
+        .resend-box {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--card-border);
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 0.9rem;
+        }
+
+        .action-link {
+            color: var(--brand-secondary);
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .action-link:hover {
+            color: var(--brand-primary);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .register-sidebar {
+                width: 100%;
+                height: auto;
+                padding: 2rem;
+            }
+
+            .stepper-nav {
+                flex-direction: row;
+                gap: 15px;
+            }
+
+            .step-text,
+            .stepper-nav::before {
+                display: none;
+            }
+
+            .otp-main {
+                padding: 3rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside class="register-sidebar">
+        <div>
+            <div class="logo-box">
+                <i class="fas fa-rocket" style="color: var(--brand-primary);"></i> Fluxence
+            </div>
+
+            <nav class="stepper-nav">
+                <div class="step-item completed">
+                    <div class="step-icon"><i class="fas fa-check"></i></div>
+                    <div class="step-text">
+                        <h4>Compte</h4>
+                        <p>Informations validées</p>
+                    </div>
+                </div>
+                <div class="step-item active">
+                    <div class="step-icon">2</div>
+                    <div class="step-text">
+                        <h4>Vérification</h4>
+                        <p>Code OTP envoyé</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-icon">3</div>
+                    <div class="step-text">
+                        <h4>Entreprise</h4>
+                        <p>Profil de la structure</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-icon">4</div>
+                    <div class="step-text">
+                        <h4>Documents</h4>
+                        <p>Validation KYC</p>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div style="font-size: 0.8rem; opacity: 0.5;">Assistance : support@fluxence.ma</div>
+    </aside>
+
+    <main class="otp-main">
+        <div class="otp-content">
+            <div class="icon-circle">
+                <i class="fas fa-shield-halved"></i>
+            </div>
+            <h2>Vérification de sécurité</h2>
+            <p class="instruction">
+                Nous avons envoyé un code à 6 chiffres à l'adresse :<br>
+                <span id="email-span">contact@entreprise.ma</span>
+            </p>
+
+            <div class="otp-grid">
+                <input type="text" maxlength="1" class="otp-box" oninput="mNext(this, 1)" onkeydown="mPrev(this, 0)">
+                <input type="text" maxlength="1" class="otp-box" oninput="mNext(this, 2)" onkeydown="mPrev(this, 1)">
+                <input type="text" maxlength="1" class="otp-box" oninput="mNext(this, 3)" onkeydown="mPrev(this, 2)">
+                <input type="text" maxlength="1" class="otp-box" oninput="mNext(this, 4)" onkeydown="mPrev(this, 3)">
+                <input type="text" maxlength="1" class="otp-box" oninput="mNext(this, 5)" onkeydown="mPrev(this, 4)">
+                <input type="text" maxlength="1" class="otp-box" onkeydown="mPrev(this, 5)">
+            </div>
+
+            <div class="timer-info">
+                Expire dans : <span id="countdown">05:00</span>
+            </div>
+
+            <button class="btn-verify" onclick="verifyOTP()">Confirmer l'identité <i
+                    class="fas fa-arrow-right"></i></button>
+
+            <div class="resend-box">
+                <span class="action-link" onclick="location.reload()"><i class="fas fa-redo"></i> Renvoyer</span>
+                <a href="register.html" class="action-link"><i class="fas fa-pen"></i> Modifier email</a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        window.onload = () => {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('email')) document.getElementById('email-span').textContent = params.get('email');
+            startTimer(300);
+        };
+
+        function startTimer(duration) {
+            let timer = duration, minutes, seconds;
+            setInterval(function () {
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+                document.getElementById('countdown').textContent = (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
+                if (--timer < 0) timer = 0;
+            }, 1000);
+        }
+
+        function mNext(c, n) { if (c.value.length === 1) document.querySelectorAll('.otp-box')[n].focus(); }
+        function mPrev(c, p) { if (event.key === 'Backspace' && c.value === '') document.querySelectorAll('.otp-box')[p].focus(); }
+
+        function verifyOTP() {
+            let code = "";
+            document.querySelectorAll('.otp-box').forEach(i => code += i.value);
+            if (code.length === 6) {
+                window.location.href = 'company-profile-setup.html';
+            } else {
+                alert("Code incomplet");
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence Admin | Gestion des Litiges</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="../js/components.js"></script>
+    <script src="../js/admin-data.js"></script>
+
+    <style>
+        :root {
+            --admin-bg: #fcfcfd;
+            --card-border: #eaecf0;
+            --text-main: #101828;
+            --text-sub: #475467;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --danger-main: #b42318;
+            --danger-bg: #fef3f2;
+            --warning-main: #b54708;
+            --warning-bg: #fffaeb;
+            --info-main: #026aa2;
+            --info-bg: #f0f9ff;
+            --success-main: #027a48;
+            --success-bg: #ecfdf3;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--admin-bg);
+            color: var(--text-main);
+            letter-spacing: -0.01em;
+        }
+
+        .main-content {
+            padding: 0;
+            background: var(--admin-bg);
+        }
+
+        .top-nav {
+            background: white;
+            border-bottom: 1px solid var(--card-border);
+            padding: 1.25rem 2.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-container {
+            padding: 2rem 2.5rem;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        /* KPI Grid System */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin: 0;
+        }
+
+        .stat-subtext {
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            display: block;
+        }
+
+        /* Admin Table Styling */
+        .table-outer {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            scrollbar-width: thin;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        .admin-table th {
+            background: #f9fafb;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--card-border);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .admin-table td {
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid var(--card-border);
+            font-size: 0.85rem;
+            vertical-align: middle;
+        }
+
+        /* Status & Badges */
+        .badge {
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge-open {
+            background: var(--danger-bg);
+            color: var(--danger-main);
+            border: 1px solid #fda29b;
+        }
+
+        .badge-processing {
+            background: var(--warning-bg);
+            color: var(--warning-main);
+            border: 1px solid #fec84b;
+        }
+
+        .badge-mediation {
+            background: var(--info-bg);
+            color: var(--info-main);
+            border: 1px solid #b9e6fe;
+        }
+
+        .badge-resolved {
+            background: var(--success-bg);
+            color: var(--success-main);
+            border: 1px solid #6ce9a6;
+        }
+
+        .badge-closed {
+            background: #f2f4f7;
+            color: #344054;
+            border: 1px solid #eaecf0;
+        }
+
+        .motif-tag {
+            padding: 2px 6px;
+            background: #f2f4f7;
+            color: #344054;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 4px;
+            border: 1px solid #eaecf0;
+        }
+
+        .evidence-icons {
+            display: flex;
+            gap: 0.5rem;
+            color: var(--text-sub);
+            font-size: 0.75rem;
+        }
+
+        .evidence-icons i {
+            color: #026aa2;
+        }
+
+        .decision-badge {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #027a48;
+            background: #ecfdf3;
+            padding: 2px 6px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-top: 4px;
+        }
+
+        /* Actions Shell */
+        .action-btns {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .btn-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            border: 1px solid var(--card-border);
+            background: white;
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+
+        .btn-icon:hover {
+            border-color: var(--text-main);
+            color: var(--text-main);
+            background: #f9fafb;
+        }
+
+        .btn-icon.info:hover {
+            color: var(--info-main);
+            border-color: #b9e6fe;
+            background: var(--info-bg);
+        }
+
+        .btn-icon.success:hover {
+            color: var(--success-main);
+            border-color: #6ce9a6;
+            background: var(--success-bg);
+        }
+
+        .btn-icon.danger:hover {
+            color: var(--danger-main);
+            border-color: #fda29b;
+            background: var(--danger-bg);
+        }
+
+        .btn-icon.warning:hover {
+            color: var(--warning-main);
+            border-color: #fec84b;
+            background: var(--warning-bg);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+        <aside id="sidebar-container"></aside>
+
+        <main class="main-content">
+            <header class="top-nav">
+                <div>
+                    <h1 style="margin:0; font-size: 1.5rem; font-weight: 700;">Litiges</h1>
+                    <p style="margin:0; font-size: 0.85rem; color: var(--text-sub);">Arbitrage administratif, médiation
+                        et résolutions de conflits B2B</p>
+                </div>
+            </header>
+
+            <div class="dashboard-container">
+
+                <!-- Dispute Stats -->
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <span class="stat-label">Litiges Ouverts</span>
+                        <p class="stat-value" style="color: var(--danger-main);">8</p>
+                        <span class="stat-subtext" style="color: var(--danger-main);">Arbitrage requis</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">En Médiation</span>
+                        <p class="stat-value" style="color: var(--warning-main);">12</p>
+                        <span class="stat-subtext" style="color: var(--warning-main);">Délai moyen 48h</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Taux de Résolution</span>
+                        <p class="stat-value">98.5%</p>
+                        <span class="stat-subtext" style="color: var(--success-main);">Satisfaction parties</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Volume Litiges (K MAD)</span>
+                        <p class="stat-value">412.5</p>
+                        <span class="stat-subtext" style="color: var(--info-main);">Montant sous séquestre</span>
+                    </div>
+                </div>
+
+                <div class="table-outer">
+                    <div class="table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Litige / Deal</th>
+                                    <th>Produit / Catégorie</th>
+                                    <th>Acheteur / Entreprise (Plaignant)</th>
+                                    <th>Vendeur / Entreprise (Défendeur)</th>
+                                    <th>Motif du Litige</th>
+                                    <th>Description / Preuves</th>
+                                    <th>Statut Actuel</th>
+                                    <th>Dates (Ouverture / MàJ)</th>
+                                    <th>Décision Admin (Si résolu)</th>
+                                    <th style="text-align: right;">Actions Globales</th>
+                                </tr>
+                            </thead>
+                            <tbody id="disputes-table-body">
+                                <!-- Data injected via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            Components.renderAdminSidebar('admin-disputes.html');
+
+            const disputes = [
+                {
+                    id: 'LIT-0842', dealId: 'DEAL-838', product: 'Bobines Cuivre 5mm', cat: 'Matières Premières',
+                    acheteur: 'Julien Durand', buyerCo: 'LogiFrance',
+                    vendeur: 'Leila Mansouri', sellerCo: 'Intech Solutions',
+                    motif: 'Produit non conforme',
+                    desc: 'Le cuivre livré est du Grade B au lieu de Grade A (Certificat ISO manquant).',
+                    evidence: { photos: 3, video: 1, docs: 2 },
+                    status: 'mediation',
+                    dates: { open: '04/03/2026', update: '04/03/2026 14:20' },
+                    decision: null
+                },
+                {
+                    id: 'LIT-0840', dealId: 'DEAL-840', product: 'Moteur WEG 50HP', cat: 'Équipements',
+                    acheteur: 'Reda Hakimi', buyerCo: 'BuildIt SA',
+                    vendeur: 'Mehdi Tazi', sellerCo: 'Kenitra Metals',
+                    motif: 'Retard de livraison',
+                    desc: 'Livraison prévue le 01/03, toujours pas de signe du transporteur.',
+                    evidence: { photos: 0, video: 0, docs: 1 },
+                    status: 'processing',
+                    dates: { open: '02/03/2026', update: '03/03/2026 09:12' },
+                    decision: null
+                },
+                {
+                    id: 'LIT-0835', dealId: 'DEAL-830', product: 'Lot 500 Palettes', cat: 'Logistique',
+                    acheteur: 'Omar Alami', buyerCo: 'Atlas Mining Group',
+                    vendeur: 'Hamza El Amrani', sellerCo: 'Global Build Inc',
+                    motif: 'Produit endommagé',
+                    desc: '15 palettes sont fracturées et inutilisables.',
+                    evidence: { photos: 5, video: 0, docs: 0 },
+                    status: 'resolved',
+                    dates: { open: '25/02/2026', update: '01/03/2026 11:00' },
+                    decision: 'Remboursement partiel (2,400 MAD)'
+                },
+                {
+                    id: 'LIT-0830', dealId: 'DEAL-821', product: 'Acier Inox 316L', cat: 'Matières Premières',
+                    acheteur: 'Yasmine Benani', buyerCo: 'Safi Logistics',
+                    vendeur: 'Omar Alami', sellerCo: 'Atlas Mining Group',
+                    motif: 'Non livraison',
+                    desc: 'Le vendeur ne répond plus aux messages depuis le paiement validé.',
+                    evidence: { photos: 0, video: 0, docs: 3 },
+                    status: 'open',
+                    dates: { open: '04/03/2026', update: '04/03/2026 10:00' },
+                    decision: null
+                }
+            ];
+
+            const tbody = document.getElementById('disputes-table-body');
+
+            function renderDisputes(list) {
+                tbody.innerHTML = list.map(l => `
+                    <tr>
+                        <td>
+                            <div style="font-weight: 700; color: var(--danger-main); font-family: monospace;">${l.id}</div>
+                            <div style="font-size: 0.7rem; color: var(--text-sub);">Deal: ${l.dealId}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700;">${l.product}</div>
+                            <div style="font-size: 0.7rem; color: #026aa2; font-weight: 700;">${l.cat}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700;">${l.acheteur}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-sub);">${l.buyerCo}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700;">${l.vendeur}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-sub);">${l.sellerCo}</div>
+                        </td>
+                        <td>
+                            <span class="motif-tag">${l.motif}</span>
+                        </td>
+                        <td>
+                            <div style="font-size: 0.75rem; color: var(--text-sub); white-space: normal; max-width: 250px; font-style: italic; margin-bottom: 4px;">
+                                "${l.desc}"
+                            </div>
+                            <div class="evidence-icons">
+                                ${l.evidence.photos > 0 ? `<span><i class="fas fa-image"></i> ${l.evidence.photos}</span>` : ''}
+                                ${l.evidence.video > 0 ? `<span><i class="fas fa-video"></i> ${l.evidence.video}</span>` : ''}
+                                ${l.evidence.docs > 0 ? `<span><i class="fas fa-file-alt"></i> ${l.evidence.docs}</span>` : ''}
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge ${getStatusBadgeClass(l.status)}">
+                                ${getStatusLabel(l.status)}
+                            </span>
+                        </td>
+                        <td>
+                            <div style="font-size: 0.65rem;">Ouv: ${l.dates.open}</div>
+                            <div style="font-size: 0.65rem; color: #026aa2;">MàJ: ${l.dates.update}</div>
+                        </td>
+                        <td>
+                            ${l.decision ? `<span class="decision-badge"><i class="fas fa-gavel"></i> ${l.decision}</span>` : '<span style="font-size: 0.7rem; color: #98a2b3;">En attente de jugement</span>'}
+                        </td>
+                        <td style="text-align: right;">
+                            <div class="action-btns">
+                                <button class="btn-icon" title="Voir détails litige"><i class="fas fa-search-plus"></i></button>
+                                <button class="btn-icon info" title="Voir deal associé"><i class="fas fa-handshake"></i></button>
+                                <button class="btn-icon" title="Voir infos parties"><i class="fas fa-users-cog"></i></button>
+                                <button class="btn-icon info" title="Voir preuves"><i class="fas fa-paperclip"></i></button>
+                                <button class="btn-icon warning" title="Contacter les parties"><i class="fas fa-comments"></i></button>
+                                <button class="btn-icon success" title="Décider résolution"><i class="fas fa-balance-scale"></i></button>
+                                <button class="btn-icon danger" title="Fermer litige"><i class="fas fa-times-circle"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            function getStatusBadgeClass(status) {
+                switch (status) {
+                    case 'open': return 'badge-open';
+                    case 'processing': return 'badge-processing';
+                    case 'mediation': return 'badge-mediation';
+                    case 'resolved': return 'badge-resolved';
+                    case 'closed': return 'badge-closed';
+                    default: return '';
+                }
+            }
+
+            function getStatusLabel(status) {
+                switch (status) {
+                    case 'open': return 'Ouvert';
+                    case 'processing': return 'En cours';
+                    case 'mediation': return 'En médiation';
+                    case 'resolved': return 'Résolu';
+                    case 'closed': return 'Fermé';
+                    default: return status;
+                }
+            }
+
+            renderDisputes(disputes);
+        });
+    </script>
+</body>
+
+</html>

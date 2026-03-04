@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence Admin | Produits Populaires</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="../js/components.js"></script>
+    <script src="../js/admin-data.js"></script>
+
+    <style>
+        :root {
+            --admin-bg: #fcfcfd;
+            --card-border: #eaecf0;
+            --text-main: #101828;
+            --text-sub: #475467;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --primary-corporate: #101828;
+            --success-main: #027a48;
+            --success-bg: #ecfdf3;
+            --warning-main: #b54708;
+            --warning-bg: #fffaeb;
+            --danger-main: #b42318;
+            --danger-bg: #fef3f2;
+            --info-main: #026aa2;
+            --info-bg: #f0f9ff;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--admin-bg);
+            color: var(--text-main);
+            letter-spacing: -0.01em;
+        }
+
+        .main-content {
+            padding: 0;
+            background: var(--admin-bg);
+        }
+
+        .top-nav {
+            background: white;
+            border-bottom: 1px solid var(--card-border);
+            padding: 1.25rem 2.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-container {
+            padding: 2.5rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* KPI Section */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .stat-subtext {
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            display: block;
+        }
+
+        /* Filter Section */
+        .filter-bar {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 2rem;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr) auto;
+            gap: 1rem;
+            align-items: flex-end;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+            overflow-x: auto;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .filter-label {
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+        }
+
+        .filter-control {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            font-family: inherit;
+            font-size: 0.85rem;
+            color: var(--text-main);
+            background: #fff;
+        }
+
+        /* High-Density Data Table */
+        .table-outer {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            overflow-x: auto;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        .admin-table th {
+            background: #f9fafb;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .admin-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--card-border);
+            font-size: 0.85rem;
+            vertical-align: middle;
+        }
+
+        /* Conversion Progress */
+        .conv-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .progress-bar {
+            width: 50px;
+            height: 6px;
+            background: #f2f4f7;
+            border-radius: 99px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--info-main);
+        }
+
+        .badge {
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge-info {
+            background: var(--info-bg);
+            color: var(--info-main);
+        }
+
+        .badge-warning {
+            background: var(--warning-bg);
+            color: var(--warning-main);
+        }
+
+        /* Actions */
+        .action-btns {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            background: white;
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+        }
+
+        .btn-icon:hover {
+            border-color: var(--text-main);
+            color: var(--text-main);
+            background: #f9fafb;
+        }
+
+        .product-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .product-img {
+            width: 36px;
+            height: 36px;
+            border-radius: 6px;
+            object-fit: cover;
+            background: #f2f4f7;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+        <aside id="sidebar-container"></aside>
+
+        <main class="main-content">
+            <header class="top-nav">
+                <div>
+                    <h1 style="margin:0; font-size: 1.5rem; font-weight: 700;">Produits Populaires</h1>
+                    <p style="margin:0; font-size: 0.85rem; color: var(--text-sub);">Analyse d'attractivité du catalogue
+                        et monitoring des best-sellers</p>
+                </div>
+                <div style="display: flex; gap: 0.75rem;">
+                    <button class="btn btn-secondary" style="background: white;"><i class="fas fa-file-export"></i>
+                        Rapport complet</button>
+                    <button class="btn btn-primary"><i class="fas fa-sync"></i> Rafraîchir</button>
+                </div>
+            </header>
+
+            <div class="dashboard-container">
+
+                <!-- KPI Overview -->
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <span class="stat-label">Plus Vu</span>
+                        <p class="stat-value">Charbon Grade A</p>
+                        <span class="stat-subtext" style="color: var(--info-main); font-weight: 700;">12,450 vues</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Plus Vendu</span>
+                        <p class="stat-value">Acier Allié</p>
+                        <span class="stat-subtext" style="color: var(--success-main); font-weight: 700;">850
+                            tonnes</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Hot Deal (Offres)</span>
+                        <p class="stat-value">Atlas GX-7</p>
+                        <span class="stat-subtext" style="color: var(--warning-main); font-weight: 700;">42 offres en
+                            24h</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Conv. Moyenne</span>
+                        <p class="stat-value">3.2%</p>
+                        <span class="stat-subtext">Vues vers Ventes</span>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label class="filter-label">Période</label>
+                        <select class="filter-control">
+                            <option>Derniers 7 jours</option>
+                            <option selected>Derniers 30 jours</option>
+                            <option>Dernière année</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Catégorie</label>
+                        <select class="filter-control">
+                            <option selected>Toutes catégories</option>
+                            <option>Matières Premières</option>
+                            <option>Machines Industrielles</option>
+                            <option>Électronique</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Vendeur</label>
+                        <input type="text" class="filter-control" placeholder="Nom ou Entreprise...">
+                    </div>
+                    <button class="btn btn-primary" style="padding: 10px 20px;"><i class="fas fa-filter"></i>
+                        Filtrer</button>
+                </div>
+
+                <!-- Data Table -->
+                <div class="table-outer">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>ID Produit</th>
+                                <th>Désignation & Catégorie</th>
+                                <th>Vendeur / Entreprise</th>
+                                <th>Attractivité (Vues)</th>
+                                <th>Engagement (Offres)</th>
+                                <th>Ventes (Qté)</th>
+                                <th>Volume (MAD)</th>
+                                <th>Taux Conv.</th>
+                                <th>Publication</th>
+                                <th style="text-align: right;">Actions Régie</th>
+                            </tr>
+                        </thead>
+                        <tbody id="popular-products-body">
+                            <!-- Populated via script -->
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            Components.renderAdminSidebar('admin-analytics-products.html');
+
+            const products = [
+                {
+                    id: 'ADS-9912', title: 'Charbon Industriel Grade A', category: 'Matières P.', sub: 'Énergie',
+                    vendor: 'Ahmed Mansouri', company: 'Atlas Mining',
+                    stats: { views: 12450, offers: 85, sales: 1240, volume: 450200 },
+                    conversion: 9.9, date: '12/02/2026'
+                },
+                {
+                    id: 'ADS-9850', title: 'Compresseur ATLAS GX-7', category: 'Machines', sub: 'Air Comprimé',
+                    vendor: 'Mehdi Tazi', company: 'Tazi Industrial',
+                    stats: { views: 4200, offers: 42, sales: 15, volume: 320150 },
+                    conversion: 0.35, date: '15/02/2026'
+                },
+                {
+                    id: 'ADS-9740', title: 'Acier Allié (Poutrelles)', category: 'Matières P.', sub: 'Construction',
+                    vendor: 'Samir El Masri', company: 'Egyptian Steel',
+                    stats: { views: 8900, offers: 120, sales: 850, volume: 298400 },
+                    conversion: 9.5, date: '01/02/2026'
+                },
+                {
+                    id: 'ADS-9620', title: 'Moteurs Triphasés 15kW', category: 'Électronique', sub: 'Moteurs',
+                    vendor: 'Khalid Alami', company: 'Alami Tech',
+                    stats: { views: 3500, offers: 18, sales: 12, volume: 85000 },
+                    conversion: 0.34, date: '20/02/2026'
+                },
+                {
+                    id: 'ADS-9510', title: 'Pompes Centrifuges H8', category: 'Machines', sub: 'Hydraulique',
+                    vendor: 'Yassin Benani', company: 'Benani Systems',
+                    stats: { views: 2800, offers: 25, sales: 8, volume: 54700 },
+                    conversion: 0.28, date: '25/02/2026'
+                }
+            ];
+
+            const tbody = document.getElementById('popular-products-body');
+
+            function renderProducts(list) {
+                tbody.innerHTML = list.map(p => `
+                    <tr>
+                        <td style="font-family: monospace; font-weight: 700; color: var(--text-sub); font-size: 0.75rem;">${p.id}</td>
+                        <td>
+                            <div class="product-info">
+                                <div>
+                                    <div style="font-weight: 700; font-size: 0.9rem;">${p.title}</div>
+                                    <div style="font-size: 0.7rem; color: var(--text-sub); text-transform: uppercase; font-weight: 800;">
+                                        ${p.category} > ${p.sub}
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700;">${p.vendor}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-sub);">${p.company}</div>
+                        </td>
+                        <td style="font-weight: 800; color: var(--info-main);">${p.stats.views.toLocaleString()}</td>
+                        <td style="font-weight: 700;">
+                            <span class="badge ${p.stats.offers > 50 ? 'badge-warning' : 'badge-info'}">${p.stats.offers} offres</span>
+                        </td>
+                        <td style="font-weight: 800;">${p.stats.sales.toLocaleString()}</td>
+                        <td style="font-weight: 700;">${p.stats.volume.toLocaleString()}</td>
+                        <td>
+                            <div class="conv-box">
+                                <span style="font-weight: 800; font-size: 0.8rem; min-width: 32px;">${p.conversion}%</span>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: ${p.conversion * 10}%;"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td style="font-size: 0.75rem; color: var(--text-sub); font-weight: 600;">${p.date}</td>
+                        <td style="text-align: right;">
+                            <div class="action-btns" style="justify-content: flex-end;">
+                                <button class="btn-icon" title="Voir produit"><i class="fas fa-eye"></i></button>
+                                <button class="btn-icon" title="Voir vendeur"><i class="fas fa-user-tie"></i></button>
+                                <button class="btn-icon" title="Transactions"><i class="fas fa-handshake"></i></button>
+                                <button class="btn-icon" title="Rapport"><i class="fas fa-file-download"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            renderProducts(products);
+        });
+    </script>
+</body>
+
+</html>

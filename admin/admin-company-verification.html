@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence Admin | Vérification Entreprise (KYB)</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="../js/components.js"></script>
+    <script src="../js/admin-data.js"></script>
+
+    <style>
+        :root {
+            --admin-bg: #fcfcfd;
+            --card-border: #eaecf0;
+            --text-main: #101828;
+            --text-sub: #475467;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--admin-bg);
+            color: var(--text-main);
+            letter-spacing: -0.01em;
+        }
+
+        .main-content {
+            padding: 0;
+            background: var(--admin-bg);
+        }
+
+        .top-nav {
+            background: white;
+            border-bottom: 1px solid var(--card-border);
+            padding: 1.25rem 2.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-container {
+            padding: 2rem 2.5rem;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        /* KPI Grid System */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin: 0;
+        }
+
+        .stat-subtext {
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            display: block;
+        }
+
+        /* Table Components */
+        .table-outer {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            scrollbar-width: thin;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        .admin-table th {
+            background: #f9fafb;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--card-border);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .admin-table td {
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid var(--card-border);
+            font-size: 0.85rem;
+            vertical-align: middle;
+        }
+
+        /* Status & Badges */
+        .badge {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge-pending {
+            background: #fffaeb;
+            color: #b54708;
+            border: 1px solid #fec84b;
+        }
+
+        .badge-verified {
+            background: #ecfdf3;
+            color: #027a48;
+            border: 1px solid #6ce9a6;
+        }
+
+        .badge-refused {
+            background: #fef3f2;
+            color: #b42318;
+            border: 1px solid #fda29b;
+        }
+
+        /* File Links */
+        .doc-link {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #026aa2;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-bottom: 2px;
+        }
+
+        .doc-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Actions Shell */
+        .action-btns {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: 1px solid var(--card-border);
+            background: white;
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-icon:hover {
+            border-color: var(--text-main);
+            color: var(--text-main);
+            background: #f9fafb;
+        }
+
+        .btn-icon.success:hover {
+            color: #027a48;
+            border-color: #6ce9a6;
+            background: #ecfdf3;
+        }
+
+        .btn-icon.danger:hover {
+            color: #b42318;
+            border-color: #fda29b;
+            background: #fef3f2;
+        }
+
+        .btn-icon.warning:hover {
+            color: #b54708;
+            border-color: #fec84b;
+            background: #fffaeb;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+        <aside id="sidebar-container"></aside>
+
+        <main class="main-content">
+            <header class="top-nav">
+                <div>
+                    <h1 style="margin:0; font-size: 1.5rem; font-weight: 700;">Vérification Entreprise (KYB)</h1>
+                    <p style="margin:0; font-size: 0.85rem; color: var(--text-sub);">Audit approfondi et conformité
+                        légale des entités industrielles</p>
+                </div>
+            </header>
+
+            <div class="dashboard-container">
+
+                <!-- KYB Stats -->
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <span class="stat-label">En attente de vérification</span>
+                        <p class="stat-value">22</p>
+                        <span class="stat-subtext" style="color: #b54708;">+4 depuis 24h</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Entreprises Validées</span>
+                        <p class="stat-value">124</p>
+                        <span class="stat-subtext" style="color: #027a48;">84% du catalogue</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Dossiers Refusés</span>
+                        <p class="stat-value">12</p>
+                        <span class="stat-subtext" style="color: #b42318;">Non-conformité ICE</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Taux de Conformité</span>
+                        <p class="stat-value">91.2%</p>
+                        <span class="stat-subtext" style="color: #026aa2;">Standard B2B Global</span>
+                    </div>
+                </div>
+
+                <div class="table-outer">
+                    <div class="table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID / Entreprise</th>
+                                    <th>Secteur / Création</th>
+                                    <th>Localisation & Adresse</th>
+                                    <th>Identifiants Légaux (RC / ICE / TVA) / Web</th>
+                                    <th>Mandataire & Contact</th>
+                                    <th>Documents Fournis</th>
+                                    <th>Dates (Soum. / Valid.)</th>
+                                    <th>Statut de vérif.</th>
+                                    <th>Commentaires / Motif Refus</th>
+                                    <th style="text-align: right;">Actions Admin</th>
+                                </tr>
+                            </thead>
+                            <tbody id="kyb-table-body">
+                                <!-- JS Injected -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            Components.renderAdminSidebar('admin-company-verification.html');
+
+            const kybRecords = [
+                {
+                    id: 'ENT-2041', name: 'Atlas Mining Group', sector: 'Raw Materials', created: '12/05/2018',
+                    country: 'Maroc', city: 'Casablanca', address: 'Zone Industrielle, Tit Mellil, Lot 45',
+                    rc: '84422', ice: '001524388000045', tva: '50221941', web: 'atlasmining.ma',
+                    repName: 'Omar Alami', email: 'o.alami@atlasmining.ma', phone: '+212 522-114400',
+                    docs: { rc: 'RC_Atlas_2026.pdf', statuts: 'Statuts_Atlas.pdf', idRep: 'CIN_Alami.jpg', address: 'Lydec_Facture.pdf' },
+                    submitted: '02/03/2026', validated: '--', status: 'pending', comments: 'Audit initial en cours.', reason: '--'
+                },
+                {
+                    id: 'ENT-2038', name: 'BuildIt SA', sector: 'Construction', created: '08/11/2020',
+                    country: 'Maroc', city: 'Tanger', address: 'Boulvard Tanger, Lot 4, Etage 2',
+                    rc: '91200', ice: '002294911000018', tva: '33811904', web: 'buildit-ma.com',
+                    repName: 'Reda Hakimi', email: 'r.hakimi@buildit.ma', phone: '+212 539-887766',
+                    docs: { rc: 'RC_BuildIt.pdf', statuts: 'Statuts_BuildIt.pdf', idRep: 'Passport_Hakimi.jpg', address: 'Quittance_Bureau.pdf' },
+                    submitted: '24/02/2026', validated: '25/02/2026', status: 'verified', comments: 'Conformité totale certifiée.', reason: '--'
+                },
+                {
+                    id: 'ENT-2035', name: 'Kenitra Metals', sector: 'Manufacturing', created: '15/01/2022',
+                    country: 'Maroc', city: 'Kenitra', address: 'Atlantic Free Zone, Secteur 4',
+                    rc: '44556', ice: '001994433000091', tva: '77221100', web: 'kmetals.ma',
+                    repName: 'Mehdi Tazi', email: 'm.tazi@kmetals.ma', phone: '+212 537-112233',
+                    docs: { rc: 'RC_KM.pdf', statuts: 'Statuts_KM.pdf', idRep: 'ID_Tazi.jpg', address: 'Tel_Fixe.pdf' },
+                    submitted: '15/01/2026', validated: '16/01/2026', status: 'refused', comments: 'Tentative de fraude identifiée.', reason: 'ICE falsifié détecté.'
+                },
+                {
+                    id: 'ENT-2042', name: 'LogiGlobal Maroc', sector: 'Logistique', created: '22/09/2019',
+                    country: 'Maroc', city: 'Safi', address: 'Port de Safi, Zone Nord, Bloc 2',
+                    rc: '11200', ice: '003112299000042', tva: '99011234', web: 'logiglobal.ma',
+                    repName: 'Yasmine Benani', email: 'y.benani@logiglobal.ma', phone: '+212 524-223300',
+                    docs: { rc: 'RC_Logi.pdf', statuts: 'Statuts_Logi.pdf', idRep: 'CIN_Benani.jpg', address: 'Assurance_Bail.pdf' },
+                    submitted: '04/03/2026', validated: '--', status: 'pending', comments: 'Documents en haute définition.', reason: '--'
+                }
+            ];
+
+            const tbody = document.getElementById('kyb-table-body');
+
+            function renderKYB(list) {
+                tbody.innerHTML = list.map(k => `
+                    <tr>
+                        <td>
+                            <div style="font-weight: 700; color: var(--text-main);">${k.name}</div>
+                            <div style="font-size: 0.7rem; color: var(--text-sub); font-family: monospace;">${k.id}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700;">${k.sector}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-sub);">Créée le ${k.created}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 600;">${k.country}, ${k.city}</div>
+                            <div style="font-size: 0.7rem; color: var(--text-sub); max-width: 150px; white-space: normal;">${k.address}</div>
+                        </td>
+                        <td>
+                            <div style="font-size: 0.75rem;">RC: <strong>${k.rc}</strong> | ICE: <strong>${k.ice}</strong></div>
+                            <div style="font-size: 0.75rem;">TVA: <strong>${k.tva}</strong></div>
+                            <div style="font-size: 0.7rem; color: #026aa2; font-weight: 600;">${k.web}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700; font-size: 0.85rem;">${k.repName}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-sub);">${k.email}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-sub);">${k.phone}</div>
+                        </td>
+                        <td>
+                            <a href="#" class="doc-link" title="Voir Registre de commerce"><i class="fas fa-file-contract"></i> RC</a>
+                            <a href="#" class="doc-link" title="Voir Statuts de l'entreprise"><i class="fas fa-file-invoice"></i> Statuts</a>
+                            <a href="#" class="doc-link" title="Voir Identité Rep."><i class="fas fa-id-card"></i> ID Rep</a>
+                            <a href="#" class="doc-link" title="Voir Preuve d'adresse"><i class="fas fa-map-marker-alt"></i> Adresse</a>
+                        </td>
+                        <td>
+                            <div style="font-size: 0.75rem;">Soum: ${k.submitted}</div>
+                            <div style="font-size: 0.75rem; color: #027a48;">Valid: ${k.validated}</div>
+                        </td>
+                        <td>
+                            <span class="badge badge-${k.status}">${k.status === 'pending' ? 'En attente' : (k.status === 'verified' ? 'Vérifiée' : 'Refusée')}</span>
+                        </td>
+                        <td>
+                            <div style="font-size: 0.75rem; color: var(--text-sub); max-width: 150px; white-space: normal;">${k.comments}</div>
+                            ${k.reason !== '--' ? `<div style="font-size: 0.7rem; color: #b42318; font-weight: 700; margin-top: 4px;">Motif: ${k.reason}</div>` : ''}
+                        </td>
+                        <td style="text-align: right;">
+                            <div class="action-btns">
+                                <button class="btn-icon" title="Voir documents"><i class="fas fa-folder-open"></i></button>
+                                <button class="btn-icon success" title="Approuver entreprise"><i class="fas fa-check-double"></i></button>
+                                <button class="btn-icon danger" title="Refuser entreprise"><i class="fas fa-times-circle"></i></button>
+                                <button class="btn-icon warning" title="Demander documents supp."><i class="fas fa-file-medical"></i></button>
+                                <button class="btn-icon danger" title="Suspendre entreprise"><i class="fas fa-ban"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            renderKYB(kybRecords);
+        });
+    </script>
+</body>
+
+</html>

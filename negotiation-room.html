@@ -1,39 +1,237 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fluxence - Negotiation Room</title>
+    <title>Salles de Négociation | Fluxence B2B</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
-    <link rel="stylesheet" href="css/negotiations.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="js/components.js"></script>
     <style>
-        /* Breadcrumbs */
-        .breadcrumbs {
-            display: flex;
-            gap: 0.5rem;
-            align-items: center;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
+        :root {
+            --room-bg: #f9fafb;
+            --brand-primary: #00b140;
+            --brand-dark: #101828;
+            --brand-secondary: #475467;
+            --border-color: #eaecf0;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--room-bg);
+            color: var(--brand-dark);
+        }
+
+        .negotiation-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 1.5rem;
+            height: calc(100vh - 120px);
+        }
+
+        /* Top Info Bar */
+        .neg-header-bar {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
             margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
         }
 
-        .breadcrumbs a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: var(--transition);
+        .neg-id-badge {
+            background: #f2f4f7;
+            color: var(--brand-secondary);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-weight: 700;
+            font-size: 0.85rem;
         }
 
-        .breadcrumbs a:hover {
-            color: var(--primary-color);
+        .room-main {
+            display: flex;
+            flex-direction: column;
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
         }
 
-        .breadcrumb-sep {
-            color: #cbd5e1;
+        .chat-history {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            background: #fcfcfd;
+        }
+
+        /* Offer Card in Chat */
+        .offer-card {
+            max-width: 80%;
+            padding: 1.25rem;
+            border-radius: 12px;
+            position: relative;
+            box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
+        }
+
+        .offer-card.sent {
+            align-self: flex-end;
+            background: var(--white);
+            border: 1px solid var(--brand-primary);
+        }
+
+        .offer-card.received {
+            align-self: flex-start;
+            background: #f2f4f7;
+            border: 1px solid var(--border-color);
+        }
+
+        .offer-card .meta {
             font-size: 0.75rem;
+            color: var(--brand-secondary);
+            margin-bottom: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .offer-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+        }
+
+        .offer-val {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--brand-dark);
+        }
+
+        .offer-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--brand-secondary);
+            display: block;
+        }
+
+        .offer-comment {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: var(--brand-secondary);
+        }
+
+        .status-tag {
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+            display: inline-block;
+        }
+
+        .status-sent {
+            background: #ecfdf3;
+            color: #027a48;
+        }
+
+        .status-counter {
+            background: #eff6ff;
+            color: #175cd3;
+        }
+
+        .status-accepted {
+            background: #00b140;
+            color: #ffffff;
+        }
+
+        .status-refused {
+            background: #fef3f2;
+            color: #b42318;
+        }
+
+        /* Sidebar Info */
+        .room-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .sidebar-card {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.25rem;
+        }
+
+        .sidebar-title {
+            font-size: 0.85rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--brand-secondary);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        /* Action Panel */
+        .action-panel {
+            padding: 1.5rem;
+            background: var(--white);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .security-banner {
+            background: #fff8f1;
+            border: 1px solid #fedf89;
+            padding: 1rem;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            color: #b54708;
+            margin-top: auto;
+        }
+
+        .deal-flow-btns {
+            display: flex;
+            gap: 0.75rem;
+            width: 100%;
+        }
+
+        .btn-refuse {
+            background: #fee2e2;
+            color: #d92d20;
+            border: none;
+        }
+
+        .btn-refuse:hover {
+            background: #fecdca;
+        }
+
+        /* Modal Custom */
+        .b2b-modal {
+            max-width: 550px !important;
         }
     </style>
 </head>
@@ -43,140 +241,227 @@
     <div class="layout-dashboard">
         <aside id="sidebar-container"></aside>
 
-        <main class="main-content" style="padding: 1.5rem;">
+        <main class="main-content" style="padding: 2rem;">
 
-            <div class="room-container">
-                <!-- Room Header -->
-                <div class="room-header"
-                    style="flex-direction: column; align-items: flex-start; gap: 1rem; border-bottom: 1px solid var(--border-color); background: var(--white);">
-                    <div id="breadcrumbs-container"></div>
-                    <div style="text-align: left; width: 100%;">
-                        <h3 id="room-title"
-                            style="margin: 0; font-size: 1.5rem; font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em;">
-                            Loading...</h3>
-                        <p id="room-price"
-                            style="margin: 0; font-size: 1rem; color: var(--text-secondary); font-weight: 500;">Listing
-                            Price: ...</p>
+            <!-- Header Bar -->
+            <div class="neg-header-bar">
+                <div style="display: flex; align-items: center; gap: 1.5rem;">
+                    <div class="neg-id-badge" id="neg-id">NEG-2026-842</div>
+                    <div>
+                        <h2 id="product-name" style="margin:0; font-size: 1.25rem; font-weight: 800;">Acier Inox 316L
+                            (Bobines)</h2>
+                        <p style="margin:0; font-size: 0.85rem; color: var(--brand-secondary);">Ouvert le 04 Mars 2026
+                        </p>
+                    </div>
+                </div>
+                <div style="text-align: right;">
+                    <div id="neg-status" class="status-tag status-counter">Négociation en cours</div>
+                    <div style="font-size: 0.85rem; font-weight: 700; color: var(--brand-primary); margin-top: 4px;">En
+                        attente de votre réponse</div>
+                </div>
+            </div>
+
+            <div class="negotiation-wrapper">
+                <!-- Chat & Action Area -->
+                <div class="room-main">
+                    <div class="chat-history" id="chat-history">
+                        <!-- Offers will be injected here -->
+                    </div>
+
+                    <!-- Security Reminder -->
+                    <div style="padding: 0 1.5rem;">
+                        <div class="security-banner">
+                            <i class="fas fa-shield-alt"></i> <strong>Avertissement de Sécurité :</strong>
+                            Les négociations sont protégées et gérées par la plateforme pour garantir des transactions
+                            sécurisées entre entreprises. Le partage de coordonnées externes est proscrit.
+                        </div>
+                    </div>
+
+                    <!-- Action Actions -->
+                    <div class="action-panel">
+                        <div class="deal-flow-btns" id="action-buttons">
+                            <button class="btn btn-primary" style="flex: 2; height: 50px;" onclick="openOfferModal()">
+                                <i class="fas fa-paper-plane"></i> Envoyer une contre-offre
+                            </button>
+                            <button class="btn btn-secondary" id="btn-accept"
+                                style="flex: 1.5; color: white; background: #00b140; border: none; height: 50px;"
+                                onclick="handleAccept()">
+                                <i class="fas fa-check-circle"></i> Accepter l'offre
+                            </button>
+                            <button class="btn btn-white btn-refuse" style="flex: 1; height: 50px;"
+                                onclick="handleRefuse()">
+                                <i class="fas fa-times-circle"></i> Refuser
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Timeline -->
-                <div class="timeline-area" id="timeline">
-                    <!-- Messages Injected Here -->
-                </div>
+                <!-- Sidebar Metadata -->
+                <div class="room-sidebar">
+                    <div class="sidebar-card">
+                        <span class="sidebar-title">Parties Engagées</span>
+                        <div style="display: flex; flex-direction: column; gap: 1rem;">
+                            <div>
+                                <label class="offer-label">Acheteur</label>
+                                <div style="font-weight: 700; font-size: 0.95rem;">Safi Logistics SA</div>
+                                <div style="font-size: 0.8rem; color: var(--brand-secondary);">Casablanca, MA</div>
+                            </div>
+                            <div style="border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
+                                <label class="offer-label">Vendeur</label>
+                                <div style="font-weight: 700; font-size: 0.95rem;">Atlas Mining Group</div>
+                                <div style="font-size: 0.8rem; color: var(--brand-secondary);">Tanger Med, MA</div>
+                            </div>
+                        </div>
+                    </div>
 
-                <!-- Waiting Status -->
-                <div class="waiting-status" id="status-msg">
-                    Waiting for response...
-                </div>
+                    <div class="sidebar-card">
+                        <span class="sidebar-title">Détails de l'annonce</span>
+                        <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1rem;">
+                            <div
+                                style="width: 60px; height: 60px; background: #f2f4f7; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--brand-primary);">
+                                <i class="fas fa-cubes fa-2x"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight: 700;">Acier Inox 316L</div>
+                                <div style="font-size: 0.85rem; color: var(--brand-secondary);">Réf: ML-8402</div>
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                            <div style="background: #f9fafb; padding: 0.75rem; border-radius: 8px;">
+                                <span class="offer-label">Prix catalogue</span>
+                                <div style="font-weight: 700;">18,500 MAD</div>
+                            </div>
+                            <div style="background: #f9fafb; padding: 0.75rem; border-radius: 8px;">
+                                <span class="offer-label">Quantité dispo</span>
+                                <div style="font-weight: 700;">45 Tonnes</div>
+                            </div>
+                        </div>
+                    </div>
 
-                <!-- Footer Actions -->
-                <div class="room-footer"
-                    style="border-top: 1px solid var(--border-color); background: var(--white); padding: 1.5rem;">
-                    <button class="btn btn-secondary" style="width: auto;" onclick="openOfferModal()">
-                        <i class="fas fa-plus"></i> <span id="new-offer-text">New Offer</span>
-                    </button>
-                    <button class="btn btn-primary" style="width: auto;" id="accept-btn" onclick="acceptOffer()">
-                        Accept Deal
-                    </button>
+                    <a href="negotiations.html"
+                        style="text-align: center; color: var(--brand-secondary); text-decoration: none; font-size: 0.9rem; font-weight: 600;">
+                        <i class="fas fa-arrow-left"></i> Retour aux négociations
+                    </a>
                 </div>
             </div>
 
         </main>
     </div>
 
-    <!-- Offer Modal -->
-    <div class="overlay" id="offer-overlay"></div>
-    <div id="offer-modal" class="modal-centered">
+    <!-- Counter Offer Modal -->
+    <div class="overlay" id="modal-overlay"></div>
+    <div id="offer-modal" class="modal-centered b2b-modal">
         <div class="modal-header">
-            <h2 class="modal-title">Make Counter Offer</h2>
-            <button class="icon-btn" onclick="closeOfferModal()"><i class="fas fa-times"></i></button>
+            <h2 class="modal-title" style="font-size: 1.25rem;"><i class="fas fa-handshake"></i> Nouvelle Offre
+                Commerciale</h2>
+            <button class="btn-icon" onclick="closeOfferModal()"><i class="fas fa-times"></i></button>
         </div>
-        <div class="modal-section">
-            <label class="form-label">Your Price (MAD)</label>
-            <input type="number" id="offer-price" class="form-input" placeholder="0.00">
-        </div>
-        <div class="modal-section">
-            <label class="form-label">Message (Optional)</label>
-            <textarea id="offer-msg" class="form-input" rows="3" placeholder="Add a note..."></textarea>
-            <p style="font-size: 0.75rem; color: #ef4444; margin-top: 0.5rem;">
-                <i class="fas fa-exclamation-triangle"></i> Sharing phone numbers, emails, or external links is strictly
-                prohibited until the deal is finalized.
-            </p>
-        </div>
-        <div class="modal-actions">
-            <button class="btn btn-secondary" onclick="closeOfferModal()">Cancel</button>
-            <button class="btn btn-primary" onclick="submitOffer()">Send Offer</button>
+        <div style="padding: 1.5rem;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                <div>
+                    <label class="form-label">Quantité demandée</label>
+                    <div style="position: relative;">
+                        <input type="number" id="input-qty" class="form-input" value="12" style="padding-right: 3rem;">
+                        <span
+                            style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-weight: 700; color: var(--brand-secondary); font-size: 0.8rem;">UNIT</span>
+                    </div>
+                </div>
+                <div>
+                    <label class="form-label">Prix unitaire (MAD)</label>
+                    <input type="number" id="input-price" class="form-input" value="18200">
+                </div>
+            </div>
+
+            <div
+                style="background: #f0fdf4; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-weight: 700; color: #166534;">MONTANT TOTAL HT</span>
+                <span id="total-calc" style="font-size: 1.25rem; font-weight: 800; color: #166534;">218,400 MAD</span>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Commentaire ou conditions (Optionnel)</label>
+                <textarea id="input-comment" class="form-input" rows="3"
+                    placeholder="Ex: Livraison incluse, paiement à 30 jours..."></textarea>
+            </div>
+
+            <div class="modal-actions" style="margin-top: 2rem;">
+                <button class="btn btn-white" style="flex: 1;" onclick="closeOfferModal()">Annuler</button>
+                <button class="btn btn-primary" style="flex: 2;" onclick="submitNewOffer()">Envoyer l'offre
+                    officielle</button>
+            </div>
         </div>
     </div>
 
-    <script src="js/app.js"></script>
     <script>
-        // --- Room Logic ---
+        // Room Setup
         const urlParams = new URLSearchParams(window.location.search);
-        const ROLE = urlParams.get('role') || 'buyer'; // 'buyer' or 'seller'
-        const ID = urlParams.get('id') || '1';
+        const NEG_ID = urlParams.get('id') || 'NEG-2026-842';
+        const USER_ROLE = urlParams.get('role') || 'buyer'; // 'buyer' or 'seller'
 
-        // Mock Data (In reality, fetch from API)
-        const roomData = {
-            1: { title: '50 Tons of Portland Cement', price: 120000 },
-            2: { title: 'Copper Wiring Scraps', price: 45000 },
-            3: { title: 'Aluminum Blocks', price: 13000 }
-        };
-
-        // Initial Conversation State (or load from localStorage)
-        const defaultMsgs = [
-            { type: 'initial', sender: 'seller', price: 120000, text: 'Initial Listing Price' },
-            { type: 'counter', sender: 'buyer', price: 110000, text: 'Would you accept this for quick payment?' },
-            { type: 'counter', sender: 'seller', price: 115000, text: 'I can do 115. final price.' }
+        // Mock History
+        let offerHistory = [
+            {
+                id: 1,
+                sender: 'Safi Logistics (Acheteur)',
+                role: 'buyer',
+                qty: 12,
+                price: 18000,
+                comment: "Offre initiale pour un lot de 12 bobines.",
+                date: "04/03/2026 09:15",
+                status: 'sent'
+            },
+            {
+                id: 2,
+                sender: 'Atlas Mining Group (Vendeur)',
+                role: 'seller',
+                qty: 12,
+                price: 18400,
+                comment: "Nous pouvons descendre à 18,400 MAD pour une livraison immédiate.",
+                date: "04/03/2026 10:30",
+                status: 'counter'
+            }
         ];
 
-        function loadRoom() {
-            const data = roomData[ID] || { title: 'Unknown Item', price: 0 };
-            document.getElementById('room-title').innerText = data.title;
-            document.getElementById('room-price').innerText = `Listing: ${data.price.toLocaleString()} MAD`;
+        function renderChat() {
+            const container = document.getElementById('chat-history');
+            container.innerHTML = offerHistory.map(of => `
+                <div class="offer-card ${of.role === USER_ROLE ? 'sent' : 'received'}">
+                    <div class="meta">
+                        <span style="font-weight: 800; color: var(--brand-dark);">${of.sender}</span>
+                        <span>${of.date}</span>
+                    </div>
+                    <div class="offer-details">
+                        <div>
+                            <span class="offer-label">Quantité</span>
+                            <div class="offer-val">${of.qty} <small style="font-size: 0.6rem;">UNITÉS</small></div>
+                        </div>
+                        <div>
+                            <span class="offer-label">Prix Unitaire</span>
+                            <div class="offer-val">${of.price.toLocaleString()} <small style="font-size: 0.6rem;">MAD</small></div>
+                        </div>
+                    </div>
+                    <div style="font-weight: 700; font-size: 0.85rem; margin-bottom: 0.5rem; color: var(--brand-primary);">
+                        Total: ${(of.qty * of.price).toLocaleString()} MAD
+                    </div>
+                    <div class="offer-comment">${of.comment}</div>
+                    <div class="status-tag ${of.status === 'sent' ? 'status-sent' : 'status-counter'}">
+                        ${of.status === 'sent' ? 'Offre envoyée' : 'Contre-offre'}
+                    </div>
+                </div>
+            `).join('');
 
-            // Button Texts
-            document.getElementById('new-offer-text').innerText = ROLE === 'buyer' ? 'New Offer' : 'Counter Offer';
+            container.scrollTop = container.scrollHeight;
 
-            // Render Messages
-            const stored = localStorage.getItem(`room_${ID}`);
-            const messages = stored ? JSON.parse(stored) : defaultMsgs;
-            renderTimeline(messages);
-
-            // Status Msg
-            const lastMsg = messages[messages.length - 1];
-            const isMyTurn = (ROLE === 'buyer' && lastMsg.sender === 'seller') || (ROLE === 'seller' && lastMsg.sender === 'buyer');
-
-            document.getElementById('status-msg').innerText = isMyTurn ? "Your turn to respond" : "Waiting for the other party...";
-            document.getElementById('accept-btn').innerText = `Accept ${lastMsg.price.toLocaleString()} MAD`;
-
-            // Auto scroll
-            const timeline = document.getElementById('timeline');
-            timeline.scrollTop = timeline.scrollHeight;
+            // Updated Accept Button Price
+            const lastOffer = offerHistory[offerHistory.length - 1];
+            if (lastOffer.role !== USER_ROLE) {
+                document.getElementById('btn-accept').innerHTML = `<i class="fas fa-check-circle"></i> Accepter l'offre à ${lastOffer.price.toLocaleString()} MAD`;
+            }
         }
 
-        function renderTimeline(msgs) {
-            const container = document.getElementById('timeline');
-            container.innerHTML = '';
-
-            msgs.forEach(m => {
-                const isOwn = (m.sender === ROLE); // If user is buyer, and sender is buyer -> Own
-
-                const block = document.createElement('div');
-                block.className = `offer-block ${isOwn ? 'own' : 'other'}`;
-                block.innerHTML = `
-                  <div class="offer-label">${m.type} • ${m.sender}</div>
-                  <div class="offer-price">${m.price.toLocaleString()} MAD</div>
-                  <div class="offer-msg">${m.text}</div>
-              `;
-                container.appendChild(block);
-            });
-        }
-
-        // Interaction
+        // Modal Logic
         function openOfferModal() {
-            document.getElementById('offer-overlay').classList.add('active');
+            document.getElementById('modal-overlay').classList.add('active');
             const modal = document.getElementById('offer-modal');
             modal.style.opacity = '1';
             modal.style.pointerEvents = 'auto';
@@ -184,56 +469,69 @@
         }
 
         function closeOfferModal() {
-            document.getElementById('offer-overlay').classList.remove('active');
+            document.getElementById('modal-overlay').classList.remove('active');
             const modal = document.getElementById('offer-modal');
             modal.style.opacity = '0';
             modal.style.pointerEvents = 'none';
             modal.style.transform = 'translate(-50%, -40%)';
         }
 
-        function submitOffer() {
-            const price = parseInt(document.getElementById('offer-price').value);
-            const msg = document.getElementById('offer-msg').value;
+        function submitNewOffer() {
+            const qty = parseInt(document.getElementById('input-qty').value);
+            const price = parseInt(document.getElementById('input-price').value);
+            const comment = document.getElementById('input-comment').value;
 
-            // Simple Anti-Circumvention Filter (Regex)
-            const contactPattern = /(\b[0-9]{10,}\b)|(\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b)|(www\.|http:|https:)/gi;
-
-            if (contactPattern.test(msg)) {
-                alert("For security reasons, sharing contact information (phone, email, links) is not allowed within the negotiation room. Your message has been blocked.");
+            // Basic Anti-Circumvention
+            const regex = /(\b[0-9]{10,}\b)|(\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b)/gi;
+            if (regex.test(comment)) {
+                alert("Pour des raisons de sécurité, le partage de numéros de téléphone ou d'emails est interdit. Merci de rester sur la plateforme Fluxence.");
                 return;
             }
 
-            if (price) {
-                const stored = localStorage.getItem(`room_${ID}`);
-                const messages = stored ? JSON.parse(stored) : [...defaultMsgs];
+            const newOffer = {
+                id: offerHistory.length + 1,
+                sender: USER_ROLE === 'buyer' ? 'Safi Logistics (Moi)' : 'Atlas Mining (Moi)',
+                role: USER_ROLE,
+                qty: qty,
+                price: price,
+                comment: comment || "Nouvelle contre-offre proposée.",
+                date: new Date().toLocaleString('fr-FR'),
+                status: 'counter'
+            };
 
-                const newMsg = {
-                    type: 'counter',
-                    sender: ROLE,
-                    price: price,
-                    text: msg || 'Counter offer sent.'
-                };
+            offerHistory.push(newOffer);
+            renderChat();
+            closeOfferModal();
+        }
 
-                messages.push(newMsg);
-                localStorage.setItem(`room_${ID}`, JSON.stringify(messages));
-
-                closeOfferModal();
-                loadRoom(); // Re-render
-            } else {
-                alert("Enter a price");
+        function handleAccept() {
+            const last = offerHistory[offerHistory.length - 1];
+            if (confirm(`Confirmez-vous l'acceptation de l'offre pour un montant total de ${(last.qty * last.price).toLocaleString()} MAD ?`)) {
+                window.location.href = `checkout.html?neg_id=${NEG_ID}&final_price=${last.price}&qty=${last.qty}`;
             }
         }
 
-        function acceptOffer() {
-            if (confirm("Are you sure you want to accept this deal? This will officially approve the transaction.")) {
-                alert("Deal Approved! IBC is now generating the Proforma Invoice. You will be redirected to the secure checkout.");
-                // Redirect to checkout with the item context
-                window.location.href = 'checkout.html?id=' + ID;
+        function handleRefuse() {
+            if (confirm("Voulez-vous vraiment refuser cette offre et fermer la négociation ?")) {
+                alert("Négociation refusée et fermée.");
+                window.location.href = 'negotiations.html';
             }
         }
 
-        // Run
-        loadRoom();
+        // Auto-calc total in modal
+        document.getElementById('input-qty').addEventListener('input', updateCalc);
+        document.getElementById('input-price').addEventListener('input', updateCalc);
+
+        function updateCalc() {
+            const q = parseInt(document.getElementById('input-qty').value) || 0;
+            const p = parseInt(document.getElementById('input-price').value) || 0;
+            document.getElementById('total-calc').innerText = (q * p).toLocaleString() + ' MAD';
+        }
+
+        // Initial Render
+        document.addEventListener('DOMContentLoaded', () => {
+            renderChat();
+        });
     </script>
 </body>
 

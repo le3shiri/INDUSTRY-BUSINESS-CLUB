@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence Admin | Annonces Signalées</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="../js/components.js"></script>
+    <script src="../js/admin-data.js"></script>
+
+    <style>
+        :root {
+            --admin-bg: #fcfcfd;
+            --card-border: #eaecf0;
+            --text-main: #101828;
+            --text-sub: #475467;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --danger-main: #b42318;
+            --danger-bg: #fef3f2;
+            --warning-main: #b54708;
+            --warning-bg: #fffaeb;
+            --success-main: #027a48;
+            --success-bg: #ecfdf3;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--admin-bg);
+            color: var(--text-main);
+            letter-spacing: -0.01em;
+        }
+
+        .main-content {
+            padding: 0;
+            background: var(--admin-bg);
+        }
+
+        .top-nav {
+            background: white;
+            border-bottom: 1px solid var(--card-border);
+            padding: 1.25rem 2.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-container {
+            padding: 2rem 2.5rem;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        /* KPI Grid System */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin: 0;
+        }
+
+        .stat-subtext {
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            display: block;
+        }
+
+        /* Admin Table Styling */
+        .table-outer {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            scrollbar-width: thin;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        .admin-table th {
+            background: #f9fafb;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--card-border);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .admin-table td {
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid var(--card-border);
+            font-size: 0.85rem;
+            vertical-align: middle;
+        }
+
+        /* Badge & Status Logic */
+        .badge {
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge-pending {
+            background: var(--warning-bg);
+            color: var(--warning-main);
+            border: 1px solid #fec84b;
+        }
+
+        .badge-verifying {
+            background: #f0f9ff;
+            color: #026aa2;
+            border: 1px solid #b9e6fe;
+        }
+
+        .badge-resolved {
+            background: var(--success-bg);
+            color: var(--success-main);
+            border: 1px solid #6ce9a6;
+        }
+
+        .report-count {
+            background: var(--danger-bg);
+            color: var(--danger-main);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 800;
+            font-size: 0.75rem;
+        }
+
+        .motif-tag {
+            padding: 2px 6px;
+            background: #f2f4f7;
+            color: #344054;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 4px;
+            border: 1px solid #eaecf0;
+        }
+
+        /* Actions Shell */
+        .action-btns {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .btn-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            border: 1px solid var(--card-border);
+            background: white;
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+
+        .btn-icon:hover {
+            border-color: var(--text-main);
+            color: var(--text-main);
+            background: #f9fafb;
+        }
+
+        .btn-icon.success:hover {
+            color: var(--success-main);
+            border-color: #6ce9a6;
+            background: var(--success-bg);
+        }
+
+        .btn-icon.danger:hover {
+            color: var(--danger-main);
+            border-color: #fda29b;
+            background: var(--danger-bg);
+        }
+
+        .btn-icon.warning:hover {
+            color: var(--warning-main);
+            border-color: #fec84b;
+            background: var(--warning-bg);
+        }
+
+        .btn-icon.info:hover {
+            color: #026aa2;
+            border-color: #b9e6fe;
+            background: #f0f9ff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+        <aside id="sidebar-container"></aside>
+
+        <main class="main-content">
+            <header class="top-nav">
+                <div>
+                    <h1 style="margin:0; font-size: 1.5rem; font-weight: 700;">Annonces Signalées</h1>
+                    <p style="margin:0; font-size: 0.85rem; color: var(--text-sub);">Modération et surveillance
+                        communautaire des contenus</p>
+                </div>
+            </header>
+
+            <div class="dashboard-container">
+
+                <!-- Report Stats -->
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <span class="stat-label">Total Signalements</span>
+                        <p class="stat-value">12</p>
+                        <span class="stat-subtext" style="color: var(--danger-main);">Vérification requise</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">En attente d'examen</span>
+                        <p class="stat-value" style="color: var(--warning-main);">5</p>
+                        <span class="stat-subtext" style="color: var(--warning-main);">Priorité Haute</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Taux de Résolution</span>
+                        <p class="stat-value">94.2%</p>
+                        <span class="stat-subtext" style="color: var(--success-main);">+2.1% ce mois</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Comptes Suspendus</span>
+                        <p class="stat-value">3</p>
+                        <span class="stat-subtext" style="color: var(--danger-main);">Suite aux signalements</span>
+                    </div>
+                </div>
+
+                <div class="table-outer">
+                    <div class="table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID / Titre / Caté.</th>
+                                    <th>Vendeur / Entreprise</th>
+                                    <th>Info Stock (Qte/Prix/Loc)</th>
+                                    <th>Signalements</th>
+                                    <th>Détail du Signalement</th>
+                                    <th>Déclarant / Date</th>
+                                    <th>Statut Signalement</th>
+                                    <th style="text-align: right;">Actions Modération</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reported-stocks-body">
+                                <!-- Data injected via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            Components.renderAdminSidebar('admin-reported-posts.html');
+
+            const reportedQueue = [
+                {
+                    id: 'STK-9421', title: 'Moteur Industriel WEG', cat: 'Équipements', subCat: 'Moteurs',
+                    vendeur: 'Omar Alami', company: 'Atlas Mining Group', quantity: 1, price: '45,000 MAD',
+                    country: 'Maroc', city: 'Casablanca',
+                    reportCount: 3, motif: 'Fraude suspectée', descDetail: 'Le vendeur demande un paiement hors plateforme par avance.',
+                    reporter: 'Yasmine Benani', reportDate: '04/03/2026', status: 'pending'
+                },
+                {
+                    id: 'STK-9418', title: 'Acier Inox 316L', cat: 'Matières Premières', subCat: 'Métaux',
+                    vendeur: 'Mehdi Tazi', company: 'Kenitra Metals', quantity: 10, price: '18,500 MAD',
+                    country: 'Maroc', city: 'Kenitra',
+                    reportCount: 1, motif: 'Information trompeuse', descDetail: 'La photo montre du 304L mais le titre dit 316L.',
+                    reporter: 'Julien Durand', reportDate: '03/03/2026', status: 'verifying'
+                },
+                {
+                    id: 'STK-9415', title: 'Palettes Europe', cat: 'Logistique', subCat: 'Manutention',
+                    vendeur: 'Leila Bennani', company: 'Safi Logistics', quantity: 100, price: '4,200 MAD',
+                    country: 'Maroc', city: 'Safi',
+                    reportCount: 2, motif: 'Prix suspect', descDetail: 'Le prix est 10x supérieur au marché industriel.',
+                    reporter: 'Hassan Tazi', reportDate: '01/03/2026', status: 'resolved'
+                },
+                {
+                    id: 'STK-9412', title: 'Logiciel ERP Enterprise', cat: 'Informatique', subCat: 'Software',
+                    vendeur: 'Inconnu', company: 'Digital Solutions', quantity: 1, price: '120,000 MAD',
+                    country: 'Maroc', city: 'Rabat',
+                    reportCount: 5, motif: 'Annonce dupliquée', descDetail: 'Cette annonce est copiée textuellement dun autre site.',
+                    reporter: 'Mehdi Tazi', reportDate: '28/02/2026', status: 'pending'
+                }
+            ];
+
+            const tbody = document.getElementById('reported-stocks-body');
+
+            function renderQueue(list) {
+                tbody.innerHTML = list.map(s => `
+                    <tr>
+                        <td>
+                            <div style="font-weight: 700; color: var(--text-main);">${s.title}</div>
+                            <div style="font-size: 0.7rem; color: var(--text-sub); font-family: monospace;">${s.id}</div>
+                            <div style="font-size: 0.65rem; color: #026aa2; font-weight: 700;">${s.cat} / ${s.subCat}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700;">${s.vendeur}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-sub);">${s.company}</div>
+                        </td>
+                        <td>
+                            <div style="font-size: 0.75rem;">Qte: <strong>${s.quantity}</strong></div>
+                            <div style="font-size: 0.75rem;">Prix: <strong>${s.price}</strong></div>
+                            <div style="font-size: 0.7rem; color: var(--text-sub);"><i class="fas fa-map-marker-alt"></i> ${s.country}, ${s.city}</div>
+                        </td>
+                        <td style="text-align: center;">
+                            <span class="report-count">${s.reportCount}</span>
+                        </td>
+                        <td>
+                            <span class="motif-tag">${s.motif}</span>
+                            <div style="font-size: 0.75rem; color: var(--text-sub); white-space: normal; max-width: 200px; font-style: italic;">
+                                "${s.descDetail}"
+                            </div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700; font-size: 0.8rem;">${s.reporter}</div>
+                            <div style="font-size: 0.7rem; color: var(--text-sub);">${s.reportDate}</div>
+                        </td>
+                        <td>
+                            <span class="badge badge-${s.status}">
+                                ${s.status === 'pending' ? 'En attente' : (s.status === 'verifying' ? 'Vérification en cours' : 'Résolu')}
+                            </span>
+                        </td>
+                        <td style="text-align: right;">
+                            <div class="action-btns">
+                                <button class="btn-icon" title="Voir l'annonce"><i class="fas fa-external-link-alt"></i></button>
+                                <button class="btn-icon" title="Voir profil vendeur"><i class="fas fa-user-shield"></i></button>
+                                <button class="btn-icon info" title="Détails du signalement"><i class="fas fa-search-plus"></i></button>
+                                <button class="btn-icon warning" title="Demander clarification au vendeur"><i class="fas fa-question-circle"></i></button>
+                                <button class="btn-icon warning" title="Suspendre l'annonce"><i class="fas fa-pause-circle"></i></button>
+                                <button class="btn-icon danger" title="Supprimer l'annonce"><i class="fas fa-trash-alt"></i></button>
+                                <button class="btn-icon success" title="Ignorer signalement"><i class="fas fa-times-circle"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            renderQueue(reportedQueue);
+        });
+    </script>
+</body>
+
+</html>

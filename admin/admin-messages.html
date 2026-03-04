@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence Admin | Messages Utilisateurs</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="../js/components.js"></script>
+    <script src="../js/admin-data.js"></script>
+
+    <style>
+        :root {
+            --admin-bg: #fcfcfd;
+            --card-border: #eaecf0;
+            --text-main: #101828;
+            --text-sub: #475467;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --danger-main: #b42318;
+            --danger-bg: #fef3f2;
+            --warning-main: #b54708;
+            --warning-bg: #fffaeb;
+            --success-main: #027a48;
+            --success-bg: #ecfdf3;
+            --info-main: #026aa2;
+            --info-bg: #f0f9ff;
+            --alert-pink: #fda29b;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--admin-bg);
+            color: var(--text-main);
+            letter-spacing: -0.01em;
+        }
+
+        .main-content {
+            padding: 0;
+            background: var(--admin-bg);
+        }
+
+        .top-nav {
+            background: white;
+            border-bottom: 1px solid var(--card-border);
+            padding: 1.25rem 2.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-container {
+            padding: 2rem 2.5rem;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        /* KPI Grid System */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin: 0;
+        }
+
+        .stat-subtext {
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            display: block;
+        }
+
+        /* Admin Table Styling */
+        .table-outer {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            scrollbar-width: thin;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        .admin-table th {
+            background: #f9fafb;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--card-border);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .admin-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--card-border);
+            font-size: 0.85rem;
+            vertical-align: middle;
+        }
+
+        /* Status & Badges */
+        .badge {
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge-sent {
+            background: #f2f4f7;
+            color: #344054;
+            border: 1px solid #eaecf0;
+        }
+
+        .badge-read {
+            background: var(--success-bg);
+            color: var(--success-main);
+            border: 1px solid #6ce9a6;
+        }
+
+        .badge-flagged {
+            background: var(--warning-bg);
+            color: var(--warning-main);
+            border: 1px solid #fec84b;
+        }
+
+        .badge-blocked {
+            background: var(--danger-bg);
+            color: var(--danger-main);
+            border: 1px solid #fda29b;
+        }
+
+        /* Security Pills */
+        .security-pills {
+            display: flex;
+            gap: 4px;
+            margin-top: 4px;
+        }
+
+        .sec-pill {
+            font-size: 0.6rem;
+            font-weight: 700;
+            padding: 1px 5px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            background: var(--danger-bg);
+            color: var(--danger-main);
+            border: 1px solid var(--alert-pink);
+        }
+
+        .content-bubble {
+            max-width: 280px;
+            white-space: normal;
+            line-height: 1.4;
+            font-size: 0.75rem;
+            padding: 8px 12px;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #eaecf0;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .user-type {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--info-main);
+            text-transform: uppercase;
+        }
+
+        /* Actions Shell */
+        .action-btns {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .btn-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            border: 1px solid var(--card-border);
+            background: white;
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+
+        .btn-icon:hover {
+            border-color: var(--text-main);
+            color: var(--text-main);
+            background: #f9fafb;
+        }
+
+        .btn-icon.info:hover {
+            color: #026aa2;
+            border-color: #b9e6fe;
+            background: var(--info-bg);
+        }
+
+        .btn-icon.warning:hover {
+            color: var(--warning-main);
+            border-color: #fec84b;
+            background: var(--warning-bg);
+        }
+
+        .btn-icon.danger:hover {
+            color: var(--danger-main);
+            border-color: #fda29b;
+            background: var(--danger-bg);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+        <aside id="sidebar-container"></aside>
+
+        <main class="main-content">
+            <header class="top-nav">
+                <div>
+                    <h1 style="margin:0; font-size: 1.5rem; font-weight: 700;">Messages Utilisateurs</h1>
+                    <p style="margin:0; font-size: 0.85rem; color: var(--text-sub);">Modération des échanges, détection
+                        de contournement et sécurité des conversations B2B</p>
+                </div>
+                <div style="display: flex; gap: 0.75rem;">
+                    <button class="btn btn-secondary" style="border: 1px solid var(--card-border); background: white;">
+                        <i class="fas fa-shield-alt"></i> Configurer Filtres Anti-Spam
+                    </button>
+                    <button class="btn btn-primary"><i class="fas fa-download"></i> Exporter Logs Chat</button>
+                </div>
+            </header>
+
+            <div class="dashboard-container">
+
+                <!-- Messaging Stats -->
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <span class="stat-label">Messages ce Jour</span>
+                        <p class="stat-value">1,452</p>
+                        <span class="stat-subtext" style="color: var(--success-main);">Activité conversationnelle
+                            intensive</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Alertes Sécurité</span>
+                        <p class="stat-value" style="color: var(--warning-main);">42</p>
+                        <span class="stat-subtext" style="color: var(--warning-main);">Contenu sensible détecté</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Messages Signalés</span>
+                        <p class="stat-value" style="color: var(--danger-main);">8</p>
+                        <span class="stat-subtext" style="color: var(--danger-main);">Modération prioritaire</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Taux Encadrement</span>
+                        <p class="stat-value">100%</p>
+                        <span class="stat-subtext" style="color: var(--info-main);">Filtrage Regex actif</span>
+                    </div>
+                </div>
+
+                <div class="table-outer">
+                    <div class="table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Message / Conv. / Deal</th>
+                                    <th>Expéditeur / Entreprise</th>
+                                    <th>Destinataire / Entreprise</th>
+                                    <th>Contenu du Message</th>
+                                    <th>Sécurité & Détection</th>
+                                    <th>Pièces Jointes</th>
+                                    <th>Statut</th>
+                                    <th>Date & Heure d'envoi</th>
+                                    <th style="text-align: right;">Actions Modération</th>
+                                </tr>
+                            </thead>
+                            <tbody id="messages-table-body">
+                                <!-- Data injected via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            Components.renderAdminSidebar('admin-messages.html');
+
+            const messages = [
+                {
+                    id: 'MSG-48291', convId: 'CONV-882', dealId: 'DEAL-842',
+                    sender: 'Yasmine Benani', senderType: 'Acheteur', senderCo: 'Safi Logistics',
+                    receiver: 'Omar Alami', receiverCo: 'Atlas Mining Group',
+                    content: 'Voici les spécifications. Appelez-moi au 0661223344 pour plus de détails.',
+                    attachments: ['doc'],
+                    status: 'flagged',
+                    detection: ['phone', 'email'],
+                    date: '04/03/2026', time: '14:22'
+                },
+                {
+                    id: 'MSG-48285', convId: 'CONV-880', dealId: '--',
+                    sender: 'Mehdi Tazi', senderType: 'Vendeur', senderCo: 'Kenitra Metals',
+                    receiver: 'Reda Hakimi', receiverCo: 'BuildIt SA',
+                    content: 'Le stock est prêt pour inspection dans nos entrepôts de Kénitra.',
+                    attachments: ['image'],
+                    status: 'read',
+                    detection: [],
+                    date: '04/03/2026', time: '13:45'
+                },
+                {
+                    id: 'MSG-48280', convId: 'CONV-875', dealId: 'DEAL-830',
+                    sender: 'Julie Durand', senderType: 'Acheteur', senderCo: 'LogiFrance',
+                    receiver: 'Leila Mansouri', receiverCo: 'Intech Solutions',
+                    content: 'Veuillez envoyer votre devis sur julie@logifrance.fr svp.',
+                    attachments: [],
+                    status: 'flagged',
+                    detection: ['email'],
+                    date: '03/03/2026', time: '10:12'
+                },
+                {
+                    id: 'MSG-48272', convId: 'CONV-821', dealId: '--',
+                    sender: 'Spambot X', senderType: 'Visiteur', senderCo: 'Inconnu',
+                    receiver: 'Hamza El Amrani', receiverCo: 'Global Build Inc',
+                    content: 'Offre spéciale sur https://crypto-scam.com !',
+                    attachments: [],
+                    status: 'blocked',
+                    detection: ['link'],
+                    date: '02/03/2026', time: '09:00'
+                }
+            ];
+
+            const tbody = document.getElementById('messages-table-body');
+
+            function renderMessages(list) {
+                tbody.innerHTML = list.map(m => `
+                    <tr>
+                        <td>
+                            <div style="font-weight: 700; font-family: monospace; font-size: 0.75rem;">${m.id}</div>
+                            <div style="font-size: 0.65rem; color: var(--text-sub);">Conv: ${m.convId} | Deal: ${m.dealId}</div>
+                        </td>
+                        <td>
+                            <div class="user-info">
+                                <span class="user-type">${m.senderType}</span>
+                                <span style="font-weight: 700;">${m.sender}</span>
+                                <span style="font-size: 0.75rem; color: var(--text-sub);">${m.senderCo}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="user-info">
+                                <span style="font-weight: 700;">${m.receiver}</span>
+                                <span style="font-size: 0.75rem; color: var(--text-sub);">${m.receiverCo}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="content-bubble">${m.content}</div>
+                        </td>
+                        <td>
+                            <div class="security-pills">
+                                ${m.detection.includes('phone') ? '<span class="sec-pill">Téléphone</span>' : ''}
+                                ${m.detection.includes('email') ? '<span class="sec-pill">Email</span>' : ''}
+                                ${m.detection.includes('link') ? '<span class="sec-pill">Lien Externe</span>' : ''}
+                                ${m.detection.length === 0 ? '<span style="font-size: 0.65rem; color: var(--success-main);"><i class="fas fa-check-circle"></i> Sécure</span>' : ''}
+                            </div>
+                        </td>
+                        <td style="text-align: center;">
+                            <div style="color: var(--info-main); font-size: 1.1rem;">
+                                ${m.attachments.includes('image') ? '<i class="fas fa-image" title="Image jointe"></i>' : ''}
+                                ${m.attachments.includes('doc') ? '<i class="fas fa-file-alt" title="Document joint"></i>' : ''}
+                                ${m.attachments.length === 0 ? '--' : ''}
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge ${getStatusBadgeClass(m.status)}">
+                                ${getStatusLabel(m.status)}
+                            </span>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700;">${m.date}</div>
+                            <div style="font-size: 0.7rem; color: var(--text-sub);">${m.time}</div>
+                        </td>
+                        <td style="text-align: right;">
+                            <div class="action-btns">
+                                <button class="btn-icon" title="Voir conversation complète"><i class="fas fa-eye"></i></button>
+                                <button class="btn-icon info" title="Voir profil expéditeur"><i class="fas fa-user-circle"></i></button>
+                                <button class="btn-icon warning" title="Signaler activité suspecte"><i class="fas fa-flag"></i></button>
+                                <button class="btn-icon danger" title="Bloquer message"><i class="fas fa-ban"></i></button>
+                                <button class="btn-icon danger" title="Supprimer & Suspendre"><i class="fas fa-user-slash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            function getStatusBadgeClass(status) {
+                switch (status) {
+                    case 'sent': return 'badge-sent';
+                    case 'read': return 'badge-read';
+                    case 'flagged': return 'badge-flagged';
+                    case 'blocked': return 'badge-blocked';
+                    default: return '';
+                }
+            }
+
+            function getStatusLabel(status) {
+                switch (status) {
+                    case 'sent': return 'Envoyé';
+                    case 'read': return 'Lu';
+                    case 'flagged': return 'Signalé';
+                    case 'blocked': return 'Bloqué';
+                    default: return status;
+                }
+            }
+
+            renderMessages(messages);
+        });
+    </script>
+</body>
+
+</html>

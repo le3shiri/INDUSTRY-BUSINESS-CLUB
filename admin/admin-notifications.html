@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence Admin | Centre de Notifications</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="../js/components.js"></script>
+    <script src="../js/admin-data.js"></script>
+
+    <style>
+        :root {
+            --admin-bg: #fcfcfd;
+            --card-border: #eaecf0;
+            --text-main: #101828;
+            --text-sub: #475467;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --primary-corporate: #101828;
+            --success-main: #027a48;
+            --success-bg: #ecfdf3;
+            --warning-main: #b54708;
+            --warning-bg: #fffaeb;
+            --danger-main: #b42318;
+            --danger-bg: #fef3f2;
+            --info-main: #026aa2;
+            --info-bg: #f0f9ff;
+            --purple-main: #6941c6;
+            --purple-bg: #f9f5ff;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--admin-bg);
+            color: var(--text-main);
+            letter-spacing: -0.01em;
+        }
+
+        .main-content {
+            padding: 0;
+            background: var(--admin-bg);
+        }
+
+        .top-nav {
+            background: white;
+            border-bottom: 1px solid var(--card-border);
+            padding: 1.25rem 2.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-container {
+            padding: 2.5rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Notification Layout Grid */
+        .notif-layout {
+            display: grid;
+            grid-template-columns: 2.5fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .config-card {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f2f4f7;
+        }
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title i {
+            color: var(--info-main);
+        }
+
+        /* Notifications Table */
+        .table-outer {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        .admin-table th {
+            background: #f9fafb;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .admin-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--card-border);
+            font-size: 0.85rem;
+            vertical-align: middle;
+        }
+
+        /* Category Labels */
+        .module-label {
+            background: #fcfcfd;
+            font-weight: 800;
+            font-size: 0.7rem;
+            color: var(--text-sub);
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid var(--card-border);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Badge & Icons */
+        .badge {
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge-email {
+            background: var(--info-bg);
+            color: var(--info-main);
+            border: 1px solid #b9e6fe;
+        }
+
+        .badge-app {
+            background: var(--purple-bg);
+            color: var(--purple-main);
+            border: 1px solid #ddd6fe;
+        }
+
+        .badge-sms {
+            background: #fffaeb;
+            color: #b54708;
+            border: 1px solid #fedf89;
+        }
+
+        .dest-badge {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            background: #f2f4f7;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .dest-admin {
+            background: #101828;
+            color: white;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+        .status-on {
+            background: #12b76a;
+        }
+
+        .status-off {
+            background: #cfd4dc;
+        }
+
+        /* Toggles */
+        .switch-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            border-radius: 8px;
+            background: #f9fafb;
+            margin-bottom: 0.75rem;
+        }
+
+        .switch-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #eaecf0;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: var(--info-main);
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(20px);
+        }
+
+        /* Actions Shell */
+        .action-btns {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            background: white;
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+        }
+
+        .btn-icon:hover {
+            border-color: var(--text-main);
+            color: var(--text-main);
+            background: #f9fafb;
+        }
+
+        .btn-icon.info:hover {
+            color: var(--info-main);
+            border-color: #b9e6fe;
+            background: var(--info-bg);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+        <aside id="sidebar-container"></aside>
+
+        <main class="main-content">
+            <header class="top-nav">
+                <div>
+                    <h1 style="margin:0; font-size: 1.5rem; font-weight: 700;">Logiciel de Notifications</h1>
+                    <p style="margin:0; font-size: 0.85rem; color: var(--text-sub);">Gestion des alertes
+                        transactionnelles, routage e-mail/SMS et logs de communication</p>
+                </div>
+                <div style="display: flex; gap: 0.75rem;">
+                    <button class="btn btn-primary"><i class="fas fa-plus"></i> Créer Notification</button>
+                </div>
+            </header>
+
+            <div class="dashboard-container">
+
+                <div class="notif-layout">
+
+                    <!-- 1. REGISTRE DES NOTIFICATIONS PAR EVENEMENT -->
+                    <div class="table-outer">
+                        <table class="admin-table" id="notif-table">
+                            <thead>
+                                <tr>
+                                    <th>Événement Déclencheur</th>
+                                    <th>Canal de Routage</th>
+                                    <th>Destinataire Cible</th>
+                                    <th>Statut</th>
+                                    <th style="text-align: right;">Actions Régies</th>
+                                </tr>
+                            </thead>
+                            <tbody id="notif-body">
+                                <!-- Group: Utilisteurs -->
+                                <tr>
+                                    <td colspan="5" class="module-label">Inscriptions & Compte</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div style="font-weight: 700;">Nouvelle inscription utilisateur</div>
+                                    </td>
+                                    <td><span class="badge badge-email"><i class="fas fa-envelope"></i> Email</span>
+                                    </td>
+                                    <td><span class="dest-badge dest-admin">Admin</span></td>
+                                    <td><span class="status-dot status-on"></span> Actif</td>
+                                    <td style="text-align: right;">
+                                        <div class="action-btns" style="justify-content: flex-end;"><button
+                                                class="btn-icon info" title="Tester"><i
+                                                    class="fas fa-flask"></i></button><button class="btn-icon"><i
+                                                    class="fas fa-edit"></i></button></div>
+                                    </td>
+                                </tr>
+
+                                <!-- Group: Annonces -->
+                                <tr>
+                                    <td colspan="5" class="module-label">Catalogue & Annonces</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div style="font-weight: 700;">Nouvelle annonce publiée</div>
+                                    </td>
+                                    <td><span class="badge badge-app"><i class="fas fa-bell"></i> App</span></td>
+                                    <td><span class="dest-badge">Vendeur</span></td>
+                                    <td><span class="status-dot status-on"></span> Actif</td>
+                                    <td style="text-align: right;">
+                                        <div class="action-btns" style="justify-content: flex-end;"><button
+                                                class="btn-icon info" title="Tester"><i
+                                                    class="fas fa-flask"></i></button><button class="btn-icon"><i
+                                                    class="fas fa-edit"></i></button></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div style="font-weight: 700;">Annonce en attente de validation</div>
+                                    </td>
+                                    <td><span class="badge badge-email"><i class="fas fa-envelope"></i> Email</span>
+                                    </td>
+                                    <td><span class="dest-badge dest-admin">Admin</span></td>
+                                    <td><span class="status-dot status-on"></span> Actif</td>
+                                    <td style="text-align: right;">
+                                        <div class="action-btns" style="justify-content: flex-end;"><button
+                                                class="btn-icon info" title="Tester"><i
+                                                    class="fas fa-flask"></i></button><button class="btn-icon"><i
+                                                    class="fas fa-edit"></i></button></div>
+                                    </td>
+                                </tr>
+
+                                <!-- Group: Transactions -->
+                                <tr>
+                                    <td colspan="5" class="module-label">Deals & Transactions</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div style="font-weight: 700;">Offre acceptée / refusée</div>
+                                    </td>
+                                    <td><span class="badge badge-email"><i class="fas fa-envelope"></i> Email</span>
+                                        <span class="badge badge-app"><i class="fas fa-bell"></i> App</span></td>
+                                    <td><span class="dest-badge">Acheteur</span></td>
+                                    <td><span class="status-dot status-on"></span> Actif</td>
+                                    <td style="text-align: right;">
+                                        <div class="action-btns" style="justify-content: flex-end;"><button
+                                                class="btn-icon info" title="Tester"><i
+                                                    class="fas fa-flask"></i></button><button class="btn-icon"><i
+                                                    class="fas fa-edit"></i></button></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div style="font-weight: 700;">Paiement reçu</div>
+                                    </td>
+                                    <td><span class="badge badge-sms"><i class="fas fa-sms"></i> SMS</span> <span
+                                            class="badge badge-email"><i class="fas fa-envelope"></i> Email</span></td>
+                                    <td><span class="dest-badge">Vendeur</span></td>
+                                    <td><span class="status-dot status-on"></span> Actif</td>
+                                    <td style="text-align: right;">
+                                        <div class="action-btns" style="justify-content: flex-end;"><button
+                                                class="btn-icon info" title="Tester"><i
+                                                    class="fas fa-flask"></i></button><button class="btn-icon"><i
+                                                    class="fas fa-edit"></i></button></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div style="font-weight: 700;">Expédition effectuée</div>
+                                    </td>
+                                    <td><span class="badge badge-app"><i class="fas fa-bell"></i> App</span></td>
+                                    <td><span class="dest-badge">Acheteur</span></td>
+                                    <td><span class="status-dot status-on"></span> Actif</td>
+                                    <td style="text-align: right;">
+                                        <div class="action-btns" style="justify-content: flex-end;"><button
+                                                class="btn-icon info" title="Tester"><i
+                                                    class="fas fa-flask"></i></button><button class="btn-icon"><i
+                                                    class="fas fa-edit"></i></button></div>
+                                    </td>
+                                </tr>
+
+                                <!-- Group: Litiges -->
+                                <tr>
+                                    <td colspan="5" class="module-label">Support & Litiges</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div style="font-weight: 700;">Réclamation / Litige ouvert</div>
+                                    </td>
+                                    <td><span class="badge badge-email"><i class="fas fa-envelope"></i> Email</span>
+                                        <span class="badge badge-app"><i class="fas fa-bell"></i> App</span></td>
+                                    <td><span class="dest-badge dest-admin">Admin</span> <span
+                                            class="dest-badge">Vendeur</span></td>
+                                    <td><span class="status-dot status-on"></span> Actif</td>
+                                    <td style="text-align: right;">
+                                        <div class="action-btns" style="justify-content: flex-end;"><button
+                                                class="btn-icon info" title="Tester"><i
+                                                    class="fas fa-flask"></i></button><button class="btn-icon"><i
+                                                    class="fas fa-edit"></i></button></div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- 2. PARAMETRES GLOBAUX DU MOTEUR -->
+                    <div class="config-card">
+                        <div class="card-header">
+                            <span class="card-title"><i class="fas fa-sliders-h"></i> Paramètres Moteurs</span>
+                        </div>
+
+                        <div class="switch-group">
+                            <span class="switch-label">Passerelle Email ACTIVE</span>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="switch-group">
+                            <span class="switch-label">Passerelle SMS ACTIVE</span>
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="switch-group">
+                            <span class="switch-label">Alertes Dashboard Administrateurs</span>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div
+                            style="margin-top: 2rem; padding: 1.25rem; border-radius: 10px; border: 1px solid #eaecf0; background: #fff;">
+                            <h4
+                                style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; margin-top: 0; color:var(--text-sub);">
+                                Santé du Serveur Mail</h4>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="font-size: 0.7rem; font-weight: 600;">Délivrabilité</span>
+                                <span
+                                    style="font-size: 0.7rem; font-weight: 800; color: var(--success-main);">99.8%</span>
+                            </div>
+                            <div
+                                style="width: 100%; height: 6px; background: #f2f4f7; border-radius: 3px; overflow: hidden;">
+                                <div style="width: 99.8%; height: 100%; background: #12b76a;"></div>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;">Sauvegarder les
+                            Toggles</button>
+                    </div>
+
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            Components.renderAdminSidebar('admin-notifications.html');
+
+            const testBtns = document.querySelectorAll('.btn-icon.info');
+            testBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    alert('Séquence de test lancée vers le canal de routage sélectionné...');
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

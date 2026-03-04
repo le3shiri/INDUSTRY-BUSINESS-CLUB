@@ -1,179 +1,494 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fluxence - Secure Payment</title>
+    <title>Fluxence | Paiement Sécurisé</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <script src="js/components.js"></script>
+    <script src="js/app.js"></script>
+
     <style>
-        .payment-container {
-            max-width: 900px;
+        :root {
+            --brand-primary: #00B140;
+            --brand-dark: #101828;
+            --brand-secondary: #667085;
+            --bg-soft: #f9fafb;
+            --card-border: #eaecf0;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --success-bg: #ecfdf3;
+            --success-text: #027a48;
+            --warning-bg: #fffaeb;
+            --warning-text: #b54708;
+            --error-bg: #fff4f2;
+            --error-text: #b42318;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-soft);
+            margin: 0;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2rem 3rem;
+            max-width: 1000px;
             margin: 0 auto;
         }
 
-        .payment-method-card {
-            padding: 1.5rem;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-lg);
-            margin-bottom: 1.5rem;
+        /* Order Summary Bar */
+        .order-brief {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(16, 24, 40, 0.02);
+        }
+
+        .brief-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .brief-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--brand-secondary);
+            text-transform: uppercase;
+        }
+
+        .brief-value {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: var(--brand-dark);
+        }
+
+        .payment-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .payment-card {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 12px 32px rgba(16, 24, 40, 0.04);
+        }
+
+        .payment-header {
+            padding: 2rem;
+            background: #f9fafb;
+            border-bottom: 1px solid var(--card-border);
+            text-align: center;
+        }
+
+        .amount-display {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--brand-dark);
+            margin: 0.5rem 0;
+        }
+
+        /* Tabs for methods */
+        .method-tabs {
+            display: flex;
+            padding: 1rem;
+            gap: 12px;
+            background: #f2f4f7;
+            margin: 1.5rem 2rem;
+            border-radius: 16px;
+        }
+
+        .method-tab {
+            flex: 1;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid transparent;
+            background: transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
             cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            background: var(--white);
+            transition: all 0.2s;
+            color: var(--brand-secondary);
+            font-weight: 700;
+            font-size: 0.85rem;
         }
 
-        .payment-method-card:hover {
-            border-color: var(--primary-color);
-            box-shadow: var(--shadow-md);
+        .method-tab i {
+            font-size: 1.25rem;
         }
 
-        .payment-method-card.active {
-            border-color: var(--primary-color);
-            background: var(--primary-light);
-            border-width: 2px;
+        .method-tab.active {
+            background: white;
+            border-color: var(--card-border);
+            color: var(--brand-primary);
+            box-shadow: 0 4px 12px rgba(16, 24, 40, 0.06);
         }
 
-        .payment-method-icon {
-            width: 48px;
-            height: 48px;
-            background: var(--white);
-            border-radius: var(--radius-md);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-secondary);
-            font-size: 1.5rem;
-            box-shadow: var(--shadow-sm);
+        .payment-body {
+            padding: 0 2rem 2.5rem;
         }
 
-        .payment-method-card.active .payment-method-icon {
-            color: var(--primary-color);
-        }
-
-        .bank-details-box {
-            background: #f8fafc;
-            border: 1px dashed var(--border-color);
-            border-radius: var(--radius-md);
-            padding: 1.5rem;
-            margin-top: 1rem;
+        /* Form segments */
+        .form-segment {
             display: none;
         }
 
-        .bank-details-box.active {
+        .form-segment.active {
             display: block;
+            animation: fadeIn 0.3s ease;
         }
 
-        .detail-row {
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .virement-box {
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .v-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 0.75rem;
-            font-family: 'Monaco', 'Consolas', monospace;
+            padding: 10px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .v-row:last-child {
+            border-bottom: none;
+        }
+
+        .v-label {
+            font-size: 0.85rem;
+            color: var(--brand-secondary);
+            font-weight: 600;
+        }
+
+        .v-value {
+            font-family: monospace;
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: var(--brand-dark);
+        }
+
+        .status-banner {
+            margin: 0 2rem 1.5rem;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
             font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .status-pending {
+            background: var(--warning-bg);
+            color: var(--warning-text);
+            border: 1px solid #fde28e;
+        }
+
+        .status-success {
+            background: var(--success-bg);
+            color: var(--success-text);
+            border: 1px solid #a6f4c5;
+            display: none;
+        }
+
+        .security-footer {
+            padding: 1.5rem 2rem;
+            background: #f9fafb;
+            border-top: 1px solid var(--card-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            color: var(--brand-secondary);
+            font-size: 0.8rem;
+            line-height: 1.4;
+            text-align: center;
+        }
+
+        .security-footer i {
+            color: var(--brand-primary);
+            font-size: 1.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--brand-dark);
+        }
+
+        .form-input {
+            padding: 12px 14px;
+            border: 1px solid #d0d5dd;
+            border-radius: 10px;
+            font-size: 0.95rem;
+        }
+
+        .action-bar {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn-invoice {
+            background: white;
+            border: 1px solid var(--card-border);
+            color: var(--brand-dark);
+            font-weight: 700;
         }
     </style>
 </head>
 
 <body>
 
-    <div class="layout-dashboard">
-        <aside id="sidebar-container"></aside>
+    <aside id="sidebar-container"></aside>
 
-        <main class="main-content">
-            <div class="payment-container">
-                <header style="margin-bottom: 2.5rem; text-align: center;">
-                    <h1 style="font-size: 2rem; font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em;">
-                        Secure Payment</h1>
-                    <p class="text-secondary">Amount Due: <strong style="color: var(--primary-color);">44,337.50
-                            MAD</strong></p>
-                </header>
+    <main class="main-content">
+        <header style="margin-bottom: 2rem;">
+            <h1 style="font-size: 2rem; font-weight: 800; color: var(--brand-dark); margin: 0 0 0.5rem;">Paiement
+                Sécurisé</h1>
+            <p style="color: var(--brand-secondary); font-weight: 500;">Finalisez votre transaction via notre plateforme
+                certifiée.</p>
+        </header>
 
-                <div class="shadow-box" style="padding: 2.5rem;">
-                    <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 2rem;">Select Payment Method</h3>
+        <!-- Order Brief -->
+        <div class="order-brief">
+            <div class="brief-item">
+                <span class="brief-label">ID Commande</span>
+                <span class="brief-value">#ORD-2026-4921</span>
+            </div>
+            <div class="brief-item">
+                <span class="brief-label">Produit</span>
+                <span class="brief-value">Cuivre Millberry</span>
+            </div>
+            <div class="brief-item">
+                <span class="brief-label">Vendeur</span>
+                <span class="brief-value">Atlas Mining SA</span>
+            </div>
+            <div class="brief-item">
+                <span class="brief-label">Quantité</span>
+                <span class="brief-value">10 Tonnes</span>
+            </div>
+            <div class="brief-item">
+                <span class="brief-label">Prix Unitaire</span>
+                <span class="brief-value">42,000 MAD</span>
+            </div>
+        </div>
 
-                    <!-- Method 1: Bank Transfer -->
-                    <div class="payment-method-card active" onclick="selectMethod('bank')">
-                        <div class="payment-method-icon">
-                            <i class="fas fa-university"></i>
+        <div class="payment-grid">
+            <div class="payment-card">
+                <div class="payment-header">
+                    <span
+                        style="font-size: 0.85rem; font-weight: 700; color: var(--brand-secondary); text-transform: uppercase;">Total
+                        TTC à régler</span>
+                    <div class="amount-display">507,000.00 MAD</div>
+                </div>
+
+                <div id="paymentStatus" class="status-banner status-pending">
+                    <i class="fas fa-clock fa-spin"></i>
+                    <span>Paiement en attente de traitement</span>
+                </div>
+
+                <div id="successBanner" class="status-banner status-success">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Paiement confirmé ! Votre commande est en préparation.</span>
+                </div>
+
+                <!-- Tabs -->
+                <div class="method-tabs">
+                    <button class="method-tab active" onclick="switchMethod('card')">
+                        <i class="fas fa-credit-card"></i>
+                        <span>Carte Bancaire</span>
+                    </button>
+                    <button class="method-tab" onclick="switchMethod('virement')">
+                        <i class="fas fa-university"></i>
+                        <span>Virement</span>
+                    </button>
+                    <button class="method-tab" onclick="switchMethod('escrow')">
+                        <i class="fas fa-shield-halved"></i>
+                        <span>Platform Escrow</span>
+                    </button>
+                </div>
+
+                <div class="payment-body">
+                    <!-- Card Form -->
+                    <div id="cardSection" class="form-segment active">
+                        <div class="form-group" style="margin-bottom: 1.5rem;">
+                            <label class="form-label">Nom du titulaire</label>
+                            <input type="text" class="form-input" placeholder="Ex: MOHAMED ALAMI">
                         </div>
-                        <div style="flex: 1;">
-                            <h4 style="margin: 0; font-size: 1rem; font-weight: 700;">Direct Bank Transfer (RIB)</h4>
-                            <p style="margin: 0; font-size: 0.85rem; color: var(--text-secondary);">Ideal for large
-                                industrial volume payments.</p>
+                        <div class="form-group" style="margin-bottom: 1.5rem;">
+                            <label class="form-label">Numéro de carte</label>
+                            <div style="position: relative;">
+                                <input type="text" class="form-input" placeholder="0000 0000 0000 0000"
+                                    style="padding-right: 50px;">
+                                <i class="fab fa-cc-visa"
+                                    style="position: absolute; right: 15px; top: 14px; font-size: 1.5rem; color: #1a1f71;"></i>
+                            </div>
                         </div>
-                        <div class="checkbox-themed"><input type="radio" name="pay-method" checked></div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Date d'expiration</label>
+                                <input type="text" class="form-input" placeholder="MM/YY">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">CVV</label>
+                                <input type="text" class="form-input" placeholder="123">
+                            </div>
+                        </div>
+
+                        <div class="action-bar">
+                            <button class="btn btn-primary" style="flex: 2; height: 52px; font-size: 1rem;"
+                                onclick="processPayment()">Payer maintenant</button>
+                            <button class="btn btn-white" style="flex: 1; height: 52px;"
+                                onclick="window.history.back()">Annuler</button>
+                        </div>
                     </div>
 
-                    <div id="bank-details" class="bank-details-box active">
-                        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">Please
-                            transfer the total amount to the following account:</p>
-                        <div class="detail-row"><span>Beneficiary:</span> <strong>FLUXENCE IBC ESCROW</strong></div>
-                        <div class="detail-row"><span>Bank:</span> <strong>Attijariwafa Bank</strong></div>
-                        <div class="detail-row"><span>RIB:</span> <strong>007 780 0001234567890123 45</strong></div>
-                        <div class="detail-row"><span>Reference:</span> <strong>PO-2024-8842-STEEL</strong></div>
-                        <button class="btn btn-secondary"
-                            style="width: auto; padding: 0.4rem 1rem; font-size: 0.8rem; margin-top: 0.5rem;">
-                            <i class="far fa-copy"></i> Copy Details
-                        </button>
+                    <!-- Virement Form -->
+                    <div id="virementSection" class="form-segment">
+                        <p style="font-size: 0.9rem; color: var(--brand-secondary); margin-bottom: 1rem;">Veuillez
+                            effectuer le virement sur le compte séquestre suivant :</p>
+                        <div class="virement-box">
+                            <div class="v-row"><span class="v-label">Bénéficiaire</span><span class="v-value">FLUXENCE
+                                    IBC MOROCCO</span></div>
+                            <div class="v-row"><span class="v-label">Banque</span><span class="v-value">Attijariwafa
+                                    Bank</span></div>
+                            <div class="v-row"><span class="v-label">IBAN</span><span class="v-value">MA64 0070 0000
+                                    1234 5678 9012 3456</span></div>
+                            <div class="v-row"><span class="v-label">Référence</span><span
+                                    class="v-value">REF-PAY-ORD4921</span></div>
+                        </div>
+                        <p style="font-size: 0.8rem; color: #b42318; font-weight: 700; margin-top: 1rem;">* Important :
+                            Veuillez mentionner la référence pour une validation rapide.</p>
+
+                        <div class="action-bar">
+                            <button class="btn btn-white btn-invoice" style="flex: 1; height: 52px;"><i
+                                    class="fas fa-file-pdf"></i> Télécharger l'avis</button>
+                            <button class="btn btn-primary" style="flex: 1; height: 52px;"
+                                onclick="alert('Demande de confirmation envoyée')">J'ai fait le virement</button>
+                        </div>
                     </div>
 
-                    <!-- Method 2: Escrow Guarantee -->
-                    <div class="payment-method-card" onclick="selectMethod('escrow')">
-                        <div class="payment-method-icon">
-                            <i class="fas fa-shield-alt"></i>
-                        </div>
-                        <div style="flex: 1;">
-                            <h4 style="margin: 0; font-size: 1rem; font-weight: 700;">IBC Escrow Wallet</h4>
-                            <p style="margin: 0; font-size: 0.85rem; color: var(--text-secondary);">Funds released only
-                                upon material acceptance.</p>
-                        </div>
-                        <div class="checkbox-themed"><input type="radio" name="pay-method"></div>
-                    </div>
-
-                    <div class="modal-section" style="margin-top: 3rem;">
-                        <h4 class="modal-section-title">Step 2: Upload Proof of Transfer</h4>
-                        <div class="upload-area-themed" onclick="document.getElementById('proof-file').click()">
-                            <input type="file" id="proof-file" hidden
-                                onchange="document.getElementById('file-ready').style.display='block'">
-                            <i class="fas fa-file-invoice-dollar upload-icon"></i>
-                            <p style="font-size: 0.95rem; font-weight: 500; color: var(--text-primary); margin: 0;">
-                                Click to upload transfer receipt (Avis de virement)</p>
-                            <p style="font-size: 0.8rem; color: var(--text-secondary); margin: 0;">PDF or Image format
-                                required.</p>
-                            <p id="file-ready"
-                                style="margin-top: 0.5rem; color: var(--success-color); font-weight: 700; display: none;">
-                                <i class="fas fa-check-circle"></i> receipt_po_8842.pdf ready
+                    <!-- Platform Escrow Form -->
+                    <div id="escrowSection" class="form-segment">
+                        <div style="text-align: center; padding: 1rem;">
+                            <i class="fas fa-shield-heart"
+                                style="font-size: 3rem; color: var(--brand-primary); margin-bottom: 1rem;"></i>
+                            <h4 style="font-weight: 800; margin-bottom: 1rem;">Paiement Sécurisé Fluxence</h4>
+                            <p style="font-size: 0.9rem; color: var(--brand-secondary); line-height: 1.6;">
+                                Vos fonds resteront bloqués sur notre compte séquestre partenaire.
+                                Le vendeur ne sera payé qu'après votre confirmation de réception conforme des matériaux.
                             </p>
+                            <button class="btn btn-primary" style="margin-top: 1.5rem; height: 52px; padding: 0 40px;"
+                                onclick="processPayment()">Utiliser le solde séquestre</button>
                         </div>
                     </div>
 
-                    <div style="margin-top: 3rem; display: flex; justify-content: center; gap: 1.5rem;">
-                        <button class="btn btn-secondary" onclick="window.history.back()">Back</button>
-                        <button class="btn btn-primary" style="width: 300px;"
-                            onclick="window.location.href='order-tracking.html'">
-                            Submit Payment Confirmation
-                        </button>
+                    <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
+                        <a href="checkout.html"
+                            style="font-size: 0.85rem; font-weight: 700; color: var(--brand-secondary); text-decoration: none;"><i
+                                class="fas fa-arrow-left"></i> Voir commande</a>
+                        <span style="color: #eaecf0;">|</span>
+                        <a href="#"
+                            style="font-size: 0.85rem; font-weight: 700; color: var(--brand-secondary); text-decoration: none;"><i
+                                class="fas fa-file-invoice"></i> Télécharger facture</a>
+                    </div>
+
+                </div>
+
+                <div class="security-footer">
+                    <i class="fas fa-shield-check"></i>
+                    <div>
+                        <b>Paiement protégé par le système Escrow de Fluxence.</b><br>
+                        Les fonds sont sécurisés et ne seront débloqués qu'après validation de la livraison.
                     </div>
                 </div>
             </div>
-        </main>
-    </div>
+        </div>
+    </main>
 
-    <script src="js/app.js"></script>
     <script>
-        function selectMethod(method) {
-            document.querySelectorAll('.payment-method-card').forEach(c => c.classList.remove('active'));
-            document.querySelectorAll('.bank-details-box').forEach(b => b.classList.remove('active'));
+        function switchMethod(method) {
+            // Tabs
+            document.querySelectorAll('.method-tab').forEach(t => t.classList.remove('active'));
+            const activeTab = Array.from(document.querySelectorAll('.method-tab')).find(t => t.innerText.toLowerCase().includes(method.replace('card', 'carte').replace('virement', 'virement').replace('escrow', 'escrow')));
+            // Since innerText might be different, let's use a simpler way
+            const tabs = document.querySelectorAll('.method-tab');
+            if (method === 'card') tabs[0].classList.add('active');
+            if (method === 'virement') tabs[1].classList.add('active');
+            if (method === 'escrow') tabs[2].classList.add('active');
 
-            if (method === 'bank') {
-                document.querySelector('.payment-method-card:nth-child(2)').classList.add('active');
-                document.getElementById('bank-details').classList.add('active');
-            }
+            // Sections
+            document.querySelectorAll('.form-segment').forEach(s => s.classList.remove('active'));
+            document.getElementById(method + 'Section').classList.add('active');
+        }
+
+        function processPayment() {
+            const btn = document.querySelector('.btn-primary');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Traitement...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                document.getElementById('paymentStatus').style.display = 'none';
+                document.getElementById('successBanner').style.display = 'flex';
+                btn.innerHTML = 'Paiement effectué';
+
+                setTimeout(() => {
+                    location.href = 'order-tracking.html';
+                }, 2000);
+            }, 2000);
         }
     </script>
 </body>

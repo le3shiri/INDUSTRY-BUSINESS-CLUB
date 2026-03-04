@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence | Validation du Compte</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --brand-primary: #00B140;
+            /* Sprite Green */
+            --brand-secondary: #667085;
+            --brand-dark: #101828;
+            --warning-main: #b54708;
+            --warning-bg: #fffaeb;
+            --success-main: #027a48;
+            --success-bg: #ecfdf3;
+            --card-border: #eaecf0;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --bg-soft: #fcfcfd;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-soft);
+            margin: 0;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Progress (Universal) */
+        .register-sidebar {
+            width: 380px;
+            background: var(--brand-dark);
+            padding: 4rem 3rem;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .logo-box {
+            font-size: 1.5rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 4rem;
+        }
+
+        .stepper-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+            position: relative;
+        }
+
+        .stepper-nav::before {
+            content: '';
+            position: absolute;
+            left: 11px;
+            top: 30px;
+            bottom: 30px;
+            width: 2px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #1d2939;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .step-item.completed .step-icon {
+            background: var(--brand-primary);
+            border-color: var(--brand-primary);
+            color: white;
+        }
+
+        .step-item.active .step-icon {
+            background: var(--brand-primary);
+            border-color: var(--brand-primary);
+            color: white;
+            box-shadow: 0 0 0 4px rgba(0, 177, 64, 0.2);
+        }
+
+        .step-text h4 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .step-item.active .step-text h4 {
+            color: white;
+        }
+
+        .step-item.completed .step-text h4 {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Main Validation Content */
+        .validation-main {
+            flex: 1;
+            padding: 4rem;
+            background: white;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .status-card {
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .icon-wait {
+            width: 80px;
+            height: 80px;
+            background: var(--warning-bg);
+            color: var(--warning-main);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            font-size: 2.25rem;
+            animation: rotate-slow 10s linear infinite;
+        }
+
+        @keyframes rotate-slow {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        h2 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 1rem;
+        }
+
+        .main-p {
+            color: var(--brand-secondary);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 3rem;
+        }
+
+        /* Info Summary */
+        .info-summary {
+            background: #f9fafb;
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            text-align: left;
+            margin-bottom: 2.5rem;
+        }
+
+        .info-group span {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--brand-secondary);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .info-group strong {
+            font-size: 1rem;
+            color: var(--brand-dark);
+        }
+
+        /* Checklist */
+        .checklist {
+            margin-bottom: 3rem;
+            text-align: left;
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 0.5rem 1.5rem;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 0;
+            border-bottom: 1px solid #f2f4f7;
+        }
+
+        .check-item:last-child {
+            border-bottom: none;
+        }
+
+        .check-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+
+        .c-done {
+            background: var(--success-bg);
+            color: var(--success-main);
+        }
+
+        .c-wait {
+            background: var(--warning-bg);
+            color: var(--warning-main);
+            animation: pulse 1.5s infinite;
+        }
+
+        .check-label {
+            flex: 1;
+            font-weight: 700;
+            color: #344054;
+        }
+
+        .check-status {
+            font-size: 0.75rem;
+            font-weight: 800;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.6;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        /* Banner ETA */
+        .eta-box {
+            background: #fefef2;
+            border: 1px solid #fff9c4;
+            padding: 1.25rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            color: #856404;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            font-size: 0.95rem;
+        }
+
+        /* Buttons */
+        .footer-btns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border: 1px solid var(--card-border);
+            text-decoration: none;
+        }
+
+        .btn-full {
+            grid-column: span 2;
+            background: var(--brand-dark);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 14px rgba(16, 24, 40, 0.2);
+        }
+
+        .btn-full:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 24, 40, 0.3);
+        }
+
+        .btn-white {
+            background: white;
+            color: #344054;
+        }
+
+        .btn-white:hover {
+            border-color: var(--brand-dark);
+        }
+
+        .logout-link {
+            margin-top: 2rem;
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--brand-secondary);
+            text-decoration: none;
+        }
+
+        .logout-link:hover {
+            color: var(--error-main);
+        }
+
+        @media (max-width: 900px) {
+            body {
+                flex-direction: column;
+            }
+
+            .register-sidebar {
+                width: 100%;
+                height: auto;
+                padding: 2rem;
+            }
+
+            .stepper-nav {
+                flex-direction: row;
+                gap: 15px;
+            }
+
+            .step-text,
+            .stepper-nav::before {
+                display: none;
+            }
+
+            .validation-main {
+                padding: 3rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside class="register-sidebar">
+        <div>
+            <div class="logo-box">
+                <i class="fas fa-rocket" style="color: var(--brand-primary);"></i> Fluxence
+            </div>
+
+            <nav class="stepper-nav">
+                <div class="step-item completed">
+                    <div class="step-icon"><i class="fas fa-check"></i></div>
+                    <div class="step-text">
+                        <h4>Compte</h4>
+                    </div>
+                </div>
+                <div class="step-item completed">
+                    <div class="step-icon"><i class="fas fa-check"></i></div>
+                    <div class="step-text">
+                        <h4>Vérification</h4>
+                    </div>
+                </div>
+                <div class="step-item completed">
+                    <div class="step-icon"><i class="fas fa-check"></i></div>
+                    <div class="step-text">
+                        <h4>Entreprise</h4>
+                    </div>
+                </div>
+                <div class="step-item completed">
+                    <div class="step-icon"><i class="fas fa-check"></i></div>
+                    <div class="step-text">
+                        <h4>Documents</h4>
+                    </div>
+                </div>
+                <div class="step-item active">
+                    <div class="step-icon">5</div>
+                    <div class="step-text">
+                        <h4>Attente</h4>
+                        <p>En cours de validation</p>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div style="font-size: 0.8rem; opacity: 0.5;">Validation de conformité B2B</div>
+    </aside>
+
+    <main class="validation-main">
+        <div class="status-card">
+            <div class="icon-wait">
+                <i class="fas fa-circle-notch"></i>
+            </div>
+
+            <h2>Vérification finale</h2>
+            <p class="main-p">Félicitations ! Vous avez complété toutes les étapes. Notre équipe de conformité examine
+                maintenant votre dossier pour activer votre accès complet.</p>
+
+            <div class="info-summary">
+                <div class="info-group">
+                    <span>Organisme</span>
+                    <strong>Atlas Industrials SARL</strong>
+                </div>
+                <div class="info-group">
+                    <span>Email de contact</span>
+                    <strong>contact@atlas-indus.ma</strong>
+                </div>
+            </div>
+
+            <div class="checklist">
+                <div class="check-item">
+                    <div class="check-icon c-done"><i class="fas fa-check"></i></div>
+                    <span class="check-label">Authentification mail</span>
+                    <span class="check-status" style="color: var(--success-main);">Validé</span>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon c-done"><i class="fas fa-check"></i></div>
+                    <span class="check-label">Profil de l'organisation</span>
+                    <span class="check-status" style="color: var(--success-main);">Complété</span>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon c-wait"><i class="fas fa-sync-alt"></i></div>
+                    <span class="check-label">Validation des documents KYC</span>
+                    <span class="check-status" style="color: var(--warning-main);">En cours</span>
+                </div>
+            </div>
+
+            <div class="eta-box">
+                <i class="fas fa-bolt"></i>
+                <span>Délai moyen d'activation : 24h à 48h ouvrées</span>
+            </div>
+
+            <div class="footer-btns">
+                <a href="kyc-documents-upload.html" class="btn btn-white"><i class="fas fa-eye"></i> Voir mon
+                    dossier</a>
+                <button class="btn btn-white" onclick="alert('Demande envoyée au support')"><i
+                        class="fas fa-headset"></i> Aide en direct</button>
+                <a href="dashboard-welcome.html" class="btn btn-full">Accéder au Dashboard (Limité) <i
+                        class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <a href="login.html" class="logout-link"><i class="fas fa-sign-out-alt"></i> Se déconnecter en attendant</a>
+        </div>
+    </main>
+
+</body>
+
+</html>

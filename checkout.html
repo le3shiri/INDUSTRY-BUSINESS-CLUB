@@ -1,193 +1,466 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fluxence - Checkout</title>
+    <title>Fluxence | Paiement & Confirmation</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <script src="js/components.js"></script>
+    <script src="js/app.js"></script>
+
     <style>
-        .checkout-grid {
+        :root {
+            --brand-primary: #00B140;
+            --brand-dark: #101828;
+            --brand-secondary: #667085;
+            --bg-soft: #f9fafb;
+            --card-border: #eaecf0;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-soft);
+            margin: 0;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2rem 3rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .checkout-container {
             display: grid;
-            grid-template-columns: 1fr 380px;
-            gap: 2rem;
-            margin-top: 2rem;
+            grid-template-columns: 1fr 450px;
+            gap: 2.5rem;
+            align-items: start;
         }
 
         .checkout-section {
-            background: var(--white);
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
             padding: 2rem;
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--border-color);
-            box-shadow: var(--shadow-sm);
             margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(16, 24, 40, 0.03);
         }
 
-        .checkout-header {
+        .section-header {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
+            gap: 12px;
+            margin-bottom: 2rem;
             padding-bottom: 1rem;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid #f2f4f7;
         }
 
-        .step-number {
-            width: 32px;
-            height: 32px;
-            background: var(--primary-light);
-            color: var(--primary-color);
-            border-radius: 50%;
+        .section-header i {
+            width: 40px;
+            height: 40px;
+            background: #f0fdf4;
+            color: var(--brand-primary);
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 700;
+            font-size: 1.25rem;
         }
 
-        .summary-item {
+        .section-header h2 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--brand-dark);
+        }
+
+        /* Order Info Grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .info-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--brand-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .info-value {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--brand-dark);
+        }
+
+        /* Form Controls */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--brand-dark);
+        }
+
+        .form-input {
+            padding: 12px 14px;
+            border: 1px solid #d0d5dd;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        .form-input:focus {
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 4px #f0fdf4;
+            outline: none;
+        }
+
+        /* Shipping Options */
+        .shipping-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .shipping-card {
+            border: 2px solid #eaecf0;
+            border-radius: 16px;
+            padding: 1.25rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .shipping-card.active {
+            border-color: var(--brand-primary);
+            background: #f0fdf4;
+        }
+
+        .shipping-card input {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .sh-name {
+            display: block;
+            font-weight: 800;
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+        }
+
+        .sh-desc {
+            font-size: 0.8rem;
+            color: var(--brand-secondary);
+        }
+
+        /* Order Summary Side Card */
+        .summary-card {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 2rem;
+            position: sticky;
+            top: 2rem;
+            box-shadow: 0 12px 32px rgba(16, 24, 40, 0.05);
+        }
+
+        .summary-title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            color: var(--brand-dark);
+        }
+
+        .product-summary-box {
+            display: flex;
+            gap: 12px;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #f2f4f7;
+            margin-bottom: 1.5rem;
+        }
+
+        .ps-img {
+            width: 64px;
+            height: 64px;
+            border-radius: 10px;
+            background: #f2f4f7;
+            object-fit: cover;
+        }
+
+        .ps-info h4 {
+            margin: 0;
+            font-size: 0.95rem;
+            font-weight: 800;
+        }
+
+        .ps-info p {
+            margin: 4px 0 0;
+            font-size: 0.8rem;
+            color: var(--brand-secondary);
+        }
+
+        .summary-row {
             display: flex;
             justify-content: space-between;
             margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px dashed var(--border-color);
+            font-size: 0.9rem;
         }
 
-        .total-row {
-            display: flex;
-            justify-content: space-between;
+        .summary-row.total {
             margin-top: 1.5rem;
-            padding-top: 1rem;
-            border-top: 2px solid var(--border-color);
+            padding-top: 1.5rem;
+            border-top: 2px solid #f2f4f7;
             font-size: 1.25rem;
             font-weight: 800;
-            color: var(--text-primary);
+            color: var(--brand-dark);
         }
 
-        @media (max-width: 1024px) {
-            .checkout-grid {
-                grid-template-columns: 1fr;
-            }
+        .platform-note {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            font-size: 0.8rem;
+            color: var(--brand-secondary);
+            line-height: 1.5;
+        }
+
+        .platform-note i {
+            color: var(--brand-primary);
+            margin-right: 6px;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .back-link {
+            text-align: center;
+            display: block;
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--brand-secondary);
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            color: var(--brand-dark);
         }
     </style>
 </head>
 
 <body>
 
-    <div class="layout-dashboard">
-        <aside id="sidebar-container"></aside>
+    <aside id="sidebar-container"></aside>
 
-        <main class="main-content">
-            <header style="margin-bottom: 2rem;">
-                <h1 style="font-size: 2.25rem; font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em;">
-                    Review & Checkout</h1>
-                <p class="text-secondary">Please confirm your order details and logistics preference.</p>
-            </header>
+    <main class="main-content">
+        <header style="margin-bottom: 2.5rem;">
+            <h1 style="font-size: 2.25rem; font-weight: 800; color: var(--brand-dark); margin: 0 0 0.5rem;">Finalisation
+                de la commande</h1>
+            <p style="color: var(--brand-secondary); font-weight: 500;">Vérifiez vos informations industrielles avant de
+                confirmer la transaction.</p>
+        </header>
 
-            <div class="checkout-grid">
-                <!-- Left: Forms -->
-                <div>
-                    <div class="checkout-section">
-                        <div class="checkout-header">
-                            <div class="step-number">1</div>
-                            <h2 style="margin: 0; font-size: 1.25rem; font-weight: 700;">Logistics & Delivery</h2>
-                        </div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-                            <div class="form-group">
-                                <label class="form-label">Delivery Destination</label>
-                                <input type="text" class="form-input" placeholder="Enter warehouse or site address"
-                                    value="Port of Casablanca, Zone A">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Preferred Carrier</label>
-                                <select class="form-input">
-                                    <option>Seller's Logistics (Standard)</option>
-                                    <option>Maghreb Logistics (Partner)</option>
-                                    <option>Self-Pickup (EXW)</option>
-                                </select>
-                            </div>
-                            <div class="form-group" style="grid-column: span 2;">
-                                <label class="form-label">Special Delivery Instructions</label>
-                                <textarea class="form-input" rows="3"
-                                    placeholder="Gate codes, contact person at site, etc."></textarea>
-                            </div>
-                        </div>
+        <div class="checkout-container">
+            <!-- Left: Info & Forms -->
+            <div class="checkout-main">
+
+                <!-- Section 1: Informations Commande -->
+                <div class="checkout-section fade-in-up">
+                    <div class="section-header">
+                        <i class="fas fa-file-invoice"></i>
+                        <h2>Détails de la négociation</h2>
                     </div>
-
-                    <div class="checkout-section">
-                        <div class="checkout-header">
-                            <div class="step-number">2</div>
-                            <h2 style="margin: 0; font-size: 1.25rem; font-weight: 700;">Compliance & Terms</h2>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">ID Commande</span>
+                            <span class="info-value">#ORD-2026-4921</span>
                         </div>
-                        <div style="display: flex; flex-direction: column; gap: 1rem;">
-                            <label class="checkbox-themed">
-                                <input type="checkbox" checked> I accept the Industrial Procurement Terms of Service
-                            </label>
-                            <label class="checkbox-themed">
-                                <input type="checkbox" checked> I confirm I have verified the item's technical
-                                specifications
-                            </label>
-                            <label class="checkbox-themed">
-                                <input type="checkbox"> Request on-site inspection before final dispatch (+2,500 MAD)
-                            </label>
+                        <div class="info-item">
+                            <span class="info-label">Produit</span>
+                            <span class="info-value">Cuivre Millberry - Pureté 99.9%</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Catégorie</span>
+                            <span class="info-value">Métaux & Mines</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Vendeur</span>
+                            <span class="info-value">Atlas Mining SA</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Quantité finale</span>
+                            <span class="info-value">10 Tonnes</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Prix négocié HT</span>
+                            <span class="info-value">42,000 MAD / Unité</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Right: Order Summary -->
-                <div class="side-panel">
-                    <div class="checkout-section" style="position: sticky; top: 1.5rem;">
-                        <h3 style="margin: 0 0 1.5rem 0; font-size: 1.1rem; font-weight: 700;">Order Summary</h3>
+                <!-- Section 2: Informations Livraison -->
+                <div class="checkout-section fade-in-up delay-100">
+                    <div class="section-header">
+                        <i class="fas fa-truck-fast"></i>
+                        <h2>Logistique & Livraison</h2>
+                    </div>
 
-                        <div style="display: flex; gap: 1rem; margin-bottom: 2rem;">
-                            <div
-                                style="width: 60px; height: 60px; background: var(--border-light); border-radius: var(--radius-md); overflow: hidden;">
-                                <img src="assets/products/rebar.png" alt="Steel Rebar"
-                                    style="width: 100%; height: 100%; object-fit: cover;">
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label class="form-label">Nom de l'entreprise acheteuse</label>
+                        <input type="text" class="form-input" value="Acme Industrial Corp" readonly
+                            style="background: #f2f4f7;">
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label class="form-label">Adresse de livraison (Site / Entrepôt)</label>
+                        <input type="text" class="form-input" placeholder="Ex: Zone Industrielle Sapino, Lot 12">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Pays</label>
+                            <input type="text" class="form-input" value="Maroc" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Ville</label>
+                            <input type="text" class="form-input" placeholder="Ex: Casablanca">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Code Postal</label>
+                            <input type="text" class="form-input" placeholder="Ex: 20000">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Contact Livraison (Réceptionnaire)</label>
+                            <input type="text" class="form-input" placeholder="Prénom et Nom">
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 2rem;">
+                        <h4 style="font-size: 0.9rem; font-weight: 800; margin-bottom: 1rem;">Méthode de livraison</h4>
+                        <div class="shipping-options">
+                            <div class="shipping-card active" onclick="selectShipping(this)">
+                                <input type="radio" name="shipping" checked>
+                                <span class="sh-name">Livraison Standard</span>
+                                <span class="sh-desc">Via transporteur IBC (4-5 j)</span>
                             </div>
-                            <div>
-                                <h4 style="margin: 0; font-size: 0.95rem; font-weight: 700;">Steel Reinforcement Bars
-                                </h4>
-                                <p style="margin: 0; font-size: 0.85rem; color: var(--text-secondary);">Quantity: 50
-                                    Tons</p>
+                            <div class="shipping-card" onclick="selectShipping(this)">
+                                <input type="radio" name="shipping">
+                                <span class="sh-name">Transporteur Dédié (Freight)</span>
+                                <span class="sh-desc">Spécialisé métaux (2-3 j)</span>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="summary-item">
-                            <span class="text-secondary">Subtotal</span>
-                            <span class="text-primary" style="font-weight: 600;">42,500.00 MAD</span>
-                        </div>
-                        <div class="summary-item">
-                            <span class="text-secondary">Logistics (Standard)</span>
-                            <span class="text-primary" style="font-weight: 600;">1,200.00 MAD</span>
-                        </div>
-                        <div class="summary-item">
-                            <span class="text-secondary">IBC Escrow Fee (1.5%)</span>
-                            <span class="text-primary" style="font-weight: 600;">637.50 MAD</span>
-                        </div>
-
-                        <div class="total-row">
-                            <span>Total</span>
-                            <span>44,337.50 MAD</span>
-                        </div>
-
-                        <button class="btn btn-primary" style="margin-top: 2rem;"
-                            onclick="window.location.href='payment.html'">
-                            Confirm & Go to Payment <i class="fas fa-arrow-right" style="margin-left: 0.5rem;"></i>
-                        </button>
-
-                        <p class="text-center text-muted" style="margin-top: 1.5rem; font-size: 0.75rem;">
-                            <i class="fas fa-lock"></i> Secure B2B checkout encrypted by GlobalSign
-                        </p>
+                    <div
+                        style="margin-top: 1.5rem; padding: 12px; background: #f0fdf4; border-radius: 10px; display: flex; align-items: center; gap: 10px; font-size: 0.85rem; color: #027a48; font-weight: 700;">
+                        <i class="far fa-calendar-alt"></i> Date de livraison estimée : 08 Mars 2026
                     </div>
                 </div>
             </div>
-        </main>
-    </div>
 
-    <script src="js/app.js"></script>
+            <!-- Right: Order Summary Card -->
+            <aside class="fade-in-up delay-200">
+                <div class="summary-card">
+                    <h3 class="summary-title">Récapitulatif de la commande</h3>
+
+                    <div class="product-summary-box">
+                        <img src="https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?auto=format&fit=crop&q=80&w=100"
+                            class="ps-img">
+                        <div class="ps-info">
+                            <h4>Cuivre Millberry</h4>
+                            <p>Qté : 10 Tonnes</p>
+                            <p style="font-weight: 700; color: var(--brand-dark);">42,000 MAD / T</p>
+                        </div>
+                    </div>
+
+                    <div class="summary-row">
+                        <span style="color: var(--brand-secondary); font-weight: 600;">Total produits HT</span>
+                        <span style="font-weight: 700; color: var(--brand-dark);">420,000.00 MAD</span>
+                    </div>
+                    <div class="summary-row">
+                        <span style="color: var(--brand-secondary); font-weight: 600;">Frais de livraison</span>
+                        <span style="font-weight: 700; color: var(--brand-dark);">2,500.00 MAD</span>
+                    </div>
+                    <div class="summary-row">
+                        <span style="color: var(--brand-secondary); font-weight: 600;">TVA (20%)</span>
+                        <span style="font-weight: 700; color: var(--brand-dark);">84,500.00 MAD</span>
+                    </div>
+
+                    <div class="summary-row total">
+                        <span>Total à payer TTC</span>
+                        <span>507,000.00 MAD</span>
+                    </div>
+
+                    <div class="platform-note">
+                        <p><i class="fas fa-shield-check"></i> <b>Paiements Sécurisés :</b> La transaction est traitée
+                            via l'Escrow de Fluxence. Les fonds sont débloqués après confirmation de réception.</p>
+                        <p style="margin-top: 8px;"><i class="fas fa-lock"></i> Encryption SSL 256-bit par GlobalSign.
+                        </p>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" style="height: 56px; font-size: 1.1rem;"
+                            onclick="location.href='payment.html'">Procéder au paiement</button>
+                        <button class="btn btn-white"
+                            style="height: 56px; font-size: 1.1rem; color: #f04438; border-color: #fecdca;"
+                            onclick="alert('Commande annulée')">Annuler la commande</button>
+                    </div>
+
+                    <a href="negotiation-room.html" class="back-link"><i class="fas fa-arrow-left"></i> Retour à la
+                        négociation</a>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <script>
+        function selectShipping(el) {
+            document.querySelectorAll('.shipping-card').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+            el.querySelector('input').checked = true;
+        }
+    </script>
 </body>
 
 </html>

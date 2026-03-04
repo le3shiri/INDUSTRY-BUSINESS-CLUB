@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence | Inscription Étape par Étape</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --brand-primary: #00B140;
+            /* Sprite Green */
+            --brand-secondary: #667085;
+            --brand-dark: #101828;
+            --card-border: #eaecf0;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --bg-soft: #fcfcfd;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-soft);
+            margin: 0;
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar Progress */
+        .register-sidebar {
+            width: 380px;
+            background: var(--brand-dark);
+            padding: 4rem 3rem;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .logo-box {
+            font-size: 1.5rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 4rem;
+        }
+
+        .stepper-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+            position: relative;
+        }
+
+        .stepper-nav::before {
+            content: '';
+            position: absolute;
+            left: 11px;
+            top: 30px;
+            bottom: 30px;
+            width: 2px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #1d2939;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+
+        .step-item.active .step-icon {
+            background: var(--brand-primary);
+            border-color: var(--brand-primary);
+            color: white;
+            box-shadow: 0 0 0 4px rgba(0, 177, 64, 0.2);
+        }
+
+        .step-item.completed .step-icon {
+            background: var(--brand-primary);
+            border-color: var(--brand-primary);
+            color: white;
+        }
+
+        .step-text h4 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.6);
+            transition: color 0.3s;
+        }
+
+        .step-text p {
+            margin: 2px 0 0 0;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .step-item.active .step-text h4 {
+            color: white;
+        }
+
+        .step-item.active .step-text p {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Main Content */
+        .register-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem;
+            background: white;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 520px;
+        }
+
+        .form-header {
+            margin-bottom: 2.5rem;
+        }
+
+        .form-header h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .form-header p {
+            color: var(--brand-secondary);
+        }
+
+        /* Step Visibility */
+        .form-step {
+            display: none;
+            animation: slideIn 0.4s ease-out;
+        }
+
+        .form-step.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Inputs */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group.full {
+            grid-column: span 2;
+        }
+
+        .form-label {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #344054;
+        }
+
+        .form-control {
+            padding: 12px 16px;
+            border-radius: 10px;
+            border: 1px solid var(--card-border);
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 4px rgba(0, 177, 64, 0.05);
+        }
+
+        /* Nav Buttons */
+        .step-footer {
+            margin-top: 3rem;
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .btn-prev {
+            background: white;
+            border-color: var(--card-border);
+            color: #344054;
+            flex: 0.5;
+        }
+
+        .btn-prev:hover {
+            border-color: var(--brand-dark);
+            background: #f9fafb;
+        }
+
+        .btn-next {
+            background: var(--brand-primary);
+            color: white;
+            box-shadow: 0 4px 14px rgba(0, 177, 64, 0.3);
+        }
+
+        .btn-next:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 177, 64, 0.4);
+            opacity: 0.95;
+        }
+
+        /* Legal Checkboxes Custom */
+        .legal-box {
+            background: #f9fafb;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+            margin-bottom: 1.5rem;
+        }
+
+        .checkbox-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .checkbox-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .checkbox-row input {
+            margin-top: 4px;
+            border-radius: 4px;
+        }
+
+        .checkbox-label {
+            font-size: 0.875rem;
+            color: #475467;
+            line-height: 1.5;
+        }
+
+        .checkbox-label a {
+            color: var(--brand-primary);
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        @media (max-width: 1024px) {
+            .register-sidebar {
+                width: 300px;
+                padding: 3rem 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .register-sidebar {
+                width: 100%;
+                height: auto;
+                padding: 2rem;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .stepper-nav {
+                flex-direction: row;
+                overflow-x: auto;
+                padding-bottom: 10px;
+                gap: 15px;
+            }
+
+            .stepper-nav::before {
+                display: none;
+            }
+
+            .step-text {
+                display: none;
+            }
+
+            .register-main {
+                padding: 3rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside class="register-sidebar">
+        <div>
+            <div class="logo-box">
+                <i class="fas fa-rocket" style="color: var(--brand-primary);"></i> Fluxence
+            </div>
+
+            <nav class="stepper-nav">
+                <div class="step-item active" id="s-item-1">
+                    <div class="step-icon">1</div>
+                    <div class="step-text">
+                        <h4>Identité</h4>
+                        <p>Vos informations personnelles</p>
+                    </div>
+                </div>
+                <div class="step-item" id="s-item-2">
+                    <div class="step-icon">2</div>
+                    <div class="step-text">
+                        <h4>Organisation</h4>
+                        <p>Détails de votre structure</p>
+                    </div>
+                </div>
+                <div class="step-item" id="s-item-3">
+                    <div class="step-icon">3</div>
+                    <div class="step-text">
+                        <h4>Sécurité</h4>
+                        <p>Protection de votre accès</p>
+                    </div>
+                </div>
+                <div class="step-item" id="s-item-4">
+                    <div class="step-icon">4</div>
+                    <div class="step-text">
+                        <h4>Validation</h4>
+                        <p>Consentements légaux</p>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        <div style="font-size: 0.8rem; opacity: 0.5;">
+            Besoin d'aide ? <a href="#" style="color: white; text-decoration: underline;">Support Fluxence</a>
+        </div>
+    </aside>
+
+    <main class="register-main">
+        <div class="form-container">
+            <form id="multi-step-form">
+
+                <!-- STEP 1: IDENTITY -->
+                <div class="form-step active" id="step-1">
+                    <div class="form-header">
+                        <h2>Commençons par vous</h2>
+                        <p>Parlez-nous un peu de vous pour personnaliser votre expérience.</p>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Nom</label>
+                            <input type="text" class="form-control" name="last_name" placeholder="Ex: Elachiri"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Prénom</label>
+                            <input type="text" class="form-control" name="first_name" placeholder="Ex: Amine" required>
+                        </div>
+                        <div class="form-group full">
+                            <label class="form-label">Email professionnel</label>
+                            <input type="email" id="user-email" class="form-control" placeholder="nom@entreprise.ma"
+                                readonly>
+                        </div>
+                        <div class="form-group full">
+                            <label class="form-label">Numéro de téléphone</label>
+                            <input type="tel" class="form-control" name="phone" placeholder="+212 6 XX XX XX XX"
+                                required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 2: ORGANIZATION -->
+                <div class="form-step" id="step-2">
+                    <div class="form-header">
+                        <h2>Votre Entreprise</h2>
+                        <p>Ces informations apparaîtront sur vos transactions Fluxence.</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Dénomination sociale</label>
+                        <input type="text" class="form-control" name="company_name"
+                            placeholder="Nom officiel de l'entreprise" required>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Pays</label>
+                            <select class="form-control" name="country">
+                                <option value="MA">Maroc</option>
+                                <option value="FR">France</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Ville</label>
+                            <input type="text" class="form-control" name="city" placeholder="Ex: Casablanca" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 3: SECURITY -->
+                <div class="form-step" id="step-3">
+                    <div class="form-header">
+                        <h2>Sécurisez votre compte</h2>
+                        <p>Choisissez un mot de passe robuste pour protéger vos données industrielles.</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Mot de passe</label>
+                        <input type="password" class="form-control" name="password" placeholder="••••••••" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Confirmer le mot de passe</label>
+                        <input type="password" class="form-control" name="password_confirm" placeholder="••••••••"
+                            required>
+                    </div>
+                </div>
+
+                <!-- STEP 4: LEGAL -->
+                <div class="form-step" id="step-4">
+                    <div class="form-header">
+                        <h2>Dernière étape</h2>
+                        <p>Veuillez valider les conditions d'utilisation pour finaliser l'inscription.</p>
+                    </div>
+
+                    <div class="legal-box">
+                        <div class="checkbox-row">
+                            <input type="checkbox" id="cgu" required>
+                            <label for="cgu" class="checkbox-label">J'accepte les <a href="#">Conditions Générales
+                                    d'Utilisation</a> du portail Fluxence.</label>
+                        </div>
+                        <div class="checkbox-row">
+                            <input type="checkbox" id="privacy" required>
+                            <label for="privacy" class="checkbox-label">Je confirme avoir lu la <a href="#">Politique de
+                                    Confidentialité</a> sur le traitement des données.</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group full">
+                        <label class="form-label">Code d'invitation</label>
+                        <input type="text" id="invite-code-display" class="form-control" readonly
+                            style="background: #f2f4f7;">
+                    </div>
+                </div>
+
+                <!-- FOOTER BUTTONS -->
+                <div class="step-footer">
+                    <button type="button" class="btn btn-prev" id="btn-prev" onclick="changeStep(-1)"
+                        style="display: none;">Précédent</button>
+                    <button type="button" class="btn btn-next" id="btn-next" onclick="changeStep(1)">Continuer <i
+                            class="fas fa-arrow-right"></i></button>
+                </div>
+
+            </form>
+        </div>
+    </main>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 4;
+
+        window.onload = () => {
+            const params = new URLSearchParams(window.location.search);
+            document.getElementById('user-email').value = params.get('email') || 'contact@client.ma';
+            document.getElementById('invite-code-display').value = params.get('code') || 'FLUX-B2B-2026';
+        };
+
+        function changeStep(n) {
+            // Validation simple
+            if (n === 1) {
+                const stepEl = document.getElementById(`step-${currentStep}`);
+                const inputs = stepEl.querySelectorAll('input[required], select[required]');
+                let valid = true;
+                inputs.forEach(i => {
+                    if (!i.checkValidity()) {
+                        i.reportValidity();
+                        valid = false;
+                    }
+                });
+                if (!valid) return;
+            }
+
+            // Hide current
+            document.getElementById(`step-${currentStep}`).classList.remove('active');
+            document.getElementById(`s-item-${currentStep}`).classList.remove('active');
+            if (n === 1) document.getElementById(`s-item-${currentStep}`).classList.add('completed');
+
+            currentStep += n;
+
+            if (currentStep > totalSteps) {
+                // Submit Form
+                window.location.href = `email-verification.html?email=${encodeURIComponent(document.getElementById('user-email').value)}`;
+                return;
+            }
+
+            // Show new
+            document.getElementById(`step-${currentStep}`).classList.add('active');
+            document.getElementById(`s-item-${currentStep}`).classList.add('active');
+
+            // Manage Buttons
+            document.getElementById('btn-prev').style.display = currentStep === 1 ? 'none' : 'flex';
+
+            const nextBtn = document.getElementById('btn-next');
+            if (currentStep === totalSteps) {
+                nextBtn.innerHTML = 'Créer mon compte <i class="fas fa-check-circle"></i>';
+            } else {
+                nextBtn.innerHTML = 'Continuer <i class="fas fa-arrow-right"></i>';
+            }
+        }
+    </script>
+</body>
+
+</html>

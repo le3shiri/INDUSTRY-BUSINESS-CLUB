@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence Admin | Rapport Commissions</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/components.js"></script>
+    <script src="../js/admin-data.js"></script>
+
+    <style>
+        :root {
+            --admin-bg: #fcfcfd;
+            --card-border: #eaecf0;
+            --text-main: #101828;
+            --text-sub: #475467;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --primary-corporate: #101828;
+            --success-main: #027a48;
+            --success-bg: #ecfdf3;
+            --warning-main: #b54708;
+            --warning-bg: #fffaeb;
+            --danger-main: #b42318;
+            --danger-bg: #fef3f2;
+            --info-main: #026aa2;
+            --info-bg: #f0f9ff;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--admin-bg);
+            color: var(--text-main);
+            letter-spacing: -0.01em;
+        }
+
+        .main-content {
+            padding: 0;
+            background: var(--admin-bg);
+        }
+
+        .top-nav {
+            background: white;
+            border-bottom: 1px solid var(--card-border);
+            padding: 1.25rem 2.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-container {
+            padding: 2.5rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* KPI Grid */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin: 0;
+        }
+
+        .stat-trend {
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .trend-up {
+            color: var(--success-main);
+        }
+
+        /* Filter Section */
+        .analytics-filters {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 2rem;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr) auto;
+            gap: 1rem;
+            align-items: flex-end;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .filter-label {
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+        }
+
+        .filter-control {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            font-family: inherit;
+            font-size: 0.85rem;
+            color: var(--text-main);
+            background: #fff;
+        }
+
+        /* Charts Section */
+        .charts-row {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .chart-box {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-title {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        /* Data Tables Section */
+        .table-outer {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+            margin-bottom: 2.5rem;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .admin-table th {
+            background: #f9fafb;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .admin-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--card-border);
+            font-size: 0.85rem;
+        }
+
+        .badge {
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge-success {
+            background: var(--success-bg);
+            color: var(--success-main);
+        }
+
+        .badge-warning {
+            background: var(--warning-bg);
+            color: var(--warning-main);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+        <aside id="sidebar-container"></aside>
+
+        <main class="main-content">
+            <header class="top-nav">
+                <div>
+                    <h1 style="margin:0; font-size: 1.5rem; font-weight: 700;">Rapport Commissions</h1>
+                    <p style="margin:0; font-size: 0.85rem; color: var(--text-sub);">Analyse des revenus nets,
+                        prélèvements et performance de marge par segment</p>
+                </div>
+                <div style="display: flex; gap: 0.75rem;">
+                    <button class="btn btn-secondary" style="background: white;"><i class="fas fa-file-pdf"></i>
+                        PDF</button>
+                    <button class="btn btn-secondary" style="background: white;"><i class="fas fa-file-excel"></i>
+                        Excel</button>
+                    <button class="btn btn-primary"><i class="fas fa-sync"></i> Générer Rapport</button>
+                </div>
+            </header>
+
+            <div class="dashboard-container">
+
+                <!-- Filters -->
+                <div class="analytics-filters">
+                    <div class="filter-group">
+                        <label class="filter-label">Période</label>
+                        <select class="filter-control">
+                            <option>Aujourd'hui</option>
+                            <option>Cette semaine</option>
+                            <option selected>Ce mois ci</option>
+                            <option>Cette année</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Vendeur</label>
+                        <input type="text" class="filter-control" placeholder="Rechercher vendeur...">
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Catégorie</label>
+                        <select class="filter-control">
+                            <option selected>Toutes catégories</option>
+                            <option>Matières Premières</option>
+                            <option>Machines</option>
+                            <option>Services</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Pays</label>
+                        <select class="filter-control">
+                            <option selected>Tous les pays</option>
+                            <option>Maroc</option>
+                            <option>Égypte</option>
+                            <option>Tunisie</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Montant Min (Com.)</label>
+                        <input type="number" class="filter-control" placeholder="0 MAD">
+                    </div>
+                    <button class="btn btn-primary" style="padding: 10px 20px;"><i class="fas fa-filter"></i>
+                        Filtrer</button>
+                </div>
+
+                <!-- KPIs -->
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <span class="stat-label">Commissions Total</span>
+                        <p class="stat-value">128,320 MAD</p>
+                        <span class="stat-trend trend-up"><i class="fas fa-arrow-up"></i> +14.1% vs mois dernier</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Transactions Commissionnées</span>
+                        <p class="stat-value">312</p>
+                        <span class="stat-subtext">91% des transactions totales</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Commission Moyenne</span>
+                        <p class="stat-value">411 MAD</p>
+                        <span class="stat-subtext">Par transaction validée</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">En Attente (Escrow)</span>
+                        <p class="stat-value">18,450 MAD</p>
+                        <span class="stat-subtext" style="color: var(--warning-main);">Transactions non
+                            finalisées</span>
+                    </div>
+                </div>
+
+                <!-- Charts -->
+                <div class="charts-row">
+                    <div class="chart-box">
+                        <div class="chart-header">
+                            <h3 class="chart-title">Évolution des Commissions</h3>
+                        </div>
+                        <canvas id="commissionChart" height="280"></canvas>
+                    </div>
+                    <div class="chart-box">
+                        <div class="chart-header">
+                            <h3 class="chart-title">Commissions par Catégorie</h3>
+                        </div>
+                        <canvas id="categoryChart" height="280"></canvas>
+                    </div>
+                </div>
+
+                <!-- Detail Table -->
+                <div class="table-outer">
+                    <div
+                        style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--card-border); display: flex; justify-content: space-between; align-items: center;">
+                        <h3 style="margin:0; font-size: 1rem; font-weight: 700;">Détail des Commissions Récentes</h3>
+                        <button class="btn btn-secondary" style="font-size: 0.75rem;">Voir tout</button>
+                    </div>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>ID Transaction</th>
+                                <th>Vendeur</th>
+                                <th>Montant Vente</th>
+                                <th>Taux</th>
+                                <th>Commission (MAD)</th>
+                                <th>Pays</th>
+                                <th>Statut</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="font-family: monospace; font-weight: 700;">#TR-9981</td>
+                                <td>Atlas Mining Group</td>
+                                <td style="font-weight: 700;">45,000</td>
+                                <td>10%</td>
+                                <td style="font-weight: 800; color: var(--primary-corporate);">4,500.00</td>
+                                <td>Maroc</td>
+                                <td><span class="badge badge-success">Payée</span></td>
+                                <td>04/03/2026</td>
+                            </tr>
+                            <tr>
+                                <td style="font-family: monospace; font-weight: 700;">#TR-9980</td>
+                                <td>Tazi Industrial</td>
+                                <td style="font-weight: 700;">12,500</td>
+                                <td>8%</td>
+                                <td style="font-weight: 800; color: var(--primary-corporate);">1,000.00</td>
+                                <td>Maroc</td>
+                                <td><span class="badge badge-success">Payée</span></td>
+                                <td>04/03/2026</td>
+                            </tr>
+                            <tr>
+                                <td style="font-family: monospace; font-weight: 700;">#TR-9978</td>
+                                <td>Kenitra Metals</td>
+                                <td style="font-weight: 700;">85,000</td>
+                                <td>5%</td>
+                                <td style="font-weight: 800; color: var(--primary-corporate);">4,250.00</td>
+                                <td>Maroc</td>
+                                <td><span class="badge badge-warning">En attente</span></td>
+                                <td>03/03/2026</td>
+                            </tr>
+                            <tr>
+                                <td style="font-family: monospace; font-weight: 700;">#TR-9975</td>
+                                <td>Egyptian Steel</td>
+                                <td style="font-weight: 700;">150,000</td>
+                                <td>3%</td>
+                                <td style="font-weight: 800; color: var(--primary-corporate);">4,500.00</td>
+                                <td>Égypte</td>
+                                <td><span class="badge badge-success">Payée</span></td>
+                                <td>02/03/2026</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            Components.renderAdminSidebar('admin-report-commissions.html');
+
+            // Commission Evolution Chart
+            const ctxComm = document.getElementById('commissionChart').getContext('2d');
+            new Chart(ctxComm, {
+                type: 'line',
+                data: {
+                    labels: ['S1', 'S2', 'S3', 'S4'],
+                    datasets: [{
+                        label: 'Commissions MAD',
+                        data: [28000, 32000, 30500, 37820],
+                        borderColor: '#101828',
+                        backgroundColor: 'rgba(16, 24, 40, 0.05)',
+                        fill: true,
+                        tension: 0.4,
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, grid: { borderDash: [5, 5] } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+            // Category Split Chart
+            const ctxCat = document.getElementById('categoryChart').getContext('2d');
+            new Chart(ctxCat, {
+                type: 'polarArea',
+                data: {
+                    labels: ['Matières P.', 'Machines', 'Services', 'Logistique'],
+                    datasets: [{
+                        data: [55, 25, 15, 5],
+                        backgroundColor: ['rgba(16, 24, 40, 0.9)', 'rgba(52, 64, 84, 0.8)', 'rgba(102, 112, 133, 0.7)', 'rgba(152, 162, 179, 0.6)'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'right', labels: { boxWidth: 10, font: { size: 10 } } } }
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

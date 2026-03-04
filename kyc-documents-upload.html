@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence | Documents KYC</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --brand-primary: #00B140;
+            /* Sprite Green */
+            --brand-secondary: #667085;
+            --brand-dark: #101828;
+            --success-main: #027a48;
+            --success-bg: #ecfdf3;
+            --warning-main: #b54708;
+            --warning-bg: #fffaeb;
+            --error-main: #b42318;
+            --card-border: #eaecf0;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --bg-soft: #fcfcfd;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-soft);
+            margin: 0;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Progress */
+        .register-sidebar {
+            width: 380px;
+            background: var(--brand-dark);
+            padding: 4rem 3rem;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .logo-box {
+            font-size: 1.5rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 4rem;
+        }
+
+        .stepper-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+            position: relative;
+        }
+
+        .stepper-nav::before {
+            content: '';
+            position: absolute;
+            left: 11px;
+            top: 30px;
+            bottom: 30px;
+            width: 2px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #1d2939;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .step-item.completed .step-icon {
+            background: var(--brand-primary);
+            border-color: var(--brand-primary);
+            color: white;
+        }
+
+        .step-item.active .step-icon {
+            background: var(--brand-primary);
+            border-color: var(--brand-primary);
+            color: white;
+            box-shadow: 0 0 0 4px rgba(0, 177, 64, 0.2);
+        }
+
+        .step-text h4 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .step-item.active .step-text h4 {
+            color: white;
+        }
+
+        .step-item.completed .step-text h4 {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Main Content */
+        .kyc-main {
+            flex: 1;
+            padding: 4rem;
+            background: white;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .kyc-container {
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .intro-header {
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .intro-header h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+
+        .intro-header p {
+            color: var(--brand-secondary);
+        }
+
+        /* Review Alert Simulation */
+        .alert-refusal {
+            background: #fef3f2;
+            border: 1px solid #fee4e2;
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 2.5rem;
+            display: none;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .alert-refusal i {
+            color: var(--error-main);
+            margin-top: 3px;
+        }
+
+        .alert-refusal div span {
+            display: block;
+            font-weight: 800;
+            color: var(--error-main);
+            font-size: 0.85rem;
+            margin-bottom: 4px;
+        }
+
+        .alert-refusal div p {
+            margin: 0;
+            color: #b42318;
+            font-size: 0.9rem;
+        }
+
+        /* Doc Cards */
+        .doc-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .doc-card {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .doc-card:hover {
+            border-color: var(--brand-primary);
+            background: #fcfdf3;
+        }
+
+        .doc-card-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .doc-label {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #101828;
+        }
+
+        .doc-status {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+
+        .st-none {
+            background: #f2f4f7;
+            color: #475467;
+        }
+
+        .st-wait {
+            background: var(--warning-bg);
+            color: var(--warning-main);
+        }
+
+        .st-done {
+            background: var(--success-bg);
+            color: var(--success-main);
+        }
+
+        .st-fail {
+            background: #fef3f2;
+            color: #b42318;
+        }
+
+        .upload-trigger {
+            border: 2.5px dashed var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .upload-trigger:hover {
+            background: white;
+            border-color: var(--brand-primary);
+        }
+
+        .upload-trigger i {
+            font-size: 1.5rem;
+            color: var(--brand-secondary);
+            margin-bottom: 10px;
+        }
+
+        .upload-trigger p {
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .file-box {
+            display: none;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+        }
+
+        .file-icon {
+            width: 36px;
+            height: 36px;
+            background: #f9fafb;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--brand-primary);
+        }
+
+        .file-info {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .file-info span {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .btn-del {
+            border: none;
+            background: none;
+            color: var(--error-main);
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 5px;
+        }
+
+        /* Footer */
+        .kyc-footer {
+            margin-top: 3.5rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--card-border);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-white {
+            background: white;
+            border: 1px solid var(--card-border);
+            color: #344054;
+            text-decoration: none;
+        }
+
+        .btn-success {
+            background: var(--brand-primary);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 14px rgba(0, 177, 64, 0.3);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 177, 64, 0.4);
+        }
+
+        @media (max-width: 900px) {
+            body {
+                flex-direction: column;
+            }
+
+            .register-sidebar {
+                width: 100%;
+                height: auto;
+                padding: 2rem;
+            }
+
+            .stepper-nav {
+                flex-direction: row;
+                gap: 15px;
+            }
+
+            .step-text,
+            .stepper-nav::before {
+                display: none;
+            }
+
+            .doc-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside class="register-sidebar">
+        <div>
+            <div class="logo-box">
+                <i class="fas fa-rocket" style="color: var(--brand-primary);"></i> Fluxence
+            </div>
+
+            <nav class="stepper-nav">
+                <div class="step-item completed">
+                    <div class="step-icon"><i class="fas fa-check"></i></div>
+                    <div class="step-text">
+                        <h4>Compte</h4>
+                    </div>
+                </div>
+                <div class="step-item completed">
+                    <div class="step-icon"><i class="fas fa-check"></i></div>
+                    <div class="step-text">
+                        <h4>Vérification</h4>
+                    </div>
+                </div>
+                <div class="step-item completed">
+                    <div class="step-icon"><i class="fas fa-check"></i></div>
+                    <div class="step-text">
+                        <h4>Entreprise</h4>
+                    </div>
+                </div>
+                <div class="step-item active">
+                    <div class="step-icon">4</div>
+                    <div class="step-text">
+                        <h4>Documents</h4>
+                        <p>Dossier final KYC</p>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div style="font-size: 0.8rem; opacity: 0.5;">Plateforme de confiance industrielle</div>
+    </aside>
+
+    <main class="kyc-main">
+        <div class="kyc-container">
+            <div class="intro-header">
+                <h2>Conformité & Sécurité</h2>
+                <p>Pour finaliser l'ouverture de votre compte B2B, veuillez charger les justificatifs légaux de votre
+                    structure.</p>
+            </div>
+
+            <div class="alert-refusal" id="refusal-box">
+                <i class="fas fa-exclamation-circle"></i>
+                <div>
+                    <span>Action requise de votre part</span>
+                    <p>Le document "Registre de Commerce" soumis précédemment a été refusé car il date de plus de 3
+                        mois. Merci de fournir un extrait Modèle J récent.</p>
+                </div>
+            </div>
+
+            <div class="doc-grid">
+                <!-- CIN -->
+                <div class="doc-card">
+                    <div class="doc-card-header">
+                        <span class="doc-label">Pièce d'Identité (CIN / Passeport)</span>
+                        <span class="doc-status st-done">Vérifié</span>
+                    </div>
+                    <div class="file-box" style="display: flex;">
+                        <div class="file-icon"><i class="fas fa-id-card"></i></div>
+                        <div class="file-info"><span>cin_recto_verso.pdf</span></div>
+                    </div>
+                </div>
+
+                <!-- PHOTO PIECE -->
+                <div class="doc-card">
+                    <div class="doc-card-header">
+                        <span class="doc-label">Photo de la pièce d'identité</span>
+                        <span class="doc-status st-none" id="st-photo">En attente</span>
+                    </div>
+                    <div class="upload-trigger" onclick="trig('photo')">
+                        <i class="fas fa-camera"></i>
+                        <p>Charger Photo / Selfie avec pièce</p>
+                    </div>
+                    <div class="file-box" id="box-photo">
+                        <div class="file-icon"><i class="fas fa-image"></i></div>
+                        <div class="file-info"><span id="name-photo">-</span></div>
+                        <button class="btn-del" onclick="rem('photo')"><i class="fas fa-times"></i></button>
+                    </div>
+                    <input type="file" id="up-photo" hidden accept=".jpg,.jpeg,.png,.pdf" onchange="hdl('photo')">
+                </div>
+
+                <!-- RC -->
+                <div class="doc-card" style="border-color: var(--error-main);">
+                    <div class="doc-card-header">
+                        <span class="doc-label">Registre de commerce (RC)</span>
+                        <span class="doc-status st-fail">Refusé</span>
+                    </div>
+                    <div class="upload-trigger" onclick="trig('rc')">
+                        <i class="fas fa-file-contract"></i>
+                        <p>Charger nouveau Modèle J</p>
+                    </div>
+                    <div class="file-box" id="box-rc">
+                        <div class="file-icon"><i class="fas fa-file-pdf"></i></div>
+                        <div class="file-info"><span id="name-rc">-</span></div>
+                        <button class="btn-del" onclick="rem('rc')"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div style="margin-top: 10px; font-size: 0.75rem; color: var(--error-main); font-weight: 600;">
+                        <i class="fas fa-info-circle"></i> Commentaire admin : Document expiré (> 3 mois).
+                    </div>
+                    <input type="file" id="up-rc" hidden accept=".jpg,.jpeg,.png,.pdf" onchange="hdl('rc')">
+                </div>
+
+                <!-- ICE -->
+                <div class="doc-card">
+                    <div class="doc-card-header">
+                        <span class="doc-label">Identifiant fiscal / ICE</span>
+                        <span class="doc-status st-none" id="st-ice">En attente</span>
+                    </div>
+                    <div class="upload-trigger" onclick="trig('ice')">
+                        <i class="fas fa-barcode"></i>
+                        <p>Charger l'attestation ICE</p>
+                    </div>
+                    <div class="file-box" id="box-ice">
+                        <div class="file-icon"><i class="fas fa-file-invoice"></i></div>
+                        <div class="file-info"><span id="name-ice">-</span></div>
+                        <button class="btn-del" onclick="rem('ice')"><i class="fas fa-times"></i></button>
+                    </div>
+                    <input type="file" id="up-ice" hidden accept=".jpg,.jpeg,.png,.pdf" onchange="hdl('ice')">
+                </div>
+
+                <!-- TVA -->
+                <div class="doc-card">
+                    <div class="doc-card-header">
+                        <span class="doc-label">Numéro TVA (optionnel)</span>
+                        <span class="doc-status st-none" id="st-tva">Optionnel</span>
+                    </div>
+                    <div class="upload-trigger" onclick="trig('tva')">
+                        <i class="fas fa-percent"></i>
+                        <p>Charger attestation de TVA</p>
+                    </div>
+                    <div class="file-box" id="box-tva">
+                        <div class="file-icon"><i class="fas fa-file-invoice-dollar"></i></div>
+                        <div class="file-info"><span id="name-tva">-</span></div>
+                        <button class="btn-del" onclick="rem('tva')"><i class="fas fa-times"></i></button>
+                    </div>
+                    <input type="file" id="up-tva" hidden accept=".jpg,.jpeg,.png,.pdf" onchange="hdl('tva')">
+                </div>
+
+                <!-- ADRESSE -->
+                <div class="doc-card">
+                    <div class="doc-card-header">
+                        <span class="doc-label">Justificatif d'adresse entreprise</span>
+                        <span class="doc-status st-none" id="st-addr">En attente</span>
+                    </div>
+                    <div class="upload-trigger" onclick="trig('addr')">
+                        <i class="fas fa-map-location-dot"></i>
+                        <p>Quittance, bail ou dom.</p>
+                    </div>
+                    <div class="file-box" id="box-addr">
+                        <div class="file-icon"><i class="fas fa-file-lines"></i></div>
+                        <div class="file-info"><span id="name-addr">-</span></div>
+                        <button class="btn-del" onclick="rem('addr')"><i class="fas fa-times"></i></button>
+                    </div>
+                    <input type="file" id="up-addr" hidden accept=".jpg,.jpeg,.png,.pdf" onchange="hdl('addr')">
+                </div>
+
+                <!-- STATUTS -->
+                <div class="doc-card">
+                    <div class="doc-card-header">
+                        <span class="doc-label">Statuts de l'entreprise (optionnel)</span>
+                        <span class="doc-status st-done">Vérifié</span>
+                    </div>
+                    <div class="file-box" style="display: flex;">
+                        <div class="file-icon"><i class="fas fa-shield-check"></i></div>
+                        <div class="file-info"><span>statuts_signes.pdf</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="kyc-footer">
+                <a href="company-profile-setup.html" class="btn btn-white"><i class="fas fa-arrow-left"></i> Retour</a>
+                <button class="btn btn-success" onclick="finish()">Soumettre mon dossier <i
+                        class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function trig(id) { document.getElementById('up-' + id).click(); }
+        function hdl(id) {
+            const f = document.getElementById('up-' + id).files[0];
+            if (f) {
+                document.getElementById('name-' + id).textContent = f.name;
+                document.getElementById('box-' + id).style.display = 'flex';
+                document.getElementById('box-' + id).previousElementSibling.style.display = 'none';
+                document.getElementById('st-' + id).textContent = 'Chargé';
+                document.getElementById('st-' + id).className = 'doc-status st-wait';
+            }
+        }
+        function rem(id) {
+            document.getElementById('up-' + id).value = "";
+            document.getElementById('box-' + id).style.display = 'none';
+            document.getElementById('box-' + id).previousElementSibling.style.display = 'block';
+            document.getElementById('st-' + id).textContent = 'En attente';
+            document.getElementById('st-' + id).className = 'doc-status st-none';
+        }
+        function finish() {
+            alert("Vérification en cours !");
+            window.location.href = 'account-pending-validation.html';
+        }
+    </script>
+</body>
+
+</html>

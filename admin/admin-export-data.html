@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxence Admin | Export de Données</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="../js/components.js"></script>
+    <script src="../js/admin-data.js"></script>
+
+    <style>
+        :root {
+            --admin-bg: #fcfcfd;
+            --card-border: #eaecf0;
+            --text-main: #101828;
+            --text-sub: #475467;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --primary-corporate: #101828;
+            --success-main: #027a48;
+            --success-bg: #ecfdf3;
+            --warning-main: #b54708;
+            --warning-bg: #fffaeb;
+            --danger-main: #b42318;
+            --danger-bg: #fef3f2;
+            --info-main: #026aa2;
+            --info-bg: #f0f9ff;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--admin-bg);
+            color: var(--text-main);
+            letter-spacing: -0.01em;
+        }
+
+        .main-content {
+            padding: 0;
+            background: var(--admin-bg);
+        }
+
+        .top-nav {
+            background: white;
+            border-bottom: 1px solid var(--card-border);
+            padding: 1.25rem 2.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-container {
+            padding: 2.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .export-grid {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        /* Data Type Selector */
+        .config-card {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+        }
+
+        .section-title {
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1.25rem;
+            display: block;
+        }
+
+        .type-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .type-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-sub);
+        }
+
+        .type-item:hover {
+            background: #f9fafb;
+            border-color: var(--card-border);
+        }
+
+        .type-item.active {
+            background: #f9fafb;
+            border-color: var(--primary-corporate);
+            color: var(--text-main);
+        }
+
+        .type-item i {
+            width: 16px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        /* Configuration Panel */
+        .params-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .form-control {
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            font-family: inherit;
+            font-size: 0.85rem;
+            color: var(--text-main);
+        }
+
+        /* Format Selector */
+        .format-selector {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .format-btn {
+            flex: 1;
+            padding: 1rem;
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .format-btn i {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .format-btn span {
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .format-btn:hover {
+            border-color: var(--primary-corporate);
+            background: #f9fafb;
+        }
+
+        .format-btn.active {
+            border-color: var(--primary-corporate);
+            background: #fcfcfd;
+            box-shadow: 0 0 0 2px var(--primary-corporate);
+        }
+
+        /* Column Selection */
+        .column-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .column-chip {
+            padding: 6px 12px;
+            border-radius: 99px;
+            background: #f2f4f7;
+            border: 1px solid #eaecf0;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .column-chip.active {
+            background: var(--primary-corporate);
+            border-color: var(--primary-corporate);
+            color: white;
+        }
+
+        /* History Table */
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2.5rem;
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .history-table th {
+            background: #f9fafb;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .history-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--card-border);
+            font-size: 0.85rem;
+        }
+
+        .badge {
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            border: 1px solid transparent;
+        }
+
+        .badge-done {
+            background: var(--success-bg);
+            color: var(--success-main);
+            border-color: #6ce9a6;
+        }
+
+        .badge-wait {
+            background: var(--info-bg);
+            color: var(--info-main);
+            border-color: #b9e6fe;
+        }
+
+        .btn-schedule {
+            background: white;
+            color: var(--text-main);
+            border: 1px solid var(--card-border);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-schedule:hover {
+            background: #f9fafb;
+            border-color: var(--text-main);
+        }
+
+        /* Tooltip-like info */
+        .info-box {
+            background: var(--info-bg);
+            color: var(--info-main);
+            border: 1px solid #b9e6fe;
+            padding: 1rem;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            margin-top: 1.5rem;
+            display: flex;
+            gap: 10px;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layout-dashboard">
+        <aside id="sidebar-container"></aside>
+
+        <main class="main-content">
+            <header class="top-nav">
+                <div>
+                    <h1 style="margin:0; font-size: 1.5rem; font-weight: 700;">Export de Données</h1>
+                    <p style="margin:0; font-size: 0.85rem; color: var(--text-sub);">Extraction massive d'informations
+                        multi-critères, rapports comptables et audits logs</p>
+                </div>
+                <div style="display: flex; gap: 0.75rem;">
+                    <button class="btn-schedule"><i class="fas fa-calendar-alt"></i> Planifier Export</button>
+                    <button class="btn btn-primary" style="padding-left: 1.5rem; padding-right: 1.5rem;"
+                        onclick="generateExport()">
+                        <i class="fas fa-cloud-download-alt"></i> Générer l'export
+                    </button>
+                </div>
+            </header>
+
+            <div class="dashboard-container">
+
+                <div class="export-grid">
+
+                    <!-- Sidebar: Data Types -->
+                    <aside class="config-card">
+                        <span class="section-title">Source de données</span>
+                        <div class="type-list">
+                            <div class="type-item active"><i class="fas fa-users"></i> Utilisateurs & Entreprise</div>
+                            <div class="type-item"><i class="fas fa-store"></i> Vendeurs & Acheteurs</div>
+                            <div class="type-item"><i class="fas fa-box"></i> Annonces / Stocks</div>
+                            <div class="type-item"><i class="fas fa-tags"></i> Catégories</div>
+                            <div class="type-item"><i class="fas fa-handshake"></i> Transactions</div>
+                            <div class="type-item"><i class="fas fa-credit-card"></i> Paiements & Commissions</div>
+                            <div class="type-item"><i class="fas fa-wallet"></i> Reversements Vendeurs</div>
+                            <div class="type-item"><i class="fas fa-truck"></i> Expéditions & Livraisons</div>
+                            <div class="type-item"><i class="fas fa-file-invoice"></i> Factures & Historique</div>
+                            <div class="type-item"><i class="fas fa-exclamation-triangle"></i> Réclamations & Litiges
+                            </div>
+                            <div class="type-item"><i class="fas fa-user-clock"></i> Activité Utilisateurs</div>
+                            <div class="type-item"><i class="fas fa-terminal"></i> Logs Système</div>
+                        </div>
+
+                        <div class="info-box">
+                            <i class="fas fa-info-circle" style="margin-top: 2px;"></i>
+                            <div>
+                                Les exports JSON et XML sont recommandés pour les synchronisations avec des outils tiers
+                                (ERP/CRM).
+                            </div>
+                        </div>
+                    </aside>
+
+                    <!-- Main: Configuration -->
+                    <div style="display: flex; flex-direction: column; gap: 2rem;">
+
+                        <!-- Filters & Params -->
+                        <div class="config-card">
+                            <span class="section-title">Paramètres de l'export</span>
+                            <div class="params-grid">
+                                <div class="form-group">
+                                    <label class="form-label">Période (Début)</label>
+                                    <input type="date" class="form-control" value="2026-02-01">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Période (Fin)</label>
+                                    <input type="date" class="form-control" value="2026-03-04">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Pays / Ville</label>
+                                    <select class="form-control">
+                                        <option selected>Toutes zones</option>
+                                        <option>Maroc (Casablanca, Rabat, ...)</option>
+                                        <option>Égypte (Cairo, Alexandria)</option>
+                                        <option>Tunisie (Tunis, Sfax)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Statut des données</label>
+                                    <select class="form-control">
+                                        <option selected>Tous les statuts</option>
+                                        <option>Actif / Validé</option>
+                                        <option>En attente / Brouillon</option>
+                                        <option>Archivé / Annulé</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div style="margin-bottom: 2rem;">
+                                <label class="form-label" style="display: block; margin-bottom: 0.75rem;">Colonnes à
+                                    inclure</label>
+                                <div class="column-chips">
+                                    <div class="column-chip active">ID Utilisateur</div>
+                                    <div class="column-chip active">Nom complet</div>
+                                    <div class="column-chip active">Email</div>
+                                    <div class="column-chip active">Date d'inscription</div>
+                                    <div class="column-chip active">Type compte</div>
+                                    <div class="column-chip active">Entreprise</div>
+                                    <div class="column-chip">Téléphone</div>
+                                    <div class="column-chip">Dernière connexion</div>
+                                    <div class="column-chip">Pays</div>
+                                    <div class="column-chip">Ville</div>
+                                    <div class="column-chip">Nombre d'annonces</div>
+                                    <div class="column-chip">Total transactions</div>
+                                </div>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                                <div class="form-group">
+                                    <label class="form-label">Limite de lignes</label>
+                                    <select class="form-control">
+                                        <option>1 000 lignes</option>
+                                        <option selected>10 000 lignes</option>
+                                        <option>50 000 lignes</option>
+                                        <option>Tout exporter</option>
+                                    </select>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 10px; padding-top: 1.5rem;">
+                                    <input type="checkbox" id="zip-compress" style="width: 18px; height: 18px;">
+                                    <label for="zip-compress"
+                                        style="font-size: 0.85rem; font-weight: 700; cursor: pointer;">Compresser le
+                                        fichier (ZIP)</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Formats -->
+                        <div class="config-card">
+                            <span class="section-title">Format de sortie</span>
+                            <div class="format-selector">
+                                <div class="format-btn active">
+                                    <i class="fas fa-file-csv" style="color: #027a48;"></i>
+                                    <span>CSV</span>
+                                </div>
+                                <div class="format-btn">
+                                    <i class="fas fa-file-excel" style="color: #1d6f42;"></i>
+                                    <span>XLSX (Excel)</span>
+                                </div>
+                                <div class="format-btn">
+                                    <i class="fas fa-file-pdf" style="color: #b42318;"></i>
+                                    <span>PDF (Rapport)</span>
+                                </div>
+                                <div class="format-btn">
+                                    <i class="fas fa-file-code" style="color: #026aa2;"></i>
+                                    <span>JSON</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- History -->
+                        <div class="table-outer">
+                            <div
+                                style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--card-border); display: flex; justify-content: space-between; align-items: center;">
+                                <h3 style="margin:0; font-size: 1rem; font-weight: 700;">Historique des exports récents
+                                </h3>
+                                <button class="btn btn-secondary" style="font-size: 0.75rem;">Voir tout
+                                    l'historique</button>
+                            </div>
+                            <table class="history-table" style="margin-top:0; border:none; border-radius:0;">
+                                <thead>
+                                    <tr>
+                                        <th>Fichier / Source</th>
+                                        <th>Date génération</th>
+                                        <th>Format</th>
+                                        <th>Taille</th>
+                                        <th>Statut</th>
+                                        <th style="text-align: right;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div style="font-weight: 700;">Utilisateurs_All_Feb2026</div>
+                                            <div style="font-size: 0.7rem; color: var(--text-sub);">Source: Utilisateurs
+                                            </div>
+                                        </td>
+                                        <td>Aujourd'hui, 09:45</td>
+                                        <td><span class="badge" style="background: #ecfdf3; color: #027a48;">CSV</span>
+                                        </td>
+                                        <td>1.2 MB</td>
+                                        <td><span class="badge badge-done">Prêt</span></td>
+                                        <td style="text-align: right;">
+                                            <button class="btn-icon" title="Télécharger"><i
+                                                    class="fas fa-download"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div style="font-weight: 700;">Transactions_2026_Q1</div>
+                                            <div style="font-size: 0.7rem; color: var(--text-sub);">Source: Transactions
+                                            </div>
+                                        </td>
+                                        <td>Hier, 18:20</td>
+                                        <td><span class="badge" style="background: #fef3f2; color: #b42318;">PDF</span>
+                                        </td>
+                                        <td>3.5 MB</td>
+                                        <td><span class="badge badge-done">Prêt</span></td>
+                                        <td style="text-align: right;">
+                                            <button class="btn-icon" title="Télécharger"><i
+                                                    class="fas fa-download"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div style="font-weight: 700;">Full_System_Audit_Log</div>
+                                            <div style="font-size: 0.7rem; color: var(--text-sub);">Source: Logs Système
+                                            </div>
+                                        </td>
+                                        <td>02/03/2026, 14:10</td>
+                                        <td><span class="badge" style="background: #f0f9ff; color: #026aa2;">JSON</span>
+                                        </td>
+                                        <td>12.4 MB</td>
+                                        <td><span class="badge badge-wait">En cours...</span></td>
+                                        <td style="text-align: right;">
+                                            <button class="btn-icon" title="Annuler"><i
+                                                    class="fas fa-times"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            Components.renderAdminSidebar('admin-export-data.html');
+
+            // Interactive selections
+            const typeItems = document.querySelectorAll('.type-item');
+            typeItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    typeItems.forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+                });
+            });
+
+            const formatBtns = document.querySelectorAll('.format-btn');
+            formatBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    formatBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                });
+            });
+
+            const chips = document.querySelectorAll('.column-chip');
+            chips.forEach(chip => {
+                chip.addEventListener('click', () => {
+                    chip.classList.toggle('active');
+                });
+            });
+        });
+
+        function generateExport() {
+            alert('L\'export est en cours de génération dans nos serveurs sécurisés. Vous recevrez une notification au centre de notifications une fois le fichier prêt au téléchargement.');
+        }
+    </script>
+</body>
+
+</html>
